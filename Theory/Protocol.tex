@@ -4,10 +4,11 @@
 \newcommand{\init}{\mathsf{init}}
 \newcommand{\issue}{\mathsf{issue}}
 \newcommand{\transfer}{\mathsf{transfer}}
-\newcommand{\update}{\mathsf{update}}
+\newcommand{\rollover}{\mathsf{rollover}}
+\newcommand{\destroy}{\mathsf{destroy}}
 \newcommand{\history}{\mathsf{history}}
-\newcommand{\balance}{\mathsf{balance}}
-\newcommand{\heldbalance}{\mathcal{H}\mathsf{eldbalance}}
+\newcommand{\balance}{\mathsf{ActBalance}}
+\newcommand{\pendbalance}{\mathsf{PndBalance}}
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
 \newcommand{\pluseq}{\mathrel{+}=}
@@ -37,9 +38,9 @@
 	\begin{description}
 		\item[Init.] Upon receiving $\init$ from  all parties: 
 		\begin{enumerate}
-			\item  For each $i\in [n]$: set $\balance_i \asn 0$ and $\heldbalance_i \asn \emptyset$.
+			\item  For each $i\in [n]$:  $\balance_i,\pendbalance_i \asn 0$ and  $\historylog_i \asn \emptyset$.
 			
-			\item Set $\historylog \asn \emptyset$.
+			\item  $\historylog \asn \emptyset$.
 		\end{enumerate}
 		
 			\item[Issue.]   Upon receiving $(\sid,\issue,x,d)$ from  \Cc and \Ic:
@@ -48,7 +49,7 @@
 			
 			\item \Assert{$x\in \N$ and $d\in [n]$}.
 			
-			\item $\heldbalance_d \unioneq { (\sid,\issue,x)}$.
+			\item $\pendbalance_d \pluseq x$.
 			
 			\item Set $\historylog \unioneq {(\sid,\issue,x,d)}$.
 		\end{enumerate}
@@ -62,31 +63,48 @@
 			
 			\item $\balance_s \minuseq x$.
 			
-			\item   $\heldbalance_d \unioneq (\sid,\transfer,s,x)$.
+			\item   $\pendbalance_d \unioneq x$.
+			
+			\item Set $\historylog_d \unioneq {(\sid,\transfer,s,x)}$
 			
 			\item Set $\historylog \unioneq {(\sid,\transfer,s,d)}$
 			
 		\end{enumerate}
 		
-		\item[Update.]     Upon receiving $(\sid,\update)$ from  party $\Pc_i$ and \Cc,  party \Cc
+		\item[Rollover.]     Upon receiving $(\sid,\rollover)$ from  party $\Uc_i$ and \Cc,  party \Cc
 		
 		\begin{enumerate}
 			
 			
-			\item Set $\balance_i  \pluseq \sum_{(\cdot,x) \in \heldbalance_i} x$.
+			\item Set $\balance_i  \pluseq \pendbalance_i$.
 			
-			\item Set $\heldbalance_i  \asn \emptyset$.
+			\item Set $\pendbalance_i  \asn 0$.
 			
-			\item Set $\historylog \unioneq (\sid,\update,i)$
+			\item Set $\historylog \unioneq (\sid,\rollover,i)$
 			
 			
 		\end{enumerate}
 
 		
+			\item[Destroy.]     Upon receiving $(\sid,\destroy,x)$ from  party $\Uc_i$ and \Cc,  party \Cc
+		
+		\begin{enumerate}
+			
+			
+			 \item \Assert{$x\in \N$, $\balance_i  \ge x$ and $i \in [n]$}.
+			
+			\item $\balance_i \minuseq x$.
+			
+			
+			\item Set $\historylog \unioneq {(\sid,\destroy,i,x)}$
+			
+			
+		\end{enumerate}
+		
 		
 		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Pc_i$ and \Cc:  
 		
-		Send $(\historylog,\heldbalance_i)$ to  $\Pc_i$.	 
+		Send $(\historylog,\historylog_i)$ to  $\Pc_i$.	 
 		
 	\end{description}
 
@@ -216,7 +234,7 @@
 	
 	\item  $H_i \asn \emptyset$.
 	
-	\item  $\historylog \pluseq (\sid,\update,i)$
+	\item  $\historylog \pluseq (\sid,\rollover,i)$
 	
 	
 \end{enumerate}
