@@ -1,0 +1,949 @@
+\providecommand{\remove}[1]{}
+\newcommand{\Draft}[1]{\ifdefined\IsDraft\texttt{ #1} \fi}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\ifdefined\IsDraft
+\newcommand{\authnote}[2]{{\bf [{\color{red} #1's Note:} {\color{blue} #2}]}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+
+\newcommand{\strongAuthNote}[1]{{\bf [{\color{purple} #1}]}}
+
+
+
+
+
+\newcommand{\Ensuremath}[1]{\ensuremath{#1}\xspace}
+\newcommand{\MathAlgX}[1]{\Ensuremath{\MathAlg{#1}}}
+\newcommand{\myOptName}[1]{\Ensuremath{\operatorname{#1}}}
+%Type macros%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% mathcal letters
+\def\mydefc#1{\expandafter\def\csname c#1\endcsname{\mathcal{#1}}}
+\def\mydefallc#1{\ifx#1\mydefallc\else\mydefc#1\expandafter\mydefallc\fi}
+% \c* gives you \mathcal{*} where * can be any of the following letters
+\mydefallc ABCDEFGHIJKLMNOPQRSTUVWXYZ\mydefallc
+
+
+%%% overline letters
+\def\mydefo#1{\expandafter\def\csname o#1\endcsname{\overline{#1}}}
+\def\mydefallo#1{\ifx#1\mydefallo\else\mydefo#1\expandafter\mydefallo\fi}
+\mydefallo ABCDEFGHIJKLMNOPQRSTUVWXYZx\mydefallo
+
+
+%%% mathbf letters
+\def\mydefbf#1{\expandafter\def\csname bf#1\endcsname{\mathbf{#1}}}
+\def\mydefallbf#1{\ifx#1\mydefallbf\else\mydefbf#1\expandafter\mydefallbf\fi}
+\mydefallbf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\mydefallbf
+
+
+%%% tilde letters
+\def\mydeftilde#1{\expandafter\def\csname t#1\endcsname{\widetilde{#1}}}
+\def\mydefalltilde#1{\ifx#1\mydefalltilde\else\mydeftilde#1\expandafter\mydefalltilde\fi}
+\mydefalltilde abijkqrftABCHGDSXYKRWTQt\mydefalltilde
+
+
+%%% hat letters
+\def\mydefhat#1{\expandafter\def\csname h#1\endcsname{\widehat{#1}}}
+\def\mydefallhat#1{\ifx#1\mydefallhat\else\mydefhat#1\expandafter\mydefallhat\fi}
+\mydefallhat ABCDEFGHIJKMNOPSRTQUVWXYZabhorgq\mydefallhat
+
+
+%%% Alg letters
+\def\mydefAlg#1{\expandafter\def\csname #1c\endcsname{\MathAlgX{#1}}}
+\def\mydefallAlg#1{\ifx#1\mydefallAlg\else\mydefAlg#1\expandafter\mydefallAlg\fi}
+\mydefallAlg ABCDEFGHIJKMNOPQRSTUVWXYZ\mydefallAlg
+
+%%% hAlg letters
+\def\mydefHAlg#1{\expandafter\def\csname h#1c\endcsname{\MathAlgX{\widehat{#1}}}}
+\def\mydefallHAlg#1{\ifx#1\mydefallHAlg\else\mydefHAlg#1\expandafter\mydefallHAlg\fi}
+\mydefallHAlg ABCDEFGHIJKMNOPQRSTUVWXYZ\mydefallHAlg
+
+%%% oAlg letters
+\def\mydefOAlg#1{\expandafter\def\csname o#1c\endcsname{\MathAlgX{\overline{#1}}}}
+\def\mydefallOAlg#1{\ifx#1\mydefallOAlg\else\mydefOAlg#1\expandafter\mydefallOAlg\fi}
+\mydefallOAlg ABCDEFGHIJKMNOPQRSTUVWXYZ\mydefallOAlg
+
+
+%%% tAlg letters
+\def\mydefTAlg#1{\expandafter\def\csname t#1c\endcsname{\MathAlgX{\widetilde{#1}}}}
+\def\mydefallTAlg#1{\ifx#1\mydefallTAlg\else\mydefTAlg#1\expandafter\mydefallTAlg\fi}
+\mydefallTAlg ABCDEFGHIJKMNOPQRSTUVWXYZ\mydefallTAlg
+
+
+\newcommand{\zns}{\Z_n^\ast}
+
+%Cref%%%%%%%%%%%%%%%%
+
+\newcommand{\sdotfill}{\textcolor[rgb]{0.8,0.8,0.8}{\dotfill}} %change to \cdotfill later
+
+\newenvironment{protocol}{\begin{proto}}{\vspace{-\topsep}~\newline\sdotfill\end{proto}}
+%\newenvironment{protocol}{\begin{mybox} \vspace{-.1in}\begin{proto}}{ \vspace{-.1in} \end{proto}\end{mybox}}
+
+\newenvironment{functionality}{\begin{funct}}{\vspace{-\topsep}\sdotfill\end{funct}}
+
+%\newenvironment{functionality}{\begin{mybox} \vspace{-.1in}\begin{funct}}{ \vspace{-.1in} \end{funct}\end{mybox}}
+
+%\newenvironment{algorithm}
+%{\begin{algo}}
+%{\vspace{-\topsep}~\sdotfill\end{algo}}
+
+
+
+\definecolor{mylightgrey}{RGB}{245, 245, 245}
+
+\newenvironment{mymdframed}
+{
+	\begin{mdframed}[%
+	%outerlinewidth = 2,%
+	roundcorner = 10pt,%
+	innertopmargin = 1,%
+	%leftmargin = 40,%
+	%leftmargin = 40,%
+	%rightmargin = 40,%
+	backgroundcolor = mylightgrey,%
+	%outerlinecolor = blue!70! black,%
+	%	innertopmargin = \topskip,%
+	%	splittopskip = \topskip,%
+	%ntheorem = true
+	] 
+}
+{
+\end{mdframed}
+}
+
+
+\newenvironment{game}
+{\begin{mymdframed}\begin{gamo}}
+		{\end{gamo}\end{mymdframed}}
+
+
+\newenvironment{algorithm}
+{\begin{mymdframed}\begin{algo}}
+{\end{algo}\end{mymdframed}}
+
+
+%\newenvironment{algorithm}{\begin{mybox} \vspace{-.1in}\begin{algo}}{ \vspace{-.1in} \end{algo}\end{mybox}}
+\newenvironment{InlinedAlgorithm}{\begin{algo}}{\end{algo}}
+
+
+\newenvironment{experiment}{\begin{expr}}{\end{expr}}
+
+\newenvironment{mybox}{\begin{center}\begin{tabular}{|p{0.97\linewidth}|c|}   \hline} {  \\ \hline \end{tabular} \end{center}}			
+
+
+
+%\newenvironment{algo}{\begin{center}\setlength{\fboxsep}{12pt}
+		%\begin{boxedminipage}{\linewidth}}
+		%{\end{boxedminipage} \end{center}}
+
+%%% General %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%fix spacing issues with \left \right
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
+
+
+%\newcommand{\etal}{{et~al.\xspace}
+	\newcommand{\aka} {also known as,\xspace}
+	\newcommand{\resp}{resp.,\xspace}
+	\newcommand{\ie}  {i.e.,\xspace}
+	\newcommand{\eg}  {e.g.,\xspace}
+	\newcommand{\whp}  {with high probability\xspace}
+	\newcommand{\wrt} {with respect to\xspace}
+	\newcommand{\wlg} {without loss of generality\xspace}
+	\newcommand{\Wlg} {Without loss of generality\xspace}
+	\newcommand{\cf}{cf.,\xspace}
+	\newcommand{\vecc}[1]{\left\lVert #1 \right\rVert}
+	\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+	\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+	\newcommand{\ip}[1]{\iprod{#1}}
+	\newcommand{\iprod}[1]{\langle #1 \rangle}
+	\newcommand{\seq}[1]{\langle #1 \rangle}
+	\newcommand{\sset}[1]{\ens{#1}}
+	\newcommand{\set}[1]{ \left\{#1 \right\}}
+	%\newcommand{\expp}[1]{\exp\left( #1\right)}
+	\newcommand{\expp}[1]{e^{#1}}
+	\newcommand{\paren}[1]{ (#1 )}
+	\newcommand{\LRparen}[1]{ \left(#1 \right)}
+	\newcommand{\divs}{\;|\;}
+	\newcommand{\ynote}[1]{\authnote{Yuval}{#1}}
+	\newcommand{\inote}[1]{\authnote{Iftach}{#1}} 
+	\newcommand{\nnote}[1]{\authnote{Nikos}{#1}}
+	
+	\newcommand{\Brack}[1]{{\left[#1\right]}}
+	\newcommand{\inner}[2]{\left[#1,#2\right]}
+	\newcommand{\floor}[1]{\left \lfloor#1 \right \rfloor}
+	%\newcommand{\vect}[1]{{ \mathbf #1}}
+	%\newcommand{\mat}[1]{{ \mathbf #1}}
+	\newcommand{\lat}{\mathcal{L}}
+	\newcommand{\latP}[1]{\lat\paren{#1}}
+	\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+	
+	
+	\newcommand{\cond}{\;|\;}
+	\newcommand{\half}{\tfrac{1}{2}}
+	\newcommand{\third}{\tfrac{1}{3}}
+	\newcommand{\quarter}{\tfrac{1}{4}}
+	%\newcommand{\eqdef}{\mathbin{{\rm def}{=}}}
+	\newcommand{\eqdef}{:=}
+	
+	
+	\newcommand{\N}{{\mathbb{N}}}
+	\newcommand{\Z}{{\mathbb Z}}
+	\newcommand{\F}{{\cal F}}
+	\newcommand{\io}{\hyclass{i.o. \negmedspace-}}
+	\newcommand{\naturals}{{\mathbb{N}}}
+	\newcommand{\zo}{\set{0,1}}
+	\newcommand{\oo}{\mo}
+	
+	\newcommand{\mo}{\set{\!\shortminus 1,1\!}}
+	\newcommand{\mon}{\mo^n}
+	
+	
+	\newcommand{\zn}{{\zo^n}}
+	\newcommand{\zs}{{\zo^\ast}}
+	\newcommand{\zl}{{\zo^\ell}}
+	
+	\newcommand{\suchthat}{{\;\; : \;\;}}
+	\newcommand{\condition}{\;\ifnum\currentgrouptype=16 \middle\fi|\;}
+	\newcommand{\deffont}{\em}
+	\let\gets\undefined
+	\newcommand{\getsr}{\mathbin{\stackrel{\mbox{\tiny R}}{\leftarrow}}}
+	
+	
+	
+	\newcommand{\IsIn}{\mathbin{\stackrel{ ?}{\in}}}
+	
+	
+	%\newcommand{\getsr}{\gets}
+	\newcommand{\xor}{\oplus}
+	\newcommand{\al}{\alpha}
+	\newcommand{\be}{\beta}
+	\newcommand{\eps}{\varepsilon}
+	\newcommand{\ci} {\stackrel{\rm{c}}{\equiv}}
+	\newcommand{\from}{\leftarrow}
+	\newcommand{\la}{\leftarrow}
+	
+	\newcommand{\negfunc}{\e}
+	
+	
+	%%%%%%%%%%%%%%%%%%% functions definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	
+	% need to replace \operatorname with \newfunc
+	\newcommand{\diver}{D}
+	\newcommand{\re}[2]{\diver\paren{#1 || #2}}
+	
+	\newcommand{\loglog}{\operatorname{loglog}}
+	\newcommand{\logloglog}{\operatorname{logloglog}}
+	
+	\newcommand{\GF}{\operatorname{GF}}
+	\newcommand{\Exp}{\operatorname*{E}}
+	\newcommand{\Var}{\operatorname{Var}}
+	\newcommand{\Cov}{\operatorname{Cov}}
+	\newcommand{\Hall}{\operatorname{H}}
+	\newcommand{\Hmin}{\operatorname{H_{\infty}}}
+	\newcommand{\HRen}{\operatorname{H_2}}
+	\newcommand{\Ext}{\MathAlgX{Ext}}
+	\newcommand{\Con}{\operatorname{Con}}
+	\newcommand{\Samp}{\operatorname{Smp}}
+	\newcommand{\Enc}{\operatorname{Enc}}
+	\newcommand{\Dec}{\operatorname{Dec}}
+	\newcommand{\Gen}{\MathAlgX{Gen}}
+	\newcommand{\GenE}{\MathAlgX{ExtdGen}}
+	\newcommand{\Time}{\operatorname{time}}
+	\newcommand{\negl}{\operatorname{neg}}
+	\newcommand{\Diam}{\operatorname{Diam}}
+	\newcommand{\Cut}{\operatorname{Cut}}
+	\newcommand{\Supp}{\operatorname{Supp}}
+	\newcommand{\GL}{\operatorname{GL}}
+	\newcommand{\maj}{\operatorname*{maj}}
+	\newcommand{\argmax}{\operatorname*{argmax}}
+	\newcommand{\argmin}{\operatorname*{argmin}}
+	
+	%\newcommand{\accept}{\mathtt{accept}}
+	%\newcommand{\reject}{\mathtt{reject}}
+	\newcommand{\accept}{\ensuremath{\mathtt{Accept}}}
+	\newcommand{\reject}{\ensuremath{\mathtt{Reject}}}
+	
+	%\newcommand{\fail}{\mathtt{fail}}
+	\newcommand{\fail}{\mathsf{fail}}
+	
+	\newcommand{\halt}{\mathtt{halt}}
+	
+	\newcommand{\MathFam}[1]{\mathcal{#1}}
+	\newcommand{\ComFam}{\MathFam{COM}}
+	\newcommand{\HFam}{\MathFam{H}}
+	\newcommand{\FFam}{\MathFam{F}}
+	\newcommand{\GFam}{\MathFam{\GT}}
+	\newcommand{\Dom}{\MathFam{D}}
+	\newcommand{\Rng}{\MathFam{R}}
+	\newcommand{\Code}{\MathFam{C}}
+	\newcommand{\ndiv}{\,\cancel{\:|\,}\: }
+	\newcommand{\MathAlg}[1]{\mathsf{#1}}
+	\newcommand{\Com}{\MathAlg{Com}}
+	\newcommand{\sign}{\MathAlg{sign}}
+	
+	\newcommand{\zfrac}[2]{#1/#2}
+	
+	
+	
+	\newcommand{\tth}[1]{\Ensuremath{#1^{\rm th}}}
+	\newcommand{\tthsp}[1]{\Ensuremath{#1^{\rm th}}}
+	\newcommand{\ith}{\tth{i}}
+	\newcommand{\mth}{\tth{m}}
+	\newcommand{\jth}{\tth{j}}
+		\newcommand{\dth}{\tth{d}}
+		
+	\newcommand{\brackets}[1]{\bigl(#1\bigr)}
+	\newcommand{\bracketss}[1]{\left(#1\right)}
+	
+	
+	%%% Computational Problems %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\def\textprob#1{\textmd{\textsc{#1}}}
+	\newcommand{\mathprob}[1]{\mbox{\textmd{\textsc{#1}}}}
+	%\newcommand{\SAT}{\mathprob{SAT}}
+	\newcommand{\HamPath}{\textprob{Hamiltonian Path}}
+	\newcommand{\StatDiff}{\textprob{Statistical Difference}}
+	\newcommand{\EntDiff}{\textprob{Entropy Difference}}
+	\newcommand{\EntApprox}{\textprob{Entropy Approximation}}
+	\newcommand{\CondEntApprox}{\textprob{Conditional Entropy Approximation}}
+	\newcommand{\QuadRes}{\textprob{Quadratic Residuosity}}
+	\newcommand{\CktApprox}{\mathprob{Circuit-Approx}}
+	\newcommand{\DNFRelApprox}{\mathprob{DNF-RelApprox}}
+	\newcommand{\GraphNoniso}{\textprob{Graph Nonisomorphism}}
+	\newcommand{\GNI}{\mathprob{GNI}}
+	\newcommand{\GraphIso}{\textprob{Graph Isomorphism}}
+	%\newcommand{\GI}{\mathprob{Graph Isomorphism}}
+	\newcommand{\MinCut}{\textprob{Min-Cut}}
+	\newcommand{\MaxCut}{\textprob{Max-Cut}}
+	
+	\newcommand{\yes}{YES}%{{\sc yes}}
+	\newcommand{\no}{NO}%{{\sc no}}
+	
+	
+	%%% Complexity Classes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	%Cref isuues
+	%make all reference start with uppercase
+	\renewcommand{\cref}{\Cref}
+	\usepackage{aliascnt}
+	
+	
+	\newcommand{\itemref}[1]{Item~\ref{#1}}
+	\newcommand{\roundref}[1]{Round~\ref{#1}}
+	
+	
+	%\ifCR\else
+	%\theoremstyle{nicetheorem}
+	%\fi
+	
+	
+	
+	\newtheorem{theorem}{Theorem}[section]
+	
+	
+
+\remove{	
+	\newaliascnt{mythm}{theorem}
+	\newtheorem{mythm}[mythm]{Theorem}
+	\aliascntresetthe{mythm}
+	
+	\renewenvironment{theorem}
+	{\begin{mymdframed}\begin{mythm}}
+			{\end{mythm}\end{mymdframed}}
+}	
+	
+	
+	\newaliascnt{lemma}{theorem}
+	\newtheorem{lemma}[lemma]{Lemma}
+	\aliascntresetthe{lemma}
+	\crefname{lemma}{Lemma}{Lemmas}
+	
+	
+	
+	%\providecommand*{\lemmaautorefname}{Lemma}
+	\newaliascnt{claim}{theorem}
+	\newtheorem{claim}[claim]{Claim}
+	\aliascntresetthe{claim}
+	\crefname{claim}{Claim}{Claims}
+	
+	\newaliascnt{corollary}{theorem}
+	\newtheorem{corollary}[corollary]{Corollary}
+	\aliascntresetthe{corollary}
+	\crefname{corollary}{Corollary}{Corollaries}
+	
+	
+	\newaliascnt{construction}{theorem}
+	\newtheorem{construction}[construction]{Construction}
+	\aliascntresetthe{construction}
+	\crefname{construction}{Construction}{Constructions}
+	
+	\newaliascnt{fact}{theorem}
+	\newtheorem{fact}[fact]{Fact}
+	\aliascntresetthe{fact}
+	\crefname{fact}{Fact}{Facts}
+	
+	\newaliascnt{proposition}{theorem}
+	\newtheorem{proposition}[proposition]{Proposition}
+	\aliascntresetthe{proposition}
+	\crefname{proposition}{Proposition}{Propositions}
+	
+	\newaliascnt{conjecture}{theorem}
+	\newtheorem{conjecture}[conjecture]{Conjecture}
+	\aliascntresetthe{conjecture}
+	\crefname{conjecture}{Conjecture}{Conjectures}
+	
+	
+	\newaliascnt{definition}{theorem}
+	\newtheorem{definition}[definition]{Definition}
+	\aliascntresetthe{definition}
+	\crefname{definition}{Definition}{Definitions}
+	
+	\newaliascnt{notation}{theorem}
+	\newtheorem{notation}[notation]{Notation}
+	\aliascntresetthe{notation}
+	\crefname{notation}{Notation}{Notation}
+	
+	\newaliascnt{assertion}{theorem}
+	\newtheorem{assertion}[assertion]{Assertion}
+	\aliascntresetthe{assertion}
+	\crefname{assertion}{Assertion}{Assertion}
+	
+	\newaliascnt{assumption}{theorem}
+	\newtheorem{assumption}[assumption]{Assumption}
+	\aliascntresetthe{assumption}
+	\crefname{assumption}{Assumption}{Assumption}
+	
+%	\theoremstyle{remark}
+	\newaliascnt{remark}{theorem}
+	\newtheorem{remark}[remark]{Remark}
+	\aliascntresetthe{remark}
+	\crefname{remark}{Remark}{Remarks}
+	
+	%\theoremstyle{plain}
+	\newaliascnt{question}{theorem}
+	\newtheorem{question}[question]{Question}
+	\aliascntresetthe{question}
+	\crefname{question}{Question}{Questions}
+	
+	%\theoremstyle{definition}
+	\newaliascnt{example}{theorem}
+	\ifdefined\excludeexample
+	\else
+	\newtheorem{example}[example]{Example}
+	\fi
+	
+	
+	\aliascntresetthe{example}
+	\crefname{exmaple}{Example}{Examples}
+	%\theoremstyle{plain}
+	
+	\crefname{equation}{Equation}{Equations}
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%\theoremstyle{protocol}
+	%what is proto
+	\newaliascnt{proto}{theorem}
+	
+	%the name to appear for the environ
+	\theoremstyle{definition}
+	\newtheorem{proto}[proto]{Protocol}
+	
+	%the name to appear in the reference
+	\aliascntresetthe{proto}
+	\crefname{proto}{protocol}{protocols}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	
+	\newaliascnt{algo}{theorem}
+	\theoremstyle{plain}
+	\newtheorem{algo}[algo]{Algorithm}
+	\aliascntresetthe{algo}
+	
+	
+		\newaliascnt{gamo}{theorem}
+	\theoremstyle{plain}
+	\newtheorem{gamo}[gamo]{Game}
+	\aliascntresetthe{gamo}
+	
+	%\crefname{algorithm}{algorithm}{algorithms}
+	%\crefname{algo}{algorithm}{algorithms}
+	
+	\newaliascnt{funct}{theorem}
+	\theoremstyle{definition}
+	\newtheorem{funct}[funct]{Functionality}
+	\aliascntresetthe{funct}
+	\crefname{funct}{functionality}{Functionality}
+	
+	
+	\newaliascnt{expr}{theorem}
+	\theoremstyle{plain}
+	\newtheorem{expr}[expr]{Experiment}
+	\aliascntresetthe{expr}
+	\crefname{experiment}{experiment}{experiments}
+	
+	
+	%
+	\newcommand{\stepref}[1]{Step~\ref{#1}}
+	\newcommand{\progref}[1]{Program~\ref{#1}}
+	
+	
+	
+	
+	%%% Proof environments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\def\FullBox{$\Box$}
+	\def\qed{\ifmmode\qquad\FullBox\else{\unskip\nobreak\hfil
+			\penalty50\hskip1em\null\nobreak\hfil\FullBox
+			\parfillskip=0pt\finalhyphendemerits=0\endgraf}\fi}
+	
+	\def\qedsketch{\ifmmode\Box\else{\unskip\nobreak\hfil
+			\penalty50\hskip1em\null\nobreak\hfil$\Box$
+			\parfillskip=0pt\finalhyphendemerits=0\endgraf}\fi}
+	
+	\newenvironment{proofidea}{\begin{trivlist} \item {\it
+				Proof Idea.}} {\end{trivlist}}
+	
+	%\newenvironment{proofof}[1]{\begin{proof}[Proof of~#1]}{\end{proof}}
+	
+	\newenvironment{proofsketch}{\begin{trivlist} \item {\it
+				Proof sketch.}} {\qed\end{trivlist}}
+	
+	\newenvironment{proofskof}[1]{\begin{trivlist} \item {\it Proof
+				Sketch of~#1.}} {\end{trivlist}}
+	
+	
+
+	
+	%\newcommand{\simgeq}{\; \raisebox{-0.4ex}{\tiny$\stackrel
+	%		{{\textstyle>}}{\sim}$}\;}
+%	\newcommand{\simleq}{\; \raisebox{-0.4ex}{\tiny$\stackrel
+%			{{\textstyle<}}{\sim}$}\;}
+	
+	
+	%\newcommand{\sex}[1]{\mathbf E [#1]}
+	%\newcommand{\Ex}[1]{\Exp \left[#1\right]}
+	%\newcommand{\Ex}[1]{{\mathbf E}\left[#1\right]}
+
+	
+		
+ \DeclareMathOperator*{\Ex}{ E} 
+		
+	\newcommand{\eex}[2]{\Ex_{#1} \left[#2 \right]}
+	\newcommand{\ex}[1]{\Ex [#1 ]}
+	
+	
+%	\renewcommand{\Pr}{{\mathrm {Pr}}}
+	
+	\let\Pr\undefined
+	
+	\DeclareMathOperator*{\Pr}{Pr} %in preamble
+	
+	
+	\newcommand{\pr}[1]{\Pr\left[#1\right]}
+	\newcommand{\spr}[1]{\Pr[#1 ]}
+	
+	
+	
+	%\newcommand{\ppr}[2]{\underset{#1}{\Pr}\left[#2\right]}
+	
+	\newcommand{\ppr}[2]{\Pr_{#1}\left[#2\right]}
+		
+	
+	
+	
+	
+	
+	
+	\newcommand{\prob}[1]{\mathsf{\textsc{#1}}}
+	
+
+	
+	
+	
+	
+	\newcommand{\ens}[1]{\{#1\}}
+	\newcommand{\size}[1]{\left|#1\right|}
+	\newcommand{\ssize}[1]{|#1|}
+	\newcommand{\bsize}[1]{\bigr|#1\bigr|}
+	\newcommand{\enss}[1]{\{#1\}}
+	\newcommand{\cindist}{\approx_c}
+	\newcommand{\sindist}{\approx_s}
+
+	\newcommand{\view}{{\operatorname{view}}}
+	\newcommand{\View}{\operatorname{View}}
+	\newcommand{\indist}{\approx}
+	\newcommand{\dist}[1]{\mathbin{\stackrel{\rm {#1}}{\equiv}}}
+	\newcommand{\Uni}{{\mathord{\mathcal{U}}}}
+	
+	
+	%%% Zero Knowledge Characterization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\newcommand{\OWF}{OWF}
+	\newcommand{\OWFno}{OWF NO}
+	\newcommand{\OWFyes}{OWF YES}
+	
+	\newcommand{\Sbb}{S}
+	
+	\newcommand{\yesinstance}{\mathrm{Y}}
+	\newcommand{\noinstance}{\mathrm{N}}
+	
+	\newcommand{\SD}{\prob{SD}}
+	\newcommand{\SDy}{\SD_\yesinstance}
+	\newcommand{\SDn}{\SD_\noinstance}
+
+	
+	
+	\newcommand{\1}{\mathds{1}}
+	
+	
+		
+	
+	
+	\newcommand{\KL}{\operatorname{KL}}
+
+	\newcommand{\pptm}{{\sc pptm}\xspace}
+	\newcommand{\ppt}{{\sc ppt}\xspace}
+	
+	
+		
+	
+	
+	
+	\newcommand{\conc}{\circ}
+	
+	
+	
+	\newcommand{\Tableofcontents}{
+		\thispagestyle{empty}
+		\pagenumbering{gobble}
+		\clearpage
+		\tableofcontents
+		\thispagestyle{empty}
+		\clearpage
+		\pagenumbering{arabic}
+	}
+	
+	\newcommand{\vect}[1]{{ \bf #1}}
+	\newcommand{\Mat}[1]{{ \bf #1}}
+	\newcommand{\zot}{\set{0,1,2}}
+	
+	\newcommand{\Sim}{\MathAlgX{Sim}}
+	
+	%%%%%%%%%%%%%%%%
+	
+	
+	
+	
+
+		
+	
+	\newcommand{\pk} {{\mathsf{pk}}}
+	
+	
+	
+	
+	
+	\newcommand{\zer}{\mathbf{0}}
+	\newcommand{\one}{\mathbf{1}}
+	\newcommand{\ham}{\mathrm{dist}}
+	\newcommand{\bT}{\boldsymbol{T}}
+	\newcommand{\bU}{\boldsymbol{U}}
+	\renewcommand{\u}{\boldsymbol{u}}
+	\newcommand{\smthg}{\mathrm{smthg}}
+	\newcommand{\f}{\boldsymbol{f}}
+	\newcommand{\bado}{\cB_{1}}
+	\newcommand{\badp}{\cB_{2}}
+	\newcommand{\badt}{\cD}
+	\newcommand{\badtt}{{\cF}}
+	\newcommand{\badf}{\cB_{3}}
+	\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+	
+	\newcommand{\optional}{\textbf{optional}\xspace}
+	
+	
+	\newcommand{\verify}[1]{Verify ~#1.}
+	
+	\newcommand{\asn}{\leftarrow}
+	
+	\newcommand{\Ham}{\operatorname{Ham}}
+	
+	%%%%%%%% NEW %%%%%%
+	
+
+	
+	
+		
+	
+	
+	
+	\newcommand{\ots}{\mathsf{OT}}
+	\newcommand{\ot}[1]{\MathAlgX{\ots}_{#1}}
+	
+	
+
+
+%% ---------------------- Session Macros
+\newcommand{\sid}{\mathsf{sid}}
+
+%% ---------------------- Party Macros
+
+
+
+
+
+
+%%% mathcal letters
+\def\mydefc#1{\expandafter\def\csname c#1\endcsname{\mathcal{#1}}}
+\def\mydefallc#1{\ifx#1\mydefallc\else\mydefc#1\expandafter\mydefallc\fi}
+% \c* gives you \mathcal{*} where * can be any of the following letters
+\mydefallc ABCDEFGHIJKLMNOPQRSTUVWXYZ\mydefallc
+
+%%% mathbf letters
+\def\mydefbf#1{\expandafter\def\csname bf#1\endcsname{\mathbf{#1}}}
+\def\mydefallbf#1{\ifx#1\mydefallbf\else\mydefbf#1\expandafter\mydefallbf\fi}
+\mydefallbf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\mydefallbf
+
+\newcommand{\cPKI}{\mathcal{PKI}}
+
+%%% tilde letters
+\def\mydeftilde#1{\expandafter\def\csname t#1\endcsname{\widetilde{#1}}}
+\def\mydefalltilde#1{\ifx#1\mydefalltilde\else\mydeftilde#1\expandafter\mydefalltilde\fi}
+\mydefalltilde abijkqrfABCHGDSXYKW\mydefalltilde
+
+%%% bar letters
+\def\mydefbar#1{\expandafter\def\csname br#1\endcsname{\bar{#1}}}
+\def\mydefallbar#1{\ifx#1\mydefallbar\else\mydefbar#1\expandafter\mydefallbar\fi}
+\mydefallbar GRe \mydefallbar
+
+
+
+\mathchardef\mhyphen="2D
+
+\newcommand{\onetwo}{\set{1,2}}
+\newcommand{\bin}{\{0,1\}}
+\newcommand{\bitset}{\bin}
+\newcommand{\zm}{\zo^m}
+\newcommand{\zkp}{\zo^\kappa}
+
+\newcommand{\Q}{{\mathbb{Q}}}
+
+\renewcommand{\G}{\gG}
+\newcommand{\gG}{{\mathbb{G}}}
+\newcommand{\tgG}{\widetilde{\gG}}
+\newcommand{\hgG}{\widehat{\gG}}
+
+
+\newcommand{\zp}{\mathbb{Z}_p}
+\newcommand{\zps}{\zp^\ast}
+\newcommand{\zq}{\mathbb{Z}_q}
+
+\newcommand{\hbG}{\mathbb{\widehat{G}}}
+\newcommand{\tbG}{\mathbb{\widetilde{G}}}
+
+\newcommand{\angles}[1]{{\langle #1 \rangle}}
+\newcommand{\send}{\rightarrow}
+\newcommand{\sample}{\in_R}
+\newcommand{\lagrange}{\mathsf{Lagrange}}
+\newcommand{\Zn}{\Z_n}
+\newcommand{\Zns}{\Z_n^\ast}
+
+\newcommand{\QR}{\mathcal{QR}}
+\newcommand{\ModuliGen}{\MathAlgX{ModuliGen}}
+\newcommand{\StrongModuliGen}{\MathAlgX{StModuliGen}}
+
+\newcommand{\false}{\myOptName{false}}
+\newcommand{\true}{\myOptName{true}}
+\newcommand{\Yes}{\myOptName{Yes}}
+\newcommand{\No}{\myOptName{No}}
+\newcommand{\Slack}{\myOptName{Slack}}
+
+
+\newcommand{\bigbrack}{\vphantom{2^{2^2}}}
+\newcommand{\medbrack}{\vphantom{\hat{1}^1}}
+
+
+\newcommand{\hBeta}{\widehat{\beta}}
+\newcommand{\hrho}{\widehat{\rho}}
+
+
+\newcommand{\tE}{\widetilde{E}}
+\newcommand{\tF}{\widetilde{F}}
+\newcommand{\tdelta}{\widetilde{\delta}}
+\newcommand{\tsigma}{\widetilde{\sigma}}
+%\newcommand{\trho}{\widetilde{\rho}}
+
+\newcommand{\tBeta}{\widetilde{\beta}}
+\newcommand{\trho}{\widetilde{\rho}}
+\newcommand{\tgamma}{\widetilde{\gamma}}
+
+
+\newcommand{\Img}{\MathAlgX{Im}}
+
+
+%% ----------------- Diagrams
+\newcommand{\verylongleftarrow}[1]
+{\setlength{\unitlength}{.01in}
+    \begin{picture}(#1,1) \put(#1,0){\vector(-1,0){#1}} \end{picture}}
+\newcommand{\verylongrightarrow}[1]
+{\setlength{\unitlength}{.01in}
+    \begin{picture}(#1,1) \put(0,0){\vector(1,0){#1}} \end{picture}}
+\newcommand{\leftgoing}[2]{
+    {\stackrel{{\displaystyle #2}} {\verylongleftarrow{#1}}}}
+\newcommand{\rightgoing}[2]{
+    {\stackrel{{\displaystyle #2}} {\verylongrightarrow{#1}}}}
+\newcommand{\leftgoingc}[1]{\leftgoing{40}{#1} }
+\newcommand{\vleftgoingc}[1]{\leftgoing{80}{#1} }
+\newcommand{\rightgoingc}[1]{\rightgoing{40}{#1} }
+\newcommand{\vrightgoingc}[1]{\rightgoing{80}{#1} }
+\newcommand{\newss}[1]{{\scriptsize #1}}
+
+%% ----------------- Simulator Macros
+
+\newcommand{\tExt}{\MathAlgX{\widetilde{Ext}}}
+
+
+
+
+\newcommand{\RO}{\MathAlgX{RO}}
+\newcommand{\ROM}{\MathAlgX{ROM}}
+
+
+
+
+
+%\newcommand{\com}{\Com}
+\newcommand{\Comm}{{\textsf{Comm}}}
+\newcommand{\Verify}{\MathAlgX{Verify}}
+\newcommand{\Commit}{\MathAlgX{Commit}}
+%\newcommand{\Open}{{\textsf{Open}}}
+
+\newcommand{\tCom}{\MathAlgX{\widetilde{\Com}}}
+\newcommand{\tGen}{\MathAlgX{\widetilde{\Gen}}}
+\newcommand{\tVerify}{\MathAlgX{\widetilde{\Verify}}}
+\newcommand{\tCommit}{\MathAlgX{\widetilde{\Commit}}}
+
+\newcommand{\tEnc}{\MathAlgX{\widetilde{\Enc}}}
+\newcommand{\tDec}{\MathAlgX{\widetilde{\Dec}}}
+
+
+
+
+\newcommand{\Nins}{{\mathsf{No}}}
+\newcommand{\Yins}{{\mathsf{Yes}}}
+\newcommand{\Sins}{{\mathsf{Slack}}}
+
+
+
+%%%%%%%
+
+
+
+
+
+\newcommand{\fzk}{{\cF}_{\sf zk}}
+
+%% ------------------ ZKP API
+\newcommand{\ZK}{\textsf{ZK}}
+\newcommand{\mom}{\mo^m}
+
+\newcommand{\ipp}[1]{\iprod{#1}}
+
+
+%%%ZK
+
+\newcommand{\ZKP}{{\mathsf{ZK}}}
+\newcommand{\fZKP}[1]{\MathAlgX{\cF^\ZKP_{#1}}}
+
+\newcommand{\ZKPOK}{{\mathsf{ZK\mhyphen POK}}}
+\newcommand{\fZKPOK}[1]{\MathAlgX{\cF^\ZKPOK_{#1}}}
+
+
+
+
+
+
+
+\newcommand{\pp}{{\mathsf {pp}}}
+
+
+\newcommand{\ist}{{i^\ast}}
+\newcommand{\bigPar}[1]{\big( #1\big)}
+
+\newcommand{\Bad}{\mathsf{Bad}}
+
+\newcommand{\skappa}{{\kappa_{\mathsf s}}}
+\newcommand{\ckappa}{{\kappa_{\mathsf c}}}
+\newcommand{\slack}{{\mathsf s}}
+\newcommand{\sland}{\,\land\,}
+\newcommand{\slor}{\,\lor\,}
+
+
+\newcommand{\RSA}{{\MathAlgX{RSA}}}
+%\newcommand{\IntCmt}{{\textsf{IntCom}}}
+
+
+
+\newcommand{\crt}{\MathAlgX{crt}}
+\newcommand{\jac}{\cJ}
+
+
+
+\newcommand{\PaillierEnc}{\MathAlgX{PEnc}}
+\newcommand{\PaillierDec}{\MathAlgX{PDec}}
+\newcommand{\PaillierDom}[1]{\Z_{#1^2}^\ast}
+\newcommand{\PaillierRndDom}[1]{\Z_{#1}^\ast}
+\newcommand{\PaillierKeyGen}{\MathAlgX{PKeyGen}}
+\newcommand{\PaillierKeyGenEx}{\MathAlgX{PPKeyGenEx}}
+
+
+
+\newcommand{\IntCmtAlg}{\MathAlgX{IntCmt}}
+
+\newcommand{\IntCmtParmGen}{\MathAlgX{Gen}}
+
+
+
+\newcommand{\email}[1]{E-mail:\texttt{#1}.}
+
+
+\newcommand{\ord}{\textsf{ord}}
+
+ \newcommand{\cupdot}{\dot{\bigcup}}
+
+
+%\newcommand{\divs}{\,|\,}
+%\newcommand{\ndiv}{\,\cancel{\,|\,}\,}
+
+
+\newcommand{\PedCom}{\mathsf{Ped}}
+
+\newcommand{\hbeta}{\hat{\beta}}
+\renewcommand{\R}{\mathbb{R}}
+
+\newenvironment{indentedtext}{%
+	\begin{list}{}{
+			\setlength{\leftmargin}{0.1in}
+		}
+		\item
+	}{%
+	\end{list}
+}
+
+\mathchardef\mhyphen="2D
+
+
+\newcommand{\Ber}{\mathrm{Ber}}
+
+
+\newcommand{\gs}{{g^\ast}}

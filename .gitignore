@@ -1,0 +1,10 @@
+*.aux
+build/ConfidentialTransaction_Theory-blx.bib
+*.bbl
+*.blg
+*.log
+*.xml
+*.out
+*.gz
+*.toc
+.DS_Store
