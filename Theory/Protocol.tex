@@ -4,8 +4,9 @@
 \newcommand{\init}{\mathsf{init}}
 \newcommand{\issue}{\mathsf{issue}}
 \newcommand{\transfer}{\mathsf{transfer}}
+\newcommand{\audit}{\mathsf{audit}}
 \newcommand{\rollover}{\mathsf{rollover}}
-\newcommand{\destroy}{\mathsf{destroy}}
+\newcommand{\withraw}{\mathsf{withraw}}
 \newcommand{\history}{\mathsf{history}}
 \newcommand{\balance}{\mathsf{ActBalance}}
 \newcommand{\pendbalance}{\mathsf{PndBalance}}
@@ -83,7 +84,7 @@
 		\end{enumerate}
 
 		
-			\item[Destroy.]     Upon receiving $(\sid,\destroy,x)$ from  party $\Uc_i$ and \Cc,  party \Cc
+			\item[Withraw.]     Upon receiving $(\sid,\withraw,x)$ from  party $\Uc_i$ and \Cc,  party \Cc
 		
 		\begin{enumerate}
 			
@@ -93,7 +94,7 @@
 			\item $\balance_i \minuseq x$.
 			
 			
-			\item Set $\historylog \unioneq {(\sid,\destroy,i,x)}$
+			\item Set $\historylog \unioneq {(\sid,\withraw,i,x)}$
 			
 			
 		\end{enumerate}
@@ -102,6 +103,8 @@
 		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Pc_i$ and \Cc:  
 		
 		Send $(\historylog,\historylog_i)$ to  $\Pc_i$.	 
+		
+		\item[Audit.]      \Inote{Later}
 		
 	\end{description}
 
