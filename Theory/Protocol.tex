@@ -7,10 +7,13 @@
 \newcommand{\update}{\mathsf{update}}
 \newcommand{\history}{\mathsf{history}}
 \newcommand{\balance}{\mathsf{balance}}
+\newcommand{\heldbalance}{\mathcal{H}\mathsf{eldbalance}}
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
 \newcommand{\pluseq}{\mathrel{+}=}
 \newcommand{\minuseq}{\mathrel{-}=}
+\newcommand{\unioneq}{\mathrel{\cup}=}
+
 \newcommand{\fConfTran}{\MathAlgX{\cF_\sConfTran}}
 \newcommand{\pConfTran}{\MathAlgX{\Pi_\sConfTran}}
 
@@ -28,24 +31,24 @@
 	\begin{description}
 		\item[Init.] Upon receiving $\init$ from  all parties: 
 		\begin{enumerate}
-			\item  For each $i\in [n]$: set $\balance_i,\balance_i^\tempst \asn 0$.
+			\item  For each $i\in [n]$: set $\balance_i \asn 0$ and $\heldbalance_i \asn \emptyset$.
 			
 			\item Set $\historylog \asn \emptyset$.
 		\end{enumerate}
 		
-			\item[Issue.]   Upon receiving $(\sid,\issue,x,d)$ from  \Vc and \Ic:
+			\item[Issue.]   Upon receiving $(\sid,\issue,x,d)$ from  \Cc and \Ic:
 		\begin{enumerate}
 			
 			
 			\item \Assert{$x\in \N$ and $d\in [n]$}.
 			
-			\item $\balance_d^\tempst \pluseq x$.
+			\item $\heldbalance_d \unioneq { (\sid,\issue,x)}$.
 			
-			\item Set $\historylog \pluseq (\sid,\issue,x,d)$.
+			\item Set $\historylog \unioneq {(\sid,\issue,x,d)}$.
 		\end{enumerate}
 		
 		
-		\item[Transfer.]    On call  $(\sid,\transfer,d)$, by  \Cc and  $\Uc_s$, with  $\Uc_s$ holding private input $x$. 
+		\item[Transfer.]    Upon receiving  $(\sid,\transfer,d)$ from  \Cc and  $\Uc_s$, with  $\Uc_s$ using private input $x$. 
 		
 	
 		\begin{enumerate}
@@ -53,27 +56,31 @@
 			
 			\item $\balance_s \minuseq x$.
 			
-			\item $\balance^\tempst_d \pluseq x$.
+			\item   $\heldbalance_d \unioneq (\sid,\transfer,s,x)$.
 			
-			\item Set $\historylog \pluseq (\sid,\transfer,s,d)$
+			\item Set $\historylog \unioneq {(\sid,\transfer,s,d)}$
 			
 		\end{enumerate}
 		
-		\item[Update.]     Upon receiving $(\sid,\update)$ from  party $\Pc_i$ and \Cc:  \Cc
+		\item[Update.]     Upon receiving $(\sid,\update)$ from  party $\Pc_i$ and \Cc,  party \Cc
 		
 		\begin{enumerate}
-			\item Set $\balance_i  \pluseq \balance^\tempst_i$.
 			
-			\item Set $\balance^\tempst_i  \asn 0$.
 			
-				\item Set $\historylog \pluseq (\sid,\update,i)$
+			\item Set $\balance_i  \pluseq \sum_{(\cdot,x) \in \heldbalance_i} x$.
+			
+			\item Set $\heldbalance_i  \asn \emptyset$.
+			
+			\item Set $\historylog \unioneq (\sid,\update,i)$
 			
 			
 		\end{enumerate}
 
 		
 		
-		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Pc_i$ and \Cc:  Send $\historylog$ to  $\Pc_i$.	 
+		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Pc_i$ and \Cc:  
+		
+		Send $(\historylog,\heldbalance_i)$ to  $\Pc_i$.	 
 		
 	\end{description}
 
@@ -122,7 +129,7 @@
 				
 				\item \Cc: 
 				\begin{enumerate}
-					\item 	For  all $i\in [n]$: Set $B_i,B_i^\tempst \getsr \Enc_{pk_i}(0)$.
+					\item 	For  all $i\in [n]$: Set $B_i\getsr \Enc_{pk_i}(0)$ and $H_i\asn \emptyset$.
 					
 					\item    Set $\historylog \asn \emptyset$.
 				\end{enumerate}								
@@ -134,7 +141,7 @@
 	\item[Participating parties.] \Ic and \Cc.
 	
 	
-	\item[\Cc's input.] $x\in \N$ and $i\in [n]$.
+	\item[\Cc's input.] $\sid$, $x\in \N$ and $i\in [n]$.
 	
 	\item Operation:
 	
@@ -143,9 +150,9 @@
 		
 		\item   \Ic: Send $(x,i)$ to \Cc.
 		
-		\item \Cc:  Set $B_i^\tempst \pluseq \Enc_{pk_i}(x)$.
+		\item \Cc:  Set $H_i \unioneq \set{\sid,\issue,(\Enc_{pk_i}(x))}$.
 	
-	 \item \Cc:  Set $\historylog \pluseq (\sid,\issue,x,i)$.
+	 \item \Cc:  Set $\historylog \unioneq (\sid,\issue,x,i)$.
 		
 	\end{enumerate}
 \end{protocol}
@@ -183,9 +190,9 @@
 			
 			\item  $\Vc^\largest(pk_s,pk_d,B_i,X)$.
 		
-		     \item  Set $B_d^\tempst \pluseq X$. 
+		     \item  Set $H_d \unioneq  (\sid,s,X)$. 
 		     
-		     \item Set $\historylog \pluseq (\sid,\transfer,s,d)$.
+		     \item Set $\historylog \unioneq (\sid,\transfer,s,d)$.
 		\end{enumerate}
 		
 	\end{enumerate}
@@ -198,12 +205,13 @@
 	\item Operation: \Cc 
 	
 	\begin{enumerate}
-	\item Set $B_i  \pluseq B_i^\tempst$. 
+	
+	\item $B_i  \pluseq \sum_{(\cdot,X) \in H_i} X$.
 	
 	
-	\item Set $B_i^\tempst \getsr \Enc_{pk_i}(0)$.
+	\item  $H_i \asn \emptyset$.
 	
-	\item Set $\historylog \pluseq (\sid,\update,i)$
+	\item  $\historylog \pluseq (\sid,\update,i)$
 	
 	
 \end{enumerate}
@@ -213,6 +221,6 @@
 \begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
 	\item[Participating parties.] $\Pc_i$ and \Cc.
 		
-	\item Operation: \Cc sends $\historylog$ to $\Pc_i$.
+	\item Operation: \Cc sends $(\historylog,H_i)$ to $\Pc_i$.
 	
 \end{protocol}
