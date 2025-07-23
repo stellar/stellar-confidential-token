@@ -5,3 +5,8 @@ We use calligraphic letters to denote sets, uppercase for random variables, and 
 Let $\N$ denote the set of natural numbers.  For $n\in \N$, let $[n] \eqdef \set{1,\ldots,n}$ and $(n) \eqdef \set{0,\ldots,n}$.  For a relation $\cR$, let $\cL(\cR)$ denote its underlying language, \ie  $\cL(\cR) \eqdef \set{x\colon \exists w \colon (x,w) \in \cR}$.    
 
 
+\subsection{Homomorphic Encryption}
+
+An homomorphic encryption is a triplet $(\KeyGen,\Enc,\Dec)$ of efficient algorithms, with the standard correctness and semantic security properties.  In addition, there is addition operation denote $+$ over any two (valid) ciphertexts  such that for any validly generated public key  $pk$ and valid ciphertexts $x_0,x_1$, it holds that  $\Enc_{sk}(x_0) + \Enc_{pk}(x_1)  \in \Supp(\Enc_{sk}(x_0+ x_1 \bmod q)$, where $q\in \N$ is efficiently determined by $pk$.
+
+\Inote{Do  we really need the homomorphic properties or only for the proofs?}
