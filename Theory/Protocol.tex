@@ -1,1 +1,218 @@
-\section{The Protocol}\label{sec:MainProtocol}
+\section{The Confidential Transaction Protocols}\label{sec:MainProtocol}
+
+
+\newcommand{\init}{\mathsf{init}}
+\newcommand{\issue}{\mathsf{issue}}
+\newcommand{\transfer}{\mathsf{transfer}}
+\newcommand{\update}{\mathsf{update}}
+\newcommand{\history}{\mathsf{history}}
+\newcommand{\balance}{\mathsf{balance}}
+\newcommand{\historylog}{\mathsf{log}}
+\newcommand{\sConfTran}{\mathsf{ConfTrans}}
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\minuseq}{\mathrel{-}=}
+\newcommand{\fConfTran}{\MathAlgX{\cF_\sConfTran}}
+\newcommand{\pConfTran}{\MathAlgX{\Pi_\sConfTran}}
+
+\newcommand{\largest}{{\mathsf{lrg}}}
+\newcommand{\posvst}{{\mathsf{pos}}}
+\newcommand{\tempst}{{\mathsf{tmp}}}
+\newcommand{\Assert}[1]{{Assert(#1)}}
+
+\subsection{The Ideal Functionality}\label{sec:MainProtocol:Ideal}
+
+\begin{functionality}[\fConfTran: Confidential transactions]\label{func:ConfidentialTransactions}~
+	
+	\item[Parties:]	Issuer \Ic, Chain \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+	
+	\begin{description}
+		\item[Init.] Upon receiving $\init$ from  all parties: 
+		\begin{enumerate}
+			\item  For each $i\in [n]$: set $\balance_i,\balance_i^\tempst \asn 0$.
+			
+			\item Set $\historylog \asn \emptyset$.
+		\end{enumerate}
+		
+			\item[Issue.]   Upon receiving $(\sid,\issue,x,d)$ from  \Vc and \Ic:
+		\begin{enumerate}
+			
+			
+			\item \Assert{$x\in \N$ and $d\in [n]$}.
+			
+			\item $\balance_d^\tempst \pluseq x$.
+			
+			\item Set $\historylog \pluseq (\sid,\issue,x,d)$.
+		\end{enumerate}
+		
+		
+		\item[Transfer.]    On call  $(\sid,\transfer,d)$, by  \Cc and  $\Uc_s$, with  $\Uc_s$ holding private input $x$. 
+		
+	
+		\begin{enumerate}
+			\item \Assert{$x\in \N$, $\balance_s  \ge x$ and $s,d \in [n]$}.
+			
+			\item $\balance_s \minuseq x$.
+			
+			\item $\balance^\tempst_d \pluseq x$.
+			
+			\item Set $\historylog \pluseq (\sid,\transfer,s,d)$
+			
+		\end{enumerate}
+		
+		\item[Update.]     Upon receiving $(\sid,\update)$ from  party $\Pc_i$ and \Cc:  \Cc
+		
+		\begin{enumerate}
+			\item Set $\balance_i  \pluseq \balance^\tempst_i$.
+			
+			\item Set $\balance^\tempst_i  \asn 0$.
+			
+				\item Set $\historylog \pluseq (\sid,\update,i)$
+			
+			
+		\end{enumerate}
+
+		
+		
+		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Pc_i$ and \Cc:  Send $\historylog$ to  $\Pc_i$.	 
+		
+	\end{description}
+
+\end{functionality}
+
+\Inote{TODO
+\begin{enumerate}
+	
+	\item 	Should the receiver be part of the call in which it gets money. 
+	
+	\item  Auditor?
+\end{enumerate}
+}
+\subsection{The Protocol}\label{sec:MainProtocol:Protocol}
+
+\newcommand{\KeyGen}{\MathAlgX{KeyGen}}
+
+\begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
+
+\item[Parties:] Issuer \Ic, Chain \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+
+\item[Paramters:]	$1^\ckappa$.
+
+\item[Subprotocols:]  See below.
+\end{protocol}
+
+
+\begin{protocol}[\pConfTran.Init]~\label{prot:ConfidentialTransactions:Init}
+	\item[Participating parties.] All parties.
+			
+			\item Operation:
+			
+			
+			\begin{enumerate}
+				
+				\item   $\Pc_i$, for  all $i\in [n]$,
+				\begin{enumerate}
+					\item Set $(pk_i,sk_i) \getsr \KeyGen(1^\ckappa)$.
+					
+					\item Store $sk_i$.
+					
+					\item Send $pk_i$ to all parties.
+				\end{enumerate}
+				
+				\item All parties  store $\set{pk_i}_{i\in [n]}$.
+				
+				\item \Cc: 
+				\begin{enumerate}
+					\item 	For  all $i\in [n]$: Set $B_i,B_i^\tempst \getsr \Enc_{pk_i}(0)$.
+					
+					\item    Set $\historylog \asn \emptyset$.
+				\end{enumerate}								
+			\end{enumerate}
+\end{protocol}
+
+
+\begin{protocol}[\pConfTran.Issue]~\label{prot:ConfidentialTransactions:Issue}
+	\item[Participating parties.] \Ic and \Cc.
+	
+	
+	\item[\Cc's input.] $x\in \N$ and $i\in [n]$.
+	
+	\item Operation:
+	
+	
+	\begin{enumerate}
+		
+		\item   \Ic: Send $(x,i)$ to \Cc.
+		
+		\item \Cc:  Set $B_i^\tempst \pluseq \Enc_{pk_i}(x)$.
+	
+	 \item \Cc:  Set $\historylog \pluseq (\sid,\issue,x,i)$.
+		
+	\end{enumerate}
+\end{protocol}
+
+
+\begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
+	\item[Participating parties.] $\Pc_s$ and \Cc.
+	
+	\item[Proof's systems:] $\Pi^\posvst.\Pi^\largest$
+	\item[Common input.] $d \in [n]$.
+	
+	
+	\item[$\Pc_s$'s private  input.] $x \in \N$.
+	
+	\item Operation: 
+	
+	\begin{enumerate}
+		\item  $\Pc_s$: 
+		
+		\begin{enumerate}
+			\item $X \getsr \Enc_{pk_d}(x;r)$ for $r \getsr \zo^\ckappa$.
+			
+			\item $\pi^\posvst \getsr \Pc^\largest((pk_d,X),(x,r))$.
+			
+			\item $\pi^\largest \getsr \Pc^\largest((pk_s,pk_d,B_i,X),(sk_s,x,r))$.
+			
+			\item Send $(X,\pi^\posvst,\pi^\largest)$ to \Cc.
+		\end{enumerate}
+		
+		
+		\item  \Cc: 
+		
+		\begin{enumerate}
+			\item  $\Vc^\posvst(pk_d,X)$.
+			
+			\item  $\Vc^\largest(pk_s,pk_d,B_i,X)$.
+		
+		     \item  Set $B_d^\tempst \pluseq X$. 
+		     
+		     \item Set $\historylog \pluseq (\sid,\transfer,s,d)$.
+		\end{enumerate}
+		
+	\end{enumerate}
+	
+\end{protocol}
+
+\begin{protocol}[\pConfTran.Update]~\label{prot:ConfidentialTransactions:Update}
+	\item[Participating parties.] $\Pc_i$ and \Cc.
+	
+	\item Operation: \Cc 
+	
+	\begin{enumerate}
+	\item Set $B_i  \pluseq B_i^\tempst$. 
+	
+	
+	\item Set $B_i^\tempst \getsr \Enc_{pk_i}(0)$.
+	
+	\item Set $\historylog \pluseq (\sid,\update,i)$
+	
+	
+\end{enumerate}
+	
+\end{protocol}
+
+\begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
+	\item[Participating parties.] $\Pc_i$ and \Cc.
+		
+	\item Operation: \Cc sends $\historylog$ to $\Pc_i$.
+	
+\end{protocol}

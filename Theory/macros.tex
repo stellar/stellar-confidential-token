@@ -79,11 +79,21 @@
 
 \newcommand{\sdotfill}{\textcolor[rgb]{0.8,0.8,0.8}{\dotfill}} %change to \cdotfill later
 
-\newenvironment{protocol}{\begin{proto}}{\vspace{-\topsep}~\newline\sdotfill\end{proto}}
+%\newenvironment{protocol}{\begin{proto}}{\vspace{-\topsep}~\newline\sdotfill\end{proto}}
+
+\newenvironment{protocol}
+{\begin{mymdframed}\begin{proto}}
+		{\end{proto}\end{mymdframed}}
+
+
 %\newenvironment{protocol}{\begin{mybox} \vspace{-.1in}\begin{proto}}{ \vspace{-.1in} \end{proto}\end{mybox}}
 
-\newenvironment{functionality}{\begin{funct}}{\vspace{-\topsep}\sdotfill\end{funct}}
+%\newenvironment{functionality}{\begin{funct}}{\vspace{-\topsep}\sdotfill\end{funct}}
 
+\newenvironment{functionality}
+{\begin{mymdframed}\begin{funct}}
+		{\end{funct}\end{mymdframed}}
+	
 %\newenvironment{functionality}{\begin{mybox} \vspace{-.1in}\begin{funct}}{ \vspace{-.1in} \end{funct}\end{mybox}}
 
 %\newenvironment{algorithm}
