@@ -244,6 +244,12 @@
 	
 	%%%%%%%%%%%%%%%%%%% functions definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
+	\newcommand{\Enc}{\MathAlgX{Enc}}
+\newcommand{\Dec}{\MathAlgX{Dec}}
+%\newcommand{\Gen}{\MathAlgX{Gen}}
+\newcommand{\KeyGen}{\MathAlgX{KeyGen}}
+
+%\newcommand{\GenE}{\MathAlgX{ExtdGen}}
 	
 	
 	% need to replace \operatorname with \newfunc
@@ -253,26 +259,17 @@
 	\newcommand{\loglog}{\operatorname{loglog}}
 	\newcommand{\logloglog}{\operatorname{logloglog}}
 	
-	\newcommand{\GF}{\operatorname{GF}}
-	\newcommand{\Exp}{\operatorname*{E}}
-	\newcommand{\Var}{\operatorname{Var}}
-	\newcommand{\Cov}{\operatorname{Cov}}
+
 	\newcommand{\Hall}{\operatorname{H}}
 	\newcommand{\Hmin}{\operatorname{H_{\infty}}}
 	\newcommand{\HRen}{\operatorname{H_2}}
 	\newcommand{\Ext}{\MathAlgX{Ext}}
 	\newcommand{\Con}{\operatorname{Con}}
 	\newcommand{\Samp}{\operatorname{Smp}}
-	\newcommand{\Enc}{\operatorname{Enc}}
-	\newcommand{\Dec}{\operatorname{Dec}}
-	\newcommand{\Gen}{\MathAlgX{Gen}}
-	\newcommand{\GenE}{\MathAlgX{ExtdGen}}
+
 	\newcommand{\Time}{\operatorname{time}}
 	\newcommand{\negl}{\operatorname{neg}}
-	\newcommand{\Diam}{\operatorname{Diam}}
-	\newcommand{\Cut}{\operatorname{Cut}}
 	\newcommand{\Supp}{\operatorname{Supp}}
-	\newcommand{\GL}{\operatorname{GL}}
 	\newcommand{\maj}{\operatorname*{maj}}
 	\newcommand{\argmax}{\operatorname*{argmax}}
 	\newcommand{\argmin}{\operatorname*{argmin}}
@@ -877,6 +874,9 @@
 
 \newcommand{\ZKPOK}{{\mathsf{ZK\mhyphen POK}}}
 \newcommand{\fZKPOK}[1]{\MathAlgX{\cF^\ZKPOK_{#1}}}
+\newcommand{\piZKPOK}[1]{\MathAlgX{\Pi^\ZKPOK_{#1}}}
+\newcommand{\vZKPOK}[1]{\MathAlgX{\Vc^\ZKPOK_{#1}}}
+\newcommand{\pZKPOK}[1]{\MathAlgX{\Pc^\ZKPOK_{#1}}}
 
 
 
@@ -956,10 +956,12 @@
 \newcommand{\Ber}{\mathrm{Ber}}
 
 
-\newcommand{\gs}{{g^\ast}}
 
 
 \newcommand{\Assert}[1]{{Assert(#1)}}
 
 
-\newcommand{\KeyGen}{\MathAlgX{KeyGen}}
+
+
+\mathchardef\mhyphen="2D
+%\newcommand{\fZKPOK}[1]{\MathAlgX{\cF_{\sf zk\mhyphen pok}^{#1}}}

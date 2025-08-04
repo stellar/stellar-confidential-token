@@ -8,7 +8,7 @@
 \newcommand{\rollover}{\mathsf{rollover}}
 \newcommand{\withraw}{\mathsf{withraw}}
 \newcommand{\history}{\mathsf{history}}
-\newcommand{\balance}{\mathsf{ActBalance}}
+\newcommand{\balance}{\mathsf{AvlBlance}}
 \newcommand{\pendbalance}{\mathsf{PndBalance}}
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
@@ -25,13 +25,16 @@
 
 \newcommand{\Issuer}{{\MathAlgX{Iss}}}
 \newcommand{\Chain}{{\MathAlgX{C}}}
+\newcommand{\pnum}{p_{\mathsf{num}} }
+\newcommand{\psize}{p_{\mathsf{size}} }
+
 
 \subsection{The Ideal Functionality}\label{sec:MainProtocol:Ideal}
 
 
 \begin{functionality}[\fConfTran: Confidential transactions]\label{func:ConfidentialTransactions}~
 	
-	\item[Parties:]	Issuer \Ic, Chain \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+	\item[Parties:]	Issuer \Ic, chain holder  \Cc and users  $\Uc_1, \ldots,\Uc_n$.
 	
 	\begin{description}
 		\item[Init.] Upon receiving $\init$ from  all parties: 
@@ -112,42 +115,75 @@
 
 
 \subsection{The Protocol}\label{sec:MainProtocol:Protocol}
+Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$.  We require that $\Dec_{sk}(A)$ outputs   $(a;r)$ such that $A = \Enc(a;r)$.
 
 
 \begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
 
+	\item[Parameters:] $\pnum,\psize \in \N$.
+	
 \item[Parties:] Issuer \Ic, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
 
-\item[Paramters:]	$1^\ckappa$.
 
 \item[Subprotocols:]  See below.
 \end{protocol}
 
 
+\newcommand{\rKeyGen}{{\cR_{\sf KeyGen}}}
+
+\newcommand{\rKeyGenDef}
+{
+	 \set{(pk,w))\colon \KeyGen(w)= (\cdot,pk)}
+}
+
+
+We use the   of  key-generation relation  
+$$\rKeyGen =\rKeyGenDef.$$
+
 \begin{protocol}[\pConfTran.Init]~\label{prot:ConfidentialTransactions:Init}
+	
+
 	\item[Participating parties.] All parties.
 			
-			\item Operation:
+			
+	\item[Protocols:]   \piZKPOK{\rKeyGen}. 
+	
+	
+	\item[Algorithms:]    \KeyGen.
+	
+			
+			\item[Operation:]~
 			
 			
 			\begin{enumerate}
 				
-				\item   $\Pc_i$, for  all $i\in [n]$,
+				\item   $\Pc_i$, for  all $i\in [n]$:
 				\begin{enumerate}
-					\item Set $(pk_i,sk_i) \getsr \KeyGen(1^\ckappa)$.
+					\item Set $(pk_i,sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
 					
 					\item Store $sk_i$.
 					
-					\item Send $pk_i$ to all parties.
+					\item Let $\pi_i \getsr \pZKPOK{\rKeyGen}(pk_i,r_i)$.
+					
+					\item Send $(pk_i,\pi_i)$ to \Cc.
+					
+					
 				\end{enumerate}
 				
-				\item All parties  store $\set{pk_i}_{i\in [n]}$.
+				\item \Cc:
+				\begin{enumerate}
+					
+					\item Call $\sset{ \vZKPOK{\rKeyGen}(pk_i,\pi_i)}_{i\in [n]}$. Abort and publish $i$, if the \ith  proof is not verified. 
+										
+					\item Store $\set{pk_i}_{i\in [n]}$.
+				\end{enumerate}
+				
 				
 				\item \Cc: 
 				\begin{enumerate}
-					\item 	For  all $i\in [n]$: Set $B_i\getsr \Enc_{pk_i}(0)$ and $H_i\asn \emptyset$.
+					\item 	Broadcast $\sset{p_i \asn 0, P_i\getsr \Enc_{pk_i}(0),B_i\asn \emptyset}_{i\in [n]}$.
 					
-					\item    Set $\historylog \asn \emptyset$.
+					\item    Broadcast $\historylog \asn \emptyset$.
 				\end{enumerate}								
 			\end{enumerate}
 \end{protocol}
@@ -166,20 +202,63 @@
 		
 		\item   \Ic: Send $(x,i)$ to \Cc.
 		
-		\item \Cc:  Set $H_i \unioneq \set{\sid,\issue,(\Enc_{pk_i}(x))}$.
-	
-	 \item \Cc:  Set $\historylog \unioneq (\sid,\issue,x,i)$.
+		\item \Cc:  
+		\begin{enumerate}
+			\item \Assert{$x\in [\psize]$ and $p_i  \le \pnum$}
+			
+			\item Set $P_i \pluseq \Enc_{pk_i}(x))$.
+				
+		\item Publish $\historylog \unioneq (\sid,\issue,x,i,P_i)$.
+				 	
+		\end{enumerate}
 		
 	\end{enumerate}
 \end{protocol}
 
 
+\newcommand{\RPs}{{\sf rp}}
+\newcommand{\rRP}{\cR_\RPs}
+
+\newcommand{\rRPDef}
+{
+	\set{((pk,A),(a,r))\colon \Enc_{pk}(a;r)= A \sland a\in [\psize]}
+}
+
+
+\newcommand{\Eqs}{{\sf eq}}
+\newcommand{\rEQ}{\cR_\Eqs}
+
+\newcommand{\rEQDef}
+{
+	\set{((pk_0,pk_1,A_0,A_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{pk_i}(a;r_i)= A_i}
+}
+
+\newcommand{\Lrgs}{{\sf lrg}}
+\newcommand{\rLrg}{\cR_\Lrgs}
+
+\newcommand{\rLrgDef}
+{
+	\set{((pk,A_0,A_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{pk}(a_i;r_i)= A_i} \sland a_1 -a_0 \in [q] 
+}
+
+We use proofs for the   following  relations  
+$$\rRP =\rRPDef$$
+
+$$\rEQ =\rEQDef$$
+
+
+$$\rLrg =\rLrgDef$$
+
 \begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
 	\item[Participating parties.] $\Pc_s$ and \Cc.
 	
-	\item[Proof's systems:] $\Pi^\posvst.\Pi^\largest$
-	\item[Common input.] $d \in [n]$.
+\item[Protocols:]   \piZKPOK{\rRP}. 
+
+
+\item[Algorithms:]    \Dec.
+
 	
+	\item[Cpmmon input:] $d\in [n]$.
 	
 	\item[$\Pc_s$'s private  input.] $x \in \N$.
 	
@@ -189,31 +268,50 @@
 		\item  $\Pc_s$: 
 		
 		\begin{enumerate}
-			\item $X \getsr \Enc_{pk_d}(x;r)$ for $r \getsr \zo^\ckappa$.
+			\item $X_d \getsr \Enc_{pk_d}(x;r)$ for $r^d \getsr \cD$.
 			
-			\item $\pi^\posvst \getsr \Pc^\largest((pk_d,X),(x,r))$.
+		
+			\item $\pi^\RPs \getsr \pZKPOK{\rRP}((pk_d,X_s,\psize),(x,r))$.
 			
-			\item $\pi^\largest \getsr \Pc^\largest((pk_s,pk_d,B_i,X),(sk_s,x,r))$.
 			
-			\item Send $(X,\pi^\posvst,\pi^\largest)$ to \Cc.
+			\item $X_s \getsr \Enc_{pk_s}(x;r)$ for $r^s \getsr \cD$.
+			
+			
+			
+			\item $\pi^\Eqs \getsr \pZKPOK{\rEQ}((pk_s,pk_d,X_s,X_s),(x,r_s,r_d))$.
+			
+			
+			\item $(b,r^b) \asn \Dec_{sk_s}(B_s)$.
+			
+			
+			\item $\pi^\Lrgs \getsr \pZKPOK{\rLrg}((pk_s,X_s,B_s),(x,r_s,r_b))$.
+			
+			
+			\item Send $(X_s,X_d,\pi^\RPs,\pi^\Eqs,\pi^\Lrgs)$ to \Cc.
 		\end{enumerate}
 		
 		
 		\item  \Cc: 
 		
 		\begin{enumerate}
-			\item  $\Vc^\posvst(pk_d,X)$.
+			\item  Call $\vZKPOK{\rRP}((pk_d,X_s,\psize),\pi^\RPs)$, $\vZKPOK{\Eqs}((pk_s,pk_d,X_s,X_s),\pi^\RPs)$ and $\vZKPOK{\rLrg}((pk_s,X_s,B_s),\pi^\RPs)$.
 			
-			\item  $\Vc^\largest(pk_s,pk_d,B_i,X)$.
 		
-		     \item  Set $H_d \unioneq  (\sid,s,X)$. 
+		     \item  Set $U_s \minuseq X_s$. 
+              
+              \item  Set $P_d \pluseq X_d$. 
+              
+              		     
+		     \item Publish  $\historylog \unioneq (\sid,\transfer,s,d,U_s,P_d)$.
 		     
-		     \item Set $\historylog \unioneq (\sid,\transfer,s,d)$.
 		\end{enumerate}
 		
 	\end{enumerate}
 	
 \end{protocol}
+
+
+
 
 \begin{protocol}[\pConfTran.Update]~\label{prot:ConfidentialTransactions:Update}
 	\item[Participating parties.] $\Pc_i$ and \Cc.
