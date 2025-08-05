@@ -8,8 +8,8 @@
 \newcommand{\rollover}{\mathsf{rollover}}
 \newcommand{\withraw}{\mathsf{withraw}}
 \newcommand{\history}{\mathsf{history}}
-\newcommand{\balance}{\mathsf{AvlBlance}}
-\newcommand{\pendbalance}{\mathsf{PndBalance}}
+\newcommand{\balance}{\mathsf{avlBlance}}
+\newcommand{\pendbalance}{\mathsf{pndBalance}}
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
 \newcommand{\pluseq}{\mathrel{+}=}
@@ -115,7 +115,7 @@
 
 
 \subsection{The Protocol}\label{sec:MainProtocol:Protocol}
-Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$.  We require that $\Dec_{sk}(A)$ outputs   $(a;r)$ such that $A = \Enc(a;r)$.
+Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$.  We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
 
 
 \begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
@@ -181,7 +181,7 @@ $$\rKeyGen =\rKeyGenDef.$$
 				
 				\item \Cc: 
 				\begin{enumerate}
-					\item 	Broadcast $\sset{p_i \asn 0, P_i\getsr \Enc_{pk_i}(0),B_i\asn \emptyset}_{i\in [n]}$.
+					\item 	Broadcast $\sset{\oP_i \asn 0, \oP_i\getsr \Enc_{pk_i}(0),\oB_i\asn \emptyset}_{i\in [n]}$.
 					
 					\item    Broadcast $\historylog \asn \emptyset$.
 				\end{enumerate}								
@@ -204,11 +204,11 @@ $$\rKeyGen =\rKeyGenDef.$$
 		
 		\item \Cc:  
 		\begin{enumerate}
-			\item \Assert{$x\in [\psize]$ and $p_i  \le \pnum$}
+			\item \Assert{$x\in [\psize]$ and $\oP_i  \le \pnum$}
 			
-			\item Set $P_i \pluseq \Enc_{pk_i}(x))$.
+			\item Set $\oP_i \pluseq \Enc_{pk_i}(x))$.
 				
-		\item Publish $\historylog \unioneq (\sid,\issue,x,i,P_i)$.
+		\item Publish $\historylog \unioneq (\sid,\issue,x,i,\oP_i)$.
 				 	
 		\end{enumerate}
 		
@@ -283,10 +283,10 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 			\item $\pi^\Eqs \getsr \pZKPOK{\rEQ}((pk_s,pk_d,X_s,X_s),(x,r_s,r_d))$.
 			
 			
-			\item $(b,r^b) \asn \Dec_{sk_s}(B_s)$.
+			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
 			
 			
-			\item $\pi^\Lrgs \getsr \pZKPOK{\rLrg}((pk_s,X_s,B_s),(x,r_s,r_b))$.
+			\item $\pi^\Lrgs \getsr \pZKPOK{\rLrg}((pk_s,X_s,\oB_s),(x,r_s,r_b))$.
 			
 			
 			\item Send $(X_s,X_d,\pi^\RPs,\pi^\Eqs,\pi^\Lrgs)$ to \Cc.
@@ -298,15 +298,15 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 		\begin{enumerate}
 			\item  Call $\vZKPOK{\rRP}((pk_d,X_s,\psize),\pi^\RPs)$,
 			
-			 $\vZKPOK{\Eqs}((pk_s,pk_d,X_s,X_s),\pi^\RPs)$ and $\vZKPOK{\rLrg}((pk_s,X_s,B_s),\pi^\RPs)$.
+			 $\vZKPOK{\Eqs}((pk_s,pk_d,X_s,X_s),\pi^\RPs)$ and $\vZKPOK{\rLrg}((pk_s,X_s,\oB_s),\pi^\RPs)$.
 			
 		
 		     \item  Set $U_s \minuseq X_s$. 
               
-              \item  Set $P_d \pluseq X_d$. 
+              \item  Set $\oP_d \pluseq X_d$. 
               
               		     
-		     \item Publish  $\historylog \unioneq (\sid,\transfer,s,d,U_s,P_d)$.
+		     \item Publish  $\historylog \unioneq (\sid,\transfer,s,d,U_s,\oP_d)$.
 		     
 		\end{enumerate}
 		
@@ -326,12 +326,12 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 	
 	\begin{enumerate}
 	
-	\item $B_i  \pluseq \P_i$.
+	\item $\oB_i  \pluseq \\oP_i$.
 	
 	
-	\item  $P_i \minuseq P_i$.
+	\item  $\oP_i \minuseq \oP_i$.
 	
-	\item  $\historylog \pluseq (\sid,\rollover,i,B_i,P_i)$
+	\item  $\historylog \pluseq (\sid,\rollover,i,\oB_i,\oP_i)$
 	
 	
 \end{enumerate}

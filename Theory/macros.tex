@@ -30,7 +30,7 @@
 %%% overline letters
 \def\mydefo#1{\expandafter\def\csname o#1\endcsname{\overline{#1}}}
 \def\mydefallo#1{\ifx#1\mydefallo\else\mydefo#1\expandafter\mydefallo\fi}
-\mydefallo ABCDEFGHIJKLMNOPQRSTUVWXYZx\mydefallo
+\mydefallo eABCDEFGHIJKLMNOPQRSTUVWXYZx\mydefallo
 
 
 %%% mathbf letters
@@ -42,7 +42,7 @@
 %%% tilde letters
 \def\mydeftilde#1{\expandafter\def\csname t#1\endcsname{\widetilde{#1}}}
 \def\mydefalltilde#1{\ifx#1\mydefalltilde\else\mydeftilde#1\expandafter\mydefalltilde\fi}
-\mydefalltilde abijkqrftABCHGDSXYKRWTQt\mydefalltilde
+\mydefalltilde abijkqrftABCHGDSXYKMRWTQt\mydefalltilde
 
 
 %%% hat letters

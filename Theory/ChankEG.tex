@@ -1,3 +1,78 @@
 \section{The ElGammal-Based  Additive Homomorphic Encryption }\label{sec:ChanksEG}
+In this section we define the (efficient)  additive homomorphic encryption scheme based on ElGammal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
 
-ee
+
+The idea is to bootstrap the so-called   \textit{ElGammal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGammal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as
+
+$\sum_{i \in (t/c)}   m_i \cdot 2^{i c}$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $m_i$. To decry $\oM= (M_0,\ldots,M_{t/c})$, one  
+\begin{enumerate}
+	\item Decrypt   each $M_i$ to get $m_i  \cdot G$.
+	\item Use brute force to find $m$.\footnote{One can use standard   processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
+	
+	\item Reconstruct $m$.
+\end{enumerate}
+
+
+
+\subsection{ElGammal In-the-Exponent Scheme}\label{sec:ChanksEG:EG}
+\newcommand{\EgKG}{\MathAlgX{EgGen}}
+\newcommand{\EgEnc}{\MathAlgX{EgEnc}}
+\newcommand{\EgDec}{\MathAlgX{EgDec}}
+
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGammal in-the-exponent scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
+\begin{description}
+	\item[Key generation:] $\EgKG()$ samples $e\getsr \Z_q$, and outputs $(e,e\cdot G)$.
+	
+	\item[Encryiption:] $\EgEnc_E(m)$  samples $e\getsr \Z_q$, and outputs  $\tM \asn (r\cdot G, r\cdot E + m \cdot G)$
+	
+	
+		\item[Decription:] $\EgDec_e(\tM)$,   
+		\begin{enumerate}
+			\item 	Let $M \asn \tM_2 - e\cdot \tM_2$.
+			
+			\item Find (using brute force) $m$ so that $m\cdot G = M$.
+			
+			\item Output $m$.
+		\end{enumerate}
+	\end{description}
+	
+	
+\subsection{The Scheme}\label{sec:ChanksEG:EGScheme}
+In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The encryption scheme $(\KeyGen,\Enc,\Dec)$ is defined as follows:
+
+\begin{description}
+	\item[Key generation:] $\KeyGen()$ 
+	\begin{enumerate}
+		\item For each $i\in (\ell)$:	sample $(e_i,E_i) \getsr \EgKG()$.
+		
+		\item Output $(\oe \asn (e_0,\ldots,e_{\ell-1}),\oE \asn (E_0,\ldots,R_{\ell-1})$
+	\end{enumerate}
+
+	
+	\item[Encryiption:] $\Enc_{\oE}(m)$
+	
+	\begin{enumerate}
+		\item Compute $m_0,\ldots,m_{\ell-1}$ do that $m =  \sum_{i \in (\ell)}   m_i \cdot 2^{i c}$.
+		\item For each $i\in (\ell)$: let $\tM_i \getsr \EgEnc_{\oE_i}(m_i)$.
+		
+		\item Output $\oM \asn (\tM_0,\ldots, \tM_{\ell-1})$.
+		
+	\end{enumerate}
+	 
+	\item[Decription:] $\EgDec_{\oe}(\oM)$   
+	\begin{enumerate}
+		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_{\oe_i}(\oM_i)$.
+		
+		\item Let  $m \asn \sum_{i \in (\ell)}   m_i \cdot 2^{i c}$.
+		
+		\item Output $m$.
+	\end{enumerate}
+\end{description}
+
+
+
+\subsection{Normalization}\label{sec:ChanksEG:Normalization}
+
+\subsection{Proofs}\label{sec:ChanksEG:Proofs}
+
+\Inote{TODO}.
