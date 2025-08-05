@@ -155,8 +155,11 @@ Throughout, we fix a security parameter $\kappa$ and omit is from the notation. 
 }
 
 
-We use the   of  key-generation relation  
-$$\rKeyGen =\rKeyGenDef.$$
+We use POK for the relation:
+\begin{description}
+	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.
+\end{description}
+
 
 \begin{protocol}[\pConfTran.Init]~\label{prot:ConfidentialTransactions:Init}
 	
@@ -249,7 +252,7 @@ $$\rKeyGen =\rKeyGenDef.$$
 
 \newcommand{\rEQDef}
 {
-	\set{((pk_0,pk_1,A_0,A_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{pk_i}(a;r_i)= A_i}
+	\set{((pk^0,pk^1,A^0,A^1),(a,r^0,r^1))\colon \forall i\in \zo \; \Enc_{pk^i}(a;r^i)= A^i}
 }
 
 \newcommand{\Lrgs}{{\sf lrger}}
@@ -257,23 +260,26 @@ $$\rKeyGen =\rKeyGenDef.$$
 
 \newcommand{\rLrgDef}
 {
-	\set{((pk,A_0,A_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \Enc_{pk}(a_i;r_i)= A_i \sland a_1 -a_0 \in [q]} 
+	\set{((pk,A^0,A^1),(a^0,r^0,a^1,r^1))\colon \forall i\in \zo \; \Enc_{pk}(a^i;r^i)= A^i \sland a^1 -a^0 \in [q]} 
 }
 
-We use proofs for the   following  relations  
-$$\rRP =\rRPDef$$
-I.e., encryption of values in $[\psize]$.
-$$\rEQ =\rEQDef$$
-I.e., encryptions of the same pair under different public keys.
+We use proof and POK  for the   following  relations:
+
+\begin{description}
+	\item[In range.] $\rRP =\rRPDef$, \ie  encryption of values in $[\psize]$.
+	
+	\item[Equality.] $\rEQ =\rEQDef$, \ie  encryptions of the same pair under different public keys.
+	
+	\item[Larger than.] $\rLrg =\rLrgDef$, \ie encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
+\end{description}
 
 
-$$\rLrg =\rLrgDef$$
-I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
+
 
 \begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
 	\item[Participating parties:] $\Pc_s$ and \Cc.
 	
-\item[Proofs:]   \piZKPOK{\rRP},\pZKPOK{\rEQ},\pZKPOK{\rLrg}
+\item[Proofs:]   \piZK{\rRP},\pZK{\rEQ},\pZK{\rLrg}
 
 
 \item[Algorithms:]    \Dec.
@@ -292,20 +298,20 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 			\item $X_d \getsr \Enc_{pk_d}(x;r)$ for $r^d \getsr \cD$.
 			
 		
-			\item $\pi^\RPs \getsr \pZKPOK{\rRP}((pk_d,X_s,\psize),(x,r))$.
+			\item $\pi^\RPs \getsr \pZK{\rRP}((pk_d,X_s,\psize),(x,r))$.
 			
 			
 			\item $X_s \getsr \Enc_{pk_s}(x;r)$ for $r^s \getsr \cD$.
 			
 			
 			
-			\item $\pi^\Eqs \getsr \pZKPOK{\rEQ}((pk_s,pk_d,X_s,X_s),(x,r_s,r_d))$.
+			\item $\pi^\Eqs \getsr \pZK{\rEQ}((pk_s,pk_d,X_s,X_s),(x,r_s,r_d))$.
 			
 			
 			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
 			
 			
-			\item $\pi^\Lrgs \getsr \pZKPOK{\rLrg}((pk_s,X_s,\oB_s),(x,r_s,r_b))$.
+			\item $\pi^\Lrgs \getsr \pZK{\rLrg}((pk_s,X_s,\oB_s),(x,r_s,r_b))$.
 			
 			
 			\item Send $(X_s,X_d,\pi^\RPs,\pi^\Eqs,\pi^\Lrgs)$ to \Cc.

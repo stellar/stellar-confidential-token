@@ -4,7 +4,7 @@ In this section we define the (efficient)  additive homomorphic encryption schem
 
 The idea is to bootstrap the so-called   \textit{ElGammal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGammal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as
 
-$\sum_{i \in (t/c)}   m_i \cdot 2^{i c}$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $m_i$. To decry $\oM= (M_0,\ldots,M_{t/c})$, one  
+$\sum_{i \in (t/c)}   2^{i c} \cdot m_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $m_i$. To decry $\oM= (M_0,\ldots,M_{t/c})$, one  
 \begin{enumerate}
 	\item Decrypt   each $M_i$ to get $m_i  \cdot G$.
 	\item Use brute force to find $m$.\footnote{One can use standard   processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
@@ -41,29 +41,23 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The encryption scheme $(\KeyGen,\Enc,\Dec)$ is defined as follows:
 
 \begin{description}
-	\item[Key generation:] $\KeyGen()$ 
-	\begin{enumerate}
-		\item For each $i\in (\ell)$:	sample $(e_i,E_i) \getsr \EgKG()$.
-		
-		\item Output $(\oe \asn (e_0,\ldots,e_{\ell-1}),\oE \asn (E_0,\ldots,R_{\ell-1})$
-	\end{enumerate}
-
+	\item[Key generation:] $\KeyGen()$ : act as $\EgKG()$.
 	
-	\item[Encryiption:] $\Enc_{\oE}(m)$
+	\item[Encryiption:] $\Enc_\pk(m)$
 	
 	\begin{enumerate}
-		\item Compute $m_0,\ldots,m_{\ell-1}$ do that $m =  \sum_{i \in (\ell)}   m_i \cdot 2^{i c}$.
-		\item For each $i\in (\ell)$: let $\tM_i \getsr \EgEnc_{\oE_i}(m_i)$.
+		\item Compute $m_0,\ldots,m_{\ell-1}$ do that $m =  \sum_{i \in (\ell)}    2^{i c} \cdot m_i $.
+		\item For each $i\in (\ell)$: let $\tM_i \getsr \EgEnc_\pk(m_i)$.
 		
 		\item Output $\oM \asn (\tM_0,\ldots, \tM_{\ell-1})$.
 		
 	\end{enumerate}
 	 
-	\item[Decription:] $\EgDec_{\oe}(\oM)$   
+	\item[Decription:] $\EgDec_\sk(\oM)$   
 	\begin{enumerate}
-		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_{\oe_i}(\oM_i)$.
+		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_\sk(\oM_i)$.
 		
-		\item Let  $m \asn \sum_{i \in (\ell)}   m_i \cdot 2^{i c}$.
+		\item Let  $m \asn \sum_{i \in (\ell)}   2^{i c} \cdot  m_i $.
 		
 		\item Output $m$.
 	\end{enumerate}
@@ -73,13 +67,18 @@ In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. Th
 
 \subsection{Proofs}\label{sec:ChanksEG:Proofs}
 
-\paragraph{Knowledge of secret key.}   Proof \piZKPOK{\rKeyGen}. 
+\paragraph{Knowledge of secret key.}   
 
-For each of the  the $\ell$ public keys, apply the (standard) ElGammal POK for the secret key relation.
+
+\begin{description}
+	\item[Task:] ZKPOK for $\rKeyGen=\rKeyGenDef$.
+	
+	\item[Proof:] Apply the (standard) ElGammal POK for the secret key relation.
+		
+\end{description}
 
 
 \paragraph{Knowledge of plain text.}  
-Protocol \piZKPOK{\rKeyGen}. 
 
 \newcommand{\rEnc}{{\cR_{\sf enc}}}
 
@@ -89,17 +88,85 @@ Protocol \piZKPOK{\rKeyGen}.
 }
 
 
-Proof of knowledge for   the ciphertexts  relation  
-$$\rEnc =\rEncDef.$$
 
 
-On  plaintext $\oM$, for each $\oM_i$:
-\begin{enumerate}
-	\item Apply the  standard ElGammal POK for the ciphertexts relation. 
+\begin{description}
+	\item[Task:] ZKPOK for $\rEnc=\rEncDef$.
 	
-	\item Apply range proof, \ie \piZKPOK{\rRP}, to show that th encrypted plaintext is in $(2^c \cdot \psize)$
-\end{enumerate}
+	\item[Proof:] On  plaintext $\oA$, for each $\oA_i$ apply the  standard EG POK for the ciphertexts relation.
+	
+\end{description}
 
+ 
+
+
+\paragraph{Decryptability.}  
+\newcommand{\rDec}{{\cR_{\sf dec}}}
+\newcommand{\rDecDef}
+{
+	\set{((\pk,\oA),(\oa,\ow))\colon \forall i\in (\ell) \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
+	\sland \ow_i \in (2^c)}
+}
+
+\begin{description}
+	\item[Task:] ZKP for $\rDec =\rDecDef$.
+	
+	\item[Proof:] On  plaintext $\oA$, for each $\oA_i$: apply EG range proof  to show that th encrypted plaintext is in $(2^c)$.
+
+\end{description}
+
+
+
+
+
+
+%\newcommand{\IntoEG}{\MathAlgX{IntoEG}}
+\paragraph{Equality.}  
+
+
+\begin{description}
+	\item[Task:] ZKP for $\rEQ =\rEQDef$.
+	
+	\item[Proof:]  On input $(\pk^0,\pk^1,\oA^0,\oA^1,a,\orr_0,\orr_1)$ 
+	
+
+	\begin{enumerate}
+		\item For both $j\in \zo$:
+		
+		\begin{enumerate}
+			\item Let  $a \asn  \sum_i  2^c \cdot a_i$ 
+		\end{enumerate}
+	
+	
+	\end{enumerate}
+	
+	\end{description}
+		
+
+
+  
+
+
+
+
+
+
+\begin{description}
+	\item[Task:] ZK for $\rRP =\rRPDef$.
+	
+	\item[Proof:] On public key $\sk$, for each  $i \in [\ell]$  apply the (standard) ElGammal ZKP for the secret key relation.
+	
+\end{description}
+
+		
+\paragraph{Larger than.}  
+
+\begin{description}
+	\item[Task:] POK for $\rLrg =\rLrgDef$.
+	
+	\item[Proof:] 
+	
+\end{description}
  
 
 

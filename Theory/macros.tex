@@ -30,8 +30,9 @@
 %%% overline letters
 \def\mydefo#1{\expandafter\def\csname o#1\endcsname{\overline{#1}}}
 \def\mydefallo#1{\ifx#1\mydefallo\else\mydefo#1\expandafter\mydefallo\fi}
-\mydefallo eABCDEFGHIJKLMNOPQRSTUVWXYZx\mydefallo
+\mydefallo aewABCDEFGHIJKLMNOPQRSTUVWXYZx\mydefallo
 
+\newcommand{\orr}{\overline{r}}
 
 %%% mathbf letters
 \def\mydefbf#1{\expandafter\def\csname bf#1\endcsname{\mathbf{#1}}}
@@ -656,7 +657,7 @@
 		
 	
 	\newcommand{\pk} {{\mathsf{pk}}}
-	
+	\newcommand{\sk} {{\mathsf{sk}}}
 	
 	
 	
@@ -871,6 +872,10 @@
 
 \newcommand{\ZKP}{{\mathsf{ZK}}}
 \newcommand{\fZKP}[1]{\MathAlgX{\cF^\ZKP_{#1}}}
+\newcommand{\piZK}[1]{\MathAlgX{\Pi^\ZKP_{#1}}}
+\newcommand{\vZK}[1]{\MathAlgX{\Vc^\ZKP_{#1}}}
+\newcommand{\pZK}[1]{\MathAlgX{\Pc^\ZKP_{#1}}}
+
 
 \newcommand{\ZKPOK}{{\mathsf{ZK\mhyphen POK}}}
 \newcommand{\fZKPOK}[1]{\MathAlgX{\cF^\ZKPOK_{#1}}}
