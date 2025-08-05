@@ -10,6 +10,8 @@
 \newcommand{\history}{\mathsf{history}}
 \newcommand{\balance}{\mathsf{avlBlance}}
 \newcommand{\pendbalance}{\mathsf{pndBalance}}
+\newcommand{\transactionnum}{\mathsf{transnum}}
+
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
 \newcommand{\pluseq}{\mathrel{+}=}
@@ -34,12 +36,19 @@
 
 \begin{functionality}[\fConfTran: Confidential transactions]\label{func:ConfidentialTransactions}~
 	
-	\item[Parties:]	Issuer \Ic, chain holder  \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+	
+	
+	\item[Parties:]	Issuer \Ic, chain holder  \Cc and users  $\Uc_1, 
+	\ldots,\Uc_n$.
+	
+	
+	\item[Parameters:] $\pnum,\psize \in \N$.
+	
 	
 	\begin{description}
 		\item[Init.] Upon receiving $\init$ from  all parties: 
 		\begin{enumerate}
-			\item  For each $i\in [n]$:  $\balance_i,\pendbalance_i \asn 0$ and  $\historylog_i \asn \emptyset$.
+			\item  For each $i\in [n]$:  $\balance_i,\pendbalance_i \asn 0$, $\transactionnum_i \asn 0$, and  $\historylog_i \asn \emptyset$.
 			
 			\item  $\historylog \asn \emptyset$.
 		\end{enumerate}
@@ -48,7 +57,9 @@
 		\begin{enumerate}
 			
 			
-			\item \Assert{$x\in \N$ and $d\in [n]$}.
+			\item \Assert{$x\in (\pnum)$, $\transactionnum\le  \psize$ and $d\in [n]$}.
+			
+			\item $\transactionnum^{++}$.
 			
 			\item $\pendbalance_d \pluseq x$.
 			
@@ -60,8 +71,11 @@
 		
 	
 		\begin{enumerate}
-			\item \Assert{$x\in \N$, $\balance_s  \ge x$ and $s,d \in [n]$}.
+			\item \Assert{$x\in (\pnum)$, $\transactionnum\le  \psize$, $\balance_s  \ge x$ and $d \in [n]$}.
 			
+				\item $\transactionnum^{++}$.
+				
+				
 			\item $\balance_s \minuseq x$.
 			
 			\item   $\pendbalance_d \unioneq x$.
@@ -75,6 +89,9 @@
 		\item[Rollover.]     Upon receiving $(\sid,\rollover)$ from  party $\Uc_i$ and \Cc,  party \Cc
 		
 		\begin{enumerate}
+			
+			
+			\item $\transactionnum \asn 0$.
 			
 			
 			\item Set $\balance_i  \pluseq \pendbalance_i$.
@@ -120,7 +137,7 @@ Throughout, we fix a security parameter $\kappa$ and omit is from the notation. 
 
 \begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
 
-	\item[Parameters:] $\pnum,\psize \in \N$.
+
 	
 \item[Parties:] Issuer \Ic, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
 
@@ -129,6 +146,7 @@ Throughout, we fix a security parameter $\kappa$ and omit is from the notation. 
 \end{protocol}
 
 
+\paragraph{Init.}
 \newcommand{\rKeyGen}{{\cR_{\sf KeyGen}}}
 
 \newcommand{\rKeyGenDef}
@@ -188,7 +206,7 @@ $$\rKeyGen =\rKeyGenDef.$$
 			\end{enumerate}
 \end{protocol}
 
-
+\paragraph{Issue.}
 \begin{protocol}[\pConfTran.Issue]~\label{prot:ConfidentialTransactions:Issue}
 	\item[Participating parties.] \Ic and \Cc.
 	
@@ -204,7 +222,7 @@ $$\rKeyGen =\rKeyGenDef.$$
 		
 		\item \Cc:  
 		\begin{enumerate}
-			\item \Assert{$x\in [\psize]$ and $\oP_i  \le \pnum$}
+			\item \Assert{$x\in [\psize]$ and $\oP_i  \le \psize$}
 			
 			\item Set $\oP_i \pluseq \Enc_{pk_i}(x))$.
 				
@@ -215,6 +233,7 @@ $$\rKeyGen =\rKeyGenDef.$$
 	\end{enumerate}
 \end{protocol}
 
+\paragraph{Transfer.}
 
 \newcommand{\RPs}{{\sf rp}}
 \newcommand{\rRP}{\cR_\RPs}
@@ -254,7 +273,7 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 \begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
 	\item[Participating parties:] $\Pc_s$ and \Cc.
 	
-\item[Proofs:]   \piZKPOK{\rRP}. 
+\item[Proofs:]   \piZKPOK{\rRP},\pZKPOK{\rEQ},\pZKPOK{\rLrg}
 
 
 \item[Algorithms:]    \Dec.
@@ -316,6 +335,7 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 
 
 
+\paragraph{Rollover.}
 
 \begin{protocol}[\pConfTran.Rollover]~\label{prot:ConfidentialTransactions:Rollover}
 	\item[Participating parties.] $\Pc_i$ and \Cc.
@@ -338,9 +358,23 @@ I.e., encryptions of the  pair of values $(a_0,a_1)$, under the same public key,
 	
 \end{protocol}
 
+
+\paragraph{History.}
+
 \begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
 	\item[Participating parties.] $\Pc_i$ and \Cc.
 		
 	\item Operation: \Cc: send  $\historylog$ to $\Pc_i$.
 	
 \end{protocol}
+
+
+\paragraph{Audit.} \Inote{TODO}
+
+
+\subsubsection{Security of \cref{prot:ConfidentialTransactions}}
+\begin{theorem}[Security of \cref{prot:ConfidentialTransactions}]\label{thm:ConfidentialTransactions}
+\Inote{TODO}
+\end{theorem}
+
+

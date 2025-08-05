@@ -71,8 +71,38 @@ In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. Th
 
 
 
-\subsection{Normalization}\label{sec:ChanksEG:Normalization}
-
 \subsection{Proofs}\label{sec:ChanksEG:Proofs}
 
-\Inote{TODO}.
+\paragraph{Knowledge of secret key.}   Proof \piZKPOK{\rKeyGen}. 
+
+For each of the  the $\ell$ public keys, apply the (standard) ElGammal POK for the secret key relation.
+
+
+\paragraph{Knowledge of plain text.}  
+Protocol \piZKPOK{\rKeyGen}. 
+
+\newcommand{\rEnc}{{\cR_{\sf enc}}}
+
+\newcommand{\rEncDef}
+{
+	\set{((pk,A),(a,r))\colon \Enc_(pk)(a;r)= A}
+}
+
+
+Proof of knowledge for   the ciphertexts  relation  
+$$\rEnc =\rEncDef.$$
+
+
+On  plaintext $\oM$, for each $\oM_i$:
+\begin{enumerate}
+	\item Apply the  standard ElGammal POK for the ciphertexts relation. 
+	
+	\item Apply range proof, \ie \piZKPOK{\rRP}, to show that th encrypted plaintext is in $(2^c \cdot \psize)$
+\end{enumerate}
+
+ 
+
+
+
+
+\subsection{Adjusting  \cref{sec:MainProtocol:Protocol}}\label{sec:ChanksEG:Adjusting}
