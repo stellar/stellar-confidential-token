@@ -88,7 +88,7 @@
 	\ldots,\Uc_n$.
 	
 	
-	\item[Parameters:] $\pcount,\psize \in \N$.
+	\item[Parameters:] $\pcount,\psize,q \in \N$.
 	
 	
 	\begin{description}
@@ -180,6 +180,8 @@
 \subsection{The Protocol}\label{sec:MainProtocol:Protocol}
 Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$.  We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
 
+\paragraph{Main protocol.}
+We split  the protocol into several sub-protocols defined below, and  use the  following environment to define the common part the different sub-protocols share, \eg global parameter. 
 
 \begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
 
@@ -187,16 +189,14 @@ Throughout, we fix a security parameter $\kappa$ and omit is from the notation. 
 	
 \item[Parties:] Issuer \Ic, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
 
+\item[Parameters:] $\pcount,\psize,q \in \N$.
 
 \item[Subprotocols:]  See below.
 \end{protocol}
 
 
 \paragraph{Init.}
-
-
-
-We use POK for the relation:
+This sub-protocol is were the encryption key are sampled and shared, and the chain manager \Cc set the initial values of the chain. The protocol  uses ZKPOK proof for the relation:
 \begin{description}
 	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.
 \end{description}
@@ -275,7 +275,7 @@ We use POK for the relation:
 
 \paragraph{Transfer.}
 
-We use proof and POK  for the   following  relations:
+The protocol uses ZK and ZKPOK proofs for the   following  relations:
 
 \begin{description}
 	\item[In range.] $\rRp =\rRpDef$, \ie  encryption of values in $[\psize]$.
