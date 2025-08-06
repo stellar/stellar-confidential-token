@@ -75,12 +75,14 @@ In \cref{sec:ChanksEG:EG} we formally define the ElGamal in-the-exponent scheme,
 Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
 
 \begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: ElGamal in-the-exponent encryption]\label{alg:EGinExp}~
-\item[Key generation:] $\EgKG()$ samples $e\getsr \Z_q$, and outputs $(e,e\cdot G)$.
+	
+	
+\item[Key generation:] $\EgKG(1^b)$ samples $e\getsr \Z_q$, and outputs $(e,E\asn  e\cdot G)$.
 	
 	\item[Encryption:] $\EgEnc_E(a)$  samples $e\getsr \Z_q$, and outputs  $\tA \asn (r\cdot G, r\cdot E + a \cdot G)$
 	
 	
-		\item[Decryption:] $\EgDec_e(\tA,b)$,   
+		\item[Decryption:] $\EgDec_e(\tA)$,   
 		\begin{enumerate}
 			\item 	Let $M \asn \tA_2 - e\cdot \tA_2$.
 			
@@ -88,10 +90,17 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 			
 			\item Output $m$.
 		\end{enumerate}
+		
+		\item[Addition:] For $\tA,\tB \in \cG^2$, $\tA +\tB \eqdef (\tA_0+\tB_0,\tA_1+\tB_1)$.
 \end{algorithm}	
 
-Note that 	the decryption algorithm gets an additional parameter, \ie $b$, to limit its running time.  
-	
+
+\begin{theorem}[Security  of \cref{alg:EGinExp}]\label{thm:EGinExp}
+	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of plaintext in $(b)$,   for $1^b$ being the input of the key generation algorithm:
+\end{theorem}
+
+
+
 \subsubsection{Zero-Knowledge Proofs}
 In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relations regrading the above scheme. 
 	
@@ -141,14 +150,21 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 \subsection{The Chunk ElGamal  Scheme}\label{sec:ChanksEG:EGScheme}
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
 
-\begin{algorithm}[$(\KeyGen,\Enc,\Dec)$: Chunk ElGamal adaptively homomorphic encryption] \label{alg:ChunkEG}~
+
+\newcommand{\basefactor}{\MathAlgX{baseF}}
+\begin{definition}[Base factorization]\label{def:basefactor}
+For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}    2^{i c} \cdot a_i$.
+\end{definition}
+
+\begin{algorithm}[$(\KeyGen,\Enc,\Dec)$: Chunk ElGamal adaptively homomorphic encryption]\label{alg:ChunkEGa}~
 	
-	\item[Key generation:] $\KeyGen()$: act as $\EgKG()$.
+	\item[Key generation:] $\KeyGen(1^b)$: act as $\EgKG(1^b)$.
 	
 	\item[Encryiption:] $\Enc_\pk(a)$
 	
 	\begin{enumerate}
-		\item Compute $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}    2^{i c} \cdot a_i$.
+		\item Compute $(a_0,\ldots,a_{\ell-1}) \asn \basefactor(a)$.
+		
 		\item For each $i\in (\ell)$: let $\tA_i \getsr \EgEnc_\pk(a_i)$.
 		
 		\item Output $\oA \asn (\tA_0,\ldots, \tA_{\ell-1})$.
@@ -163,24 +179,25 @@ In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. Th
 		
 		\item Output $m$.
 	\end{enumerate}
+	
+	\item[Addition:] For $\oA,\oB \in (\cG^2)^\ell$, $\oA +\oB \eqdef (\tA_0+\tB_0,\ldots,\tA_{\ell-1}+\tB_{\ell-1})$.
+	
+	
+	\Inote{TODO}
+	
 \end{algorithm}
 
 
-\begin{theorem}[Security of \cref{alg:ChunkEG}]\label{thm:ChunkEG}~
-\Inote{TODO. In particular states  its (limited)  additive homomorphic properties}
+\begin{theorem}[Security  of \cref{alg:ChunkEGa}]\label{thm:EGinExp}
+	Assuming \DDH is hard over $\cG$, then \cref{alg:ChunkEGa} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveats:  
+	\begin{enumerate}
+		\item 	The description only guaranteed to work on encryptions of plaintext  $a$ so that $\basefactor(a)\in (b)^\ell$,   for $1^b$ being the input of the key generation algorithm.
+		
+		\item The additive homomorphic  properties only guaranteed to hold for pair of encryptions of  $a_0$ and $a_1$ \resp, so that $\basefactor(a_0)+ \basefactor(a_1) \in (q)^\ell$.
+	\end{enumerate}
 \end{theorem}
 
-\begin{remark}[Limitations of \cref{alg:ChunkEG}]\label{rem:ChunkEG}
-We explicitly mention what prevent \label{alg:ChunkEG}  from being considered as a truly additive homomorphic scheme.
-\begin{enumerate}
-	\item Adding ciphertexts might generate ciphertexts that cannot be decrypt.
-	
-	\item Adding ciphertexts that cause overflow in one of the chunk will might generate  a ciphertexts of a wrong value. In particular, this might be the case when  \emph{subtracting}  ciphertext from the other. The action $\oA - \oB$ translates to $\oA + \oB'$ where $\oB'_i = \Enc(q-b_i)$ for $b_i$ being the value encrypted by  $ \oB_i$. Thus overflow might occur even if  all entries of $\oA $ and $\oB$ encrypt small values. 
-
-\end{enumerate}
-
-\end{remark}
-
+Note that the second limitation on the scheme stated in \cref{thm:EGinExp} might kick in also when  \emph{subtracting}  two encryptions of  $a_0$ and $a_1$ with $\basefactor(a_0),\basefactor(a_1)\in (b)^\ell$: the action $\oA_1 - \oA_0$ translates to $\oA_1 + \oA_0'$ where $\oA_0'$ is an encryption of $a_0'$ with  $\basefactor(a_0')_i = \basefactor(a_0)_i$.
 
 \subsection{Zero-Knowledge  Proofs for the Scheme }\label{sec:ChanksEG:Proofs}
 In this section, we define the ZK and POK proofs used in  \cref{sec:MainProtocol}.
