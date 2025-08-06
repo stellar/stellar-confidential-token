@@ -1,142 +1,256 @@
-\section{The ElGammal-Based  Additive Homomorphic Encryption }\label{sec:ChanksEG}
-In this section we define the (efficient)  additive homomorphic encryption scheme based on ElGammal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
+\newcommand{\rEgKeyGen}{{\cR_{\sf EGKeyGen}}}
+
+\newcommand{\rEgKeyGenDef}
+{
+	\set{(E,e))\colon e\cdot G= E}
+}
 
 
-The idea is to bootstrap the so-called   \textit{ElGammal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGammal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as
+\newcommand{\rEGEnc}{{\cR_{\sf EgEnc}}}
 
-$\sum_{i \in (t/c)}   2^{i c} \cdot m_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $m_i$. To decry $\oM= (M_0,\ldots,M_{t/c})$, one  
+\newcommand{\rEGEncDef}
+{
+	\set{((E,\tA),(a,r))\colon \EgEnc_E(a;r)= \tA}
+}
+
+
+\newcommand{\rDec}{{\cR_{\sf Dec}}}
+\newcommand{\rDecDef}
+{
+	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
+		\sland \oa_i \in (b)}
+}
+
+
+\newcommand{\EgEqs}{{\sf EgEq}}
+\newcommand{\rEgEq}{\cR_\Eqs}
+
+\newcommand{\rEgEqDef}
+{
+	\set{((E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \; \EgEnc_{E_i}(a;r_i)= \tA_i}
+}
+
+
+\newcommand{\EgRPs}{{\sf EgRp}}
+\newcommand{\rEgRp}{\cR_\EgRPs}
+
+\newcommand{\rEgRpDef}
+{
+	\set{((E,\tA,b),(a,r))\colon \Enc_E(a;r)= \tA \sland a\in (b)}
+}
+
+
+\newcommand{\EgLrgs}{{\sf EgLrger}}
+\newcommand{\rEgLrg}{\cR_\EgLrgs}
+
+\newcommand{\rEgLrgDef}
+{
+	\set{((E,\tA_0,\ttA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \EgEnc_\pk(a_i;r_i)= A_i \sland a_1 -a_0 \in [q]} 
+}
+
+
+
+
+
+\section{The Chunk ElGamal  Encryption Scheme}\label{sec:ChanksEG}
+In this section we define the (efficient)  close to being additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
+
+
+The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as
+
+$\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $a_i$. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
 \begin{enumerate}
-	\item Decrypt   each $M_i$ to get $m_i  \cdot G$.
-	\item Use brute force to find $m$.\footnote{One can use standard   processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
+	\item Decrypt   each $A_i$ to get $a_i  \cdot G$.
+	\item Use brute force to find $a$.\footnote{One can use standard   processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
 	
-	\item Reconstruct $m$.
+	\item Reconstruct $a$.
 \end{enumerate}
 
 
 
-\subsection{ElGammal In-the-Exponent Scheme}\label{sec:ChanksEG:EG}
+\subsection{ElGamal In-the-Exponent Scheme}\label{sec:ChanksEG:EG}
 \newcommand{\EgKG}{\MathAlgX{EgGen}}
 \newcommand{\EgEnc}{\MathAlgX{EgEnc}}
 \newcommand{\EgDec}{\MathAlgX{EgDec}}
 
-Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGammal in-the-exponent scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
-\begin{description}
-	\item[Key generation:] $\EgKG()$ samples $e\getsr \Z_q$, and outputs $(e,e\cdot G)$.
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
+
+\begin{algorithm}[ElGamal in-the-exponent encryption]\label{alg:EGinExp}~
+\item[Key generation:] $\EgKG()$ samples $e\getsr \Z_q$, and outputs $(e,e\cdot G)$.
 	
-	\item[Encryiption:] $\EgEnc_E(m)$  samples $e\getsr \Z_q$, and outputs  $\tM \asn (r\cdot G, r\cdot E + m \cdot G)$
+	\item[Encryiption:] $\EgEnc_E(a)$  samples $e\getsr \Z_q$, and outputs  $\tA \asn (r\cdot G, r\cdot E + a \cdot G)$
 	
 	
-		\item[Decription:] $\EgDec_e(\tM)$,   
+		\item[Decryption:] $\EgDec_e(\tA,b)$,   
 		\begin{enumerate}
-			\item 	Let $M \asn \tM_2 - e\cdot \tM_2$.
+			\item 	Let $M \asn \tA_2 - e\cdot \tA_2$.
 			
-			\item Find (using brute force) $m$ so that $m\cdot G = M$.
+			\item Find (using brute force) $m\le b$ so that $m\cdot G = M$. Abort if no such $m$ exists.
 			
 			\item Output $m$.
 		\end{enumerate}
-	\end{description}
+\end{algorithm}	
+
+Note that 	the decryption algorithm gets an additional parameter, \ie $b$, to limit its running time.  
+	
+\subsubsection{ZK Proofs}
+In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relations regrading the above scheme. 
 	
 	
-\subsection{The Scheme}\label{sec:ChanksEG:EGScheme}
-In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The encryption scheme $(\KeyGen,\Enc,\Dec)$ is defined as follows:
+\begin{description}
+	\item[Knowledge of secret key.] ~
+    
+
 
 \begin{description}
-	\item[Key generation:] $\KeyGen()$ : act as $\EgKG()$.
+	\item[Task:] ZKPOK for $\rEgKeyGen = \rEgKeyGenDef$.
 	
-	\item[Encryiption:] $\Enc_\pk(m)$
+\item[Proof:] \Inote{Schnorr proof. Give ref}
+\end{description}
+
+
+\item[Knowledge of plain text.] ~
+
+\begin{description}
+	\item[Task:] ZKPOK for $\rEGEnc=\rEGEncDef$.
+	
+	\item[Proof:] \Inote{Schnorr proof. Give ref}
+	
+\end{description}
+
+
+\item[Equality.] ~
+\begin{description}
+	\item[Task:] ZKP for $\rEgEq =\rEgEqDef$.
+	
+	\item[Proof:] \Inote{Schnorr proof. Give ref}
+\end{description}
+
+
+\item[In range.] ~
+\begin{description}
+	\item[Task:] ZKP for $\rEgRp =\rEgRpDef$.
+	
+	\item[Proof:] \Inote{Bullet proof. Give ref}
+\end{description}
+
+
+
+\end{description}
+
+	
+\subsection{The Chunk ElGamal  Scheme}\label{sec:ChanksEG:EGScheme}
+In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The encryption scheme $(\KeyGen,\Enc,\Dec)$ is defined as follows:
+
+\begin{algorithm}[Chunk ElGamal adaptively homomorphic encryption] \label{alg:ChunkEG}~
+	
+	\item[Key generation:] $\KeyGen()$: act as $\EgKG()$.
+	
+	\item[Encryiption:] $\Enc_\pk(a)$
 	
 	\begin{enumerate}
-		\item Compute $m_0,\ldots,m_{\ell-1}$ do that $m =  \sum_{i \in (\ell)}    2^{i c} \cdot m_i $.
-		\item For each $i\in (\ell)$: let $\tM_i \getsr \EgEnc_\pk(m_i)$.
+		\item Compute $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}    2^{i c} \cdot a_i$.
+		\item For each $i\in (\ell)$: let $\tA_i \getsr \EgEnc_\pk(a_i)$.
 		
-		\item Output $\oM \asn (\tM_0,\ldots, \tM_{\ell-1})$.
+		\item Output $\oA \asn (\tA_0,\ldots, \tA_{\ell-1})$.
 		
 	\end{enumerate}
 	 
-	\item[Decription:] $\EgDec_\sk(\oM)$   
+	\item[Decription:] $\Dec_\sk(\oM,b)$   
 	\begin{enumerate}
-		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_\sk(\oM_i)$.
+		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_\sk(\oM_i,b)$.
 		
 		\item Let  $m \asn \sum_{i \in (\ell)}   2^{i c} \cdot  m_i $.
 		
 		\item Output $m$.
 	\end{enumerate}
-\end{description}
+\end{algorithm}
 
 
+\begin{theorem}[Security of \cref{alg:ChunkEG}]\label{thm:ChunkEG}~
+\Inote{TODO. In particular states  its (limited)  additive homomorphic properties}
+\end{theorem}
 
-\subsection{Proofs}\label{sec:ChanksEG:Proofs}
+\begin{remark}[Limitations of \cref{alg:ChunkEG}]\label{rem:ChunkEG}
+We explicitly mention what prevent \label{alg:ChunkEG}  from being considered as a truly additive homomorphic scheme.
+\begin{enumerate}
+	\item Adding ciphertexts might generate ciphertexts that cannot be decrypt.
+	
+	\item Adding ciphertexts that cause overflow in one of the chunk will might generate  a ciphertexts of a wrong value. In particular, this might be the case when  \emph{subtracting}  ciphertext from the other. The action $\oA - \oB$ translates to $\oA + \oB'$ where $\oB'_i = \Enc(q-b_i)$ for $b_i$ being the value encrypted by  $ \oB_i$. Thus overflow might occur even if  all entries of $\oA $ and $\oB$ encrypt small values. 
 
-\paragraph{Knowledge of secret key.}   
+\end{enumerate}
+
+\end{remark}
+
+
+\subsection{ZK Proofs}\label{sec:ChanksEG:Proofs}
+In this section, we define the ZK proofs used in  \cref{sec:MainProtocol}.
+In the following, we omit the parameter $b$ from the input list of  \Dec.  We will address its value in \cref{sec:ChanksEG:Adjusting}.
 
 
 \begin{description}
-	\item[Task:] ZKPOK for $\rKeyGen=\rKeyGenDef$.
+	\item[Knowledge of secret key.] ~
 	
-	\item[Proof:] Apply the (standard) ElGammal POK for the secret key relation.
+	\begin{description}
+		\item[Task:] ZKPOK for $\rKeyGen=\rKeyGenDef$.
 		
-\end{description}
+		\item[Proof:] Same as \piZKPOK{\rEgKeyGen}. 
+		
+	\end{description}
+	
+	
+	\item[Knowledge of plain text.] ~
+	
+	
 
-
-\paragraph{Knowledge of plain text.}  
-
-\newcommand{\rEnc}{{\cR_{\sf enc}}}
-
-\newcommand{\rEncDef}
-{
-	\set{((pk,A),(a,r))\colon \Enc_(pk)(a;r)= A}
-}
-
-
+	\begin{description}
+		\item[Task:] ZKPOK for $\rEnc=\rEncDef$.
+		
+		\item[\Pc:] On  input  $((\pk,\oA),(\oa,\orr)$.
+		\begin{enumerate}
+			\item For each $i\in (\ell)$: let  $\pi_i \asn \piZKPOK{\rEGEnc}((\pk,\oA_i),(\oa_i,\orr_i))$. 
+			
+			\item Output $\pi \asn (\pi_0,\ldots, \pi_{\ell-1})$.
+			
+		\end{enumerate}
+		
+		
+	\item[\Vc:] On  input  $((\pk,\oA),\pi = (\pi_0,\ldots, \pi_{\ell-1}))$:
+	
+	 Accept iff  $\vZK{\rEGEnc}((\pk,\tA_i), \pi_i)$ for all $i\in (\ell)$.
+		
+	\end{description}
+	
+\item[Equality.]~ 
 
 
 \begin{description}
-	\item[Task:] ZKPOK for $\rEnc=\rEncDef$.
+	\item[Task:] ZKP for $\rEq =\rEqDef$.
 	
-	\item[Proof:] On  plaintext $\oA$, for each $\oA_i$ apply the  standard EG POK for the ciphertexts relation.
-	
-\end{description}
-
- 
-
-
-\paragraph{Decryptability.}  
-\newcommand{\rDec}{{\cR_{\sf dec}}}
-\newcommand{\rDecDef}
-{
-	\set{((\pk,\oA),(\oa,\ow))\colon \forall i\in (\ell) \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
-	\sland \ow_i \in (2^c)}
-}
-
-\begin{description}
-	\item[Task:] ZKP for $\rDec =\rDecDef$.
-	
-	\item[Proof:] On  plaintext $\oA$, for each $\oA_i$: apply EG range proof  to show that th encrypted plaintext is in $(2^c)$.
-
-\end{description}
-
-
-
-
-
-
-%\newcommand{\IntoEG}{\MathAlgX{IntoEG}}
-\paragraph{Equality.}  
-
-
-\begin{description}
-	\item[Task:] ZKP for $\rEQ =\rEQDef$.
-	
-	\item[Proof:]  On input $(\pk^0,\pk^1,\oA^0,\oA^1,a,\orr_0,\orr_1)$ 
+	\item[\Pc:]  On input $((\pk_0,\pk_1,\oA_0,\oA_1),(\oa,\orr_0,\orr_1))$: 
 	
 
 	\begin{enumerate}
-		\item For both $j\in \zo$:
 		
+		\item Let  $a \asn  \sum_{i\in (\ell)}    2^c \cdot \oa_i$. 
+		
+		\item For both $j\in \zo$:
 		\begin{enumerate}
-			\item Let  $a \asn  \sum_i  2^c \cdot a_i$ 
+			\item    $\tA_j \asn  \sum_i  2^c \cdot (\oA_j)_i$. 
+			\item    $r_j \asn  \sum_{i\in (\ell)}  2^c \cdot (\orr_j)_i$. 
+			
 		\end{enumerate}
+		
+		\item Output $\pi \asn \pZK{\rEgEq}((\pk,\tA_0,\tA_1), (a,r_0,r_1))$.
+				 
+	\end{enumerate}
 	
+	\item[\Vc:] On input $((\pk_0,\pk_1,\oA_0,\oA_1),\pi)$: 
+	
+	\begin{enumerate}
+		\item Generate $\tA_0$ and  $\tA_1$ as done by \Pc.
+		
+	\item Apply $\vZK{\rEgEq}((\pk,\tA_0,\tA_1), \pi)$.
 	
 	\end{enumerate}
 	
@@ -147,29 +261,135 @@ In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. Th
   
 
 
-
-
-
+\item[In range.]~  
 
 \begin{description}
-	\item[Task:] ZK for $\rRP =\rRPDef$.
+	\item[Task:] ZK for $\rRp =\rRpDef$.
 	
-	\item[Proof:] On public key $\sk$, for each  $i \in [\ell]$  apply the (standard) ElGammal ZKP for the secret key relation.
+	\item[\Pc:] On input $((\pk,\oA,b),(\oa,\orr))$:
+	
+	\begin{enumerate}
+			\item   $a \asn  \sum_{i\in (\ell)}   2^c \cdot \oa_i$. 
+		\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
+		\item    $r \asn  \sum_{i\in (\ell)}  2^c \cdot \orr_i$. 
+        
+        \item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,b), (a,r))$.
+        
+	\end{enumerate}
+	
+	
+\item[\Vc:] On input $((\pk,\oA,b),\pi)$:
+	
+	\begin{enumerate}
+		\item   Generate $\tA$ as by \Pc.
+		\item  Output $\vZK{\rEgRp}((\pk,\tA,b), \pi)$.
+		
+	\end{enumerate}
+	
 	
 \end{description}
 
 		
-\paragraph{Larger than.}  
+\item[Larger than.]~  
 
 \begin{description}
-	\item[Task:] POK for $\rLrg =\rLrgDef$.
+	\item[Task:] POK for $\rLrgEq =\rLrgEqDef$.
 	
-	\item[Proof:] 
+		\item[\Pc:]  On input $((\pk_0,\pk_1,\oA_0,\oA_1),(\oa,\orr_0,\orr_1))$: 
 	
+	
+	\begin{enumerate}
+		
+		\item For both $j\in \zo$:
+		
+		\begin{enumerate}
+			\item   $a_j \asn  \sum_{i\in (\ell)}    2^c \cdot (\oa_j)_i$. 
+			
+				\item    $\tA_j \asn  \sum_i  2^c \cdot (\oA_j)_i$. 
+				\item    $r_j \asn  \sum_{i\in (\ell)}  2^c \cdot (\orr_j)_i$. 
+				   
+		\end{enumerate}
+		
+		\item Let $\tA \asn \tA_1 - \tA_0$, $a \asn a_1 - a_0$ and $r \asn r_1 - r_0$.
+		\item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,q), (a,r))$.
+	\end{enumerate}
+	
+	
+	\item[\Vc:]  On input $((\pk_0,\pk_1,\oA_0,\oA_1),\pi$: 
+	
+	\begin{enumerate}
+		\item  Generate $\tA$ as by \Pc.
+		
+		\item  Output $\vZK{\rEgRp}((\pk,\tA,q), \pi)$.
+		
+	\end{enumerate}
 \end{description}
  
 
 
+\item[Decryptability.]  ~
 
 
-\subsection{Adjusting  \cref{sec:MainProtocol:Protocol}}\label{sec:ChanksEG:Adjusting}
+\begin{description}
+	\item[Task:] ZKP for $\rDec =\rDecDef$.
+	
+	\item[\Pc:] On  input  $((\pk,\oA,b),(\oa,\orr)$:
+	
+	\begin{enumerate}
+		\item For each $i\in (\ell)$: $\pi_i \asn \pZK{\rEgRp}((\pk,\tA_i,b), (\oa_i,\orr_i))$.
+		\item Output $\pi \asn (\pi_0,\ldots, \pi_{\ell-1})$.
+	\end{enumerate}
+	 
+	 
+	 	\item[\Vc:] On  input  $((\pk,\oA,b), \pi= (\pi_0,\ldots, \pi_{\ell-1}))$:
+	 
+	 Accept iff  $\vZK{\rEgRp}((\pk,\tA_i,b), \pi_i)$ for all $i\in (\ell)$.
+	 
+	 
+\end{description}
+
+
+\end{description}
+
+
+\subsection{Adjusting  \cref{prot:ConfidentialTransactions}}\label{sec:ChanksEG:Adjusting}
+Since the chunk ElGamal  scheme has some shortcoming to be considered as truly additive  homomorphic shame, see \cref{rem:ChunkEG}, instantiating \cref{prot:ConfidentialTransactions} with the new scheme  requires some adjustments.
+
+
+\begin{enumerate}
+	\item[Transfer.]  The sender also provide proofs that
+	
+	\begin{enumerate}
+		\item $X_d$ is decryptable (\ie using \pZK{\rDec} with parameter $b\asn 2^c$).
+		
+		\item $B_s$ is \emph{point-wise} larger  equal than $X_s$, \Inote{do we need it?}
+	\end{enumerate} 
+	
+	\item[Rollover:] The rollover over operation should be updated to allow the account holder to ``normalize''  it active balance: to make it decryptable. Specifically
+	
+	\begin{enumerate}
+		\item $\Uc_i$:
+		
+		\begin{enumerate}
+			\item Decrypt $\oP_i$ and $\oB_i$ to get value $(p_i,r_i)$ and $(b_i,w_i)$ respectively.
+			
+			
+			\item Generate a fresh  encryption $\oB_i'$ of $(p_i +b_i )$ and $\oP_i'$ of $0$.
+			
+			\item Generate a proof $\pi$ (\ie using \pZK{\rEq})   that $\oP_i+\oB_i = \oP_i'+ \oB_i'$.
+			
+			\item Send $(\oP_i',\oB_i',\pi)$ to \Cc.
+		
+		\end{enumerate}
+		
+		\item $\Cc$:
+			\begin{enumerate}
+				\item Verify $\pi$.
+				
+				\item Set $\oP_i  \asn \oP_i'$  and $\oB_i  \asn \oB_i'$.
+				
+				\item Continue as in the original protocol.
+			\end{enumerate}
+		
+	\end{enumerate}
+\end{enumerate}

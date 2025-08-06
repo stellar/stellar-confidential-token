@@ -10,7 +10,7 @@
 \newcommand{\history}{\mathsf{history}}
 \newcommand{\balance}{\mathsf{avlBlance}}
 \newcommand{\pendbalance}{\mathsf{pndBalance}}
-\newcommand{\transactionnum}{\mathsf{transnum}}
+\newcommand{\tcount}{\mathsf{tcount}}
 
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
@@ -27,8 +27,54 @@
 
 \newcommand{\Issuer}{{\MathAlgX{Iss}}}
 \newcommand{\Chain}{{\MathAlgX{C}}}
-\newcommand{\pnum}{p_{\mathsf{num}} }
+\newcommand{\pcount}{p_{\mathsf{pcount}} }
 \newcommand{\psize}{p_{\mathsf{size}} }
+
+
+
+
+\newcommand{\rEnc}{{\cR_{\sf Enc}}}
+\newcommand{\rEncDef}
+{
+	\set{((\pk,A),(a,r))\colon \Enc_\pk(a;r)= A}
+}
+
+\newcommand{\rKeyGen}{{\cR_{\sf KeyGen}}}
+
+\newcommand{\rKeyGenDef}
+{
+	\set{(\pk,w))\colon \KeyGen(w)= (\cdot,\pk)}
+}
+
+
+
+
+\newcommand{\Eqs}{{\sf Eq}}
+\newcommand{\rEq}{\cR_\Eqs}
+
+\newcommand{\rEqDef}
+{
+	\set{((\pk_0,\pk_1,\oA_0,\oA_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{\pk_i}(a;r_i)= \A_i}
+}
+
+
+\newcommand{\RPs}{{\sf Rp}}
+\newcommand{\rRp}{\cR_\RPs}
+
+\newcommand{\rRpDef}
+{
+	\set{((\pk,\oA,b),(a,r))\colon \Enc_\pk(a;r)= \oA \sland a\in (b)}
+}
+
+
+\newcommand{\LrgEqs}{{\sf LrgerEq}}
+\newcommand{\rLrgEq}{\cR_\LrgEqs}
+
+\newcommand{\rLrgEqDef}
+{
+	\set{((\pk,\oA_0,\oA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \Enc_\pk(a_i;r_i)= \oA_i \sland a_1 -a_0 \in (q)} 
+}
+
 
 
 \subsection{The Ideal Functionality}\label{sec:MainProtocol:Ideal}
@@ -42,13 +88,13 @@
 	\ldots,\Uc_n$.
 	
 	
-	\item[Parameters:] $\pnum,\psize \in \N$.
+	\item[Parameters:] $\pcount,\psize \in \N$.
 	
 	
 	\begin{description}
 		\item[Init.] Upon receiving $\init$ from  all parties: 
 		\begin{enumerate}
-			\item  For each $i\in [n]$:  $\balance_i,\pendbalance_i \asn 0$, $\transactionnum_i \asn 0$, and  $\historylog_i \asn \emptyset$.
+			\item  For each $i\in [n]$:  $\balance_i,\pendbalance_i \asn 0$, $\tcount_i \asn 0$, and  $\historylog_i \asn \emptyset$.
 			
 			\item  $\historylog \asn \emptyset$.
 		\end{enumerate}
@@ -57,13 +103,13 @@
 		\begin{enumerate}
 			
 			
-			\item \Assert{$x\in (\pnum)$, $\transactionnum\le  \psize$ and $d\in [n]$}.
+			\item \Assert{$x\in (\psize)$, $\tcount_d\le  \pcount$ and $d\in [n]$}.
 			
-			\item $\transactionnum^{++}$.
+			\item $\tcount_d^{++}$.
 			
 			\item $\pendbalance_d \pluseq x$.
 			
-			\item Set $\historylog \unioneq {(\sid,\issue,x,d)}$.
+			\item Set $\historylog \unioneq {(\sid,\issue,d,x,\tcount_d)}$.
 		\end{enumerate}
 		
 		
@@ -71,9 +117,9 @@
 		
 	
 		\begin{enumerate}
-			\item \Assert{$x\in (\pnum)$, $\transactionnum\le  \psize$, $\balance_s  \ge x$ and $d \in [n]$}.
+			\item \Assert{$x\in (\pcount)$, $\tcount\le  \psize$, $\balance_s  \ge x$ and $d \in [n]$}.
 			
-				\item $\transactionnum^{++}$.
+				\item $\tcount^{++}$.
 				
 				
 			\item $\balance_s \minuseq x$.
@@ -91,7 +137,7 @@
 		\begin{enumerate}
 			
 			
-			\item $\transactionnum \asn 0$.
+			\item $\tcount \asn 0$.
 			
 			
 			\item Set $\balance_i  \pluseq \pendbalance_i$.
@@ -120,9 +166,9 @@
 		\end{enumerate}
 		
 		
-		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Pc_i$ and \Cc:  
+		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Uc_i$ and \Cc:  
 		
-		Send $(\historylog,\historylog_i)$ to  $\Pc_i$.	 
+		Send $(\historylog,\historylog_i)$ to  $\Uc_i$.	 
 		
 		\item[Audit.]      \Inote{Later}
 		
@@ -147,12 +193,7 @@ Throughout, we fix a security parameter $\kappa$ and omit is from the notation. 
 
 
 \paragraph{Init.}
-\newcommand{\rKeyGen}{{\cR_{\sf KeyGen}}}
 
-\newcommand{\rKeyGenDef}
-{
-	 \set{(pk,w))\colon \KeyGen(w)= (\cdot,pk)}
-}
 
 
 We use POK for the relation:
@@ -178,7 +219,7 @@ We use POK for the relation:
 			
 			\begin{enumerate}
 				
-				\item   $\Pc_i$, for  all $i\in [n]$:
+				\item   $\Uc_i$, for  all $i\in [n]$:
 				\begin{enumerate}
 					\item Set $(pk_i,sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
 					
@@ -202,7 +243,8 @@ We use POK for the relation:
 				
 				\item \Cc: 
 				\begin{enumerate}
-					\item 	Broadcast $\sset{\oP_i \asn 0, \oP_i\getsr \Enc_{pk_i}(0),\oB_i\asn \emptyset}_{i\in [n]}$.
+					\item 	Broadcast $\sset{\oP_i\getsr \Enc_{pk_i}(0),\oB_i\asn \Enc_{pk_i}(0),\tcount_i 
+					\asn 0}_{i\in [n]}$.
 					
 					\item    Broadcast $\historylog \asn \emptyset$.
 				\end{enumerate}								
@@ -214,72 +256,42 @@ We use POK for the relation:
 	\item[Participating parties.] \Ic and \Cc.
 	
 	
-	\item[\Cc's input.] $\sid$, $x\in \N$ and $i\in [n]$.
 	
-	\item[Operation:] ~
+	\item[Common input.] $\sid$, $x\in \N$ and $d\in [n]$.
 	
+	\item[Operation:]  \Cc~
 	
-	\begin{enumerate}
-		
-		\item   \Ic: Send $(x,i)$ to \Cc.
-		
 		\item \Cc:  
 		\begin{enumerate}
-			\item \Assert{$x\in [\psize]$ and $\oP_i  \le \psize$}
+			\item \Assert{$x\in [\psize]$ and $\tcount_d  \le \pcount$}
 			
 			\item Set $\oP_i \pluseq \Enc_{pk_i}(x))$.
 				
-		\item Publish $\historylog \unioneq (\sid,\issue,x,i,\oP_i)$.
+		\item Broadcast $\historylog \unioneq (\sid,\issue,d,x,\oP_i,\tcount_d)$.
 				 	
-		\end{enumerate}
 		
 	\end{enumerate}
 \end{protocol}
 
 \paragraph{Transfer.}
 
-\newcommand{\RPs}{{\sf rp}}
-\newcommand{\rRP}{\cR_\RPs}
-
-\newcommand{\rRPDef}
-{
-	\set{((pk,A),(a,r))\colon \Enc_{pk}(a;r)= A \sland a\in [\psize]}
-}
-
-
-\newcommand{\Eqs}{{\sf eq}}
-\newcommand{\rEQ}{\cR_\Eqs}
-
-\newcommand{\rEQDef}
-{
-	\set{((pk^0,pk^1,A^0,A^1),(a,r^0,r^1))\colon \forall i\in \zo \; \Enc_{pk^i}(a;r^i)= A^i}
-}
-
-\newcommand{\Lrgs}{{\sf lrger}}
-\newcommand{\rLrg}{\cR_\Lrgs}
-
-\newcommand{\rLrgDef}
-{
-	\set{((pk,A^0,A^1),(a^0,r^0,a^1,r^1))\colon \forall i\in \zo \; \Enc_{pk}(a^i;r^i)= A^i \sland a^1 -a^0 \in [q]} 
-}
-
 We use proof and POK  for the   following  relations:
 
 \begin{description}
-	\item[In range.] $\rRP =\rRPDef$, \ie  encryption of values in $[\psize]$.
+	\item[In range.] $\rRp =\rRpDef$, \ie  encryption of values in $[\psize]$.
 	
-	\item[Equality.] $\rEQ =\rEQDef$, \ie  encryptions of the same pair under different public keys.
+	\item[Equality.] $\rEq =\rEqDef$, \ie  encryptions of the same pair under different public keys.
 	
-	\item[Larger than.] $\rLrg =\rLrgDef$, \ie encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
+	\item[Larger than.] $\rLrgEq =\rLrgEqDef$, \ie encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
 \end{description}
 
 
 
 
 \begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
-	\item[Participating parties:] $\Pc_s$ and \Cc.
+	\item[Participating parties:] $\Uc_s$ and \Cc.
 	
-\item[Proofs:]   \piZK{\rRP},\pZK{\rEQ},\pZK{\rLrg}
+\item[Proofs:]   \piZK{\rRp},\pZK{\rEq},\pZK{\rLrgEq}
 
 
 \item[Algorithms:]    \Dec.
@@ -287,50 +299,53 @@ We use proof and POK  for the   following  relations:
 	
 	\item[Common input:] $d\in [n]$.
 	
-	\item[$\Pc_s$'s private  input.] $x \in \N$.
+	\item[$\Uc_s$'s private  input.] $x \in \N$.
 	
 \item[Operation:] ~
 	
 	\begin{enumerate}
-		\item  $\Pc_s$: 
+		\item  $\Uc_s$: 
 		
 		\begin{enumerate}
-			\item $X_d \getsr \Enc_{pk_d}(x;r)$ for $r^d \getsr \cD$.
+			\item $X_d \getsr \Enc_{\pk_d}(x;r)$ for $r^d \getsr \cD$.
 			
 		
-			\item $\pi^\RPs \getsr \pZK{\rRP}((pk_d,X_s,\psize),(x,r))$.
+			\item $\pi^\RPs \getsr \pZK{\rRp}((\pk_d,X_s,\psize),(x,r))$.
 			
 			
-			\item $X_s \getsr \Enc_{pk_s}(x;r)$ for $r^s \getsr \cD$.
+			\item $X_s \getsr \Enc_{\pk_s}(x;r)$ for $r^s \getsr \cD$.
 			
 			
 			
-			\item $\pi^\Eqs \getsr \pZK{\rEQ}((pk_s,pk_d,X_s,X_s),(x,r_s,r_d))$.
+			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,X_s,X_s),(x,r_s,r_d))$.
 			
 			
 			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
 			
 			
-			\item $\pi^\Lrgs \getsr \pZK{\rLrg}((pk_s,X_s,\oB_s),(x,r_s,r_b))$.
+			\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,X_s,\oB_s),(x,r_s,r_b))$.
 			
 			
-			\item Send $(X_s,X_d,\pi^\RPs,\pi^\Eqs,\pi^\Lrgs)$ to \Cc.
+			\item Send $(X_s,X_d,\pi^\RPs,\pi^\Eqs,\pi^\LrgEqs)$ to \Cc.
 		\end{enumerate}
 		
 		
 		\item  \Cc: 
 		
 		\begin{enumerate}
-			\item  Call $\vZKPOK{\rRP}((pk_d,X_s,\psize),\pi^\RPs)$,
+			\item  Call $\vZKPOK{\rRp}((\pk_d,X_s,\psize),\pi^\RPs)$,
 			
-			 $\vZKPOK{\Eqs}((pk_s,pk_d,X_s,X_s),\pi^\RPs)$ and $\vZKPOK{\rLrg}((pk_s,X_s,\oB_s),\pi^\RPs)$.
+			 $\vZKPOK{\Eqs}((\pk_s,\pk_d,X_s,X_s),\pi^\RPs)$ and $\vZKPOK{\rLrgEq}((\pk_s,X_s,\oB_s),\pi^\RPs)$.
 			
+		\item Verify $\tcount_d \le \pcount$.
+		
 		
 		     \item  Set $U_s \minuseq X_s$. 
               
               \item  Set $\oP_d \pluseq X_d$. 
               
-              		     
+              \item $\tcount_d^{++}$.
+              
 		     \item Publish  $\historylog \unioneq (\sid,\transfer,s,d,U_s,\oP_d)$.
 		     
 		\end{enumerate}
@@ -344,18 +359,19 @@ We use proof and POK  for the   following  relations:
 \paragraph{Rollover.}
 
 \begin{protocol}[\pConfTran.Rollover]~\label{prot:ConfidentialTransactions:Rollover}
-	\item[Participating parties.] $\Pc_i$ and \Cc.
+	\item[Participating parties.] $\Uc_i$ and \Cc.
 	
-\item[Operation:] ~
-	
-	\Cc:
+\item[Operation:] \Cc:
 	
 	\begin{enumerate}
 	
-	\item $\oB_i  \pluseq \\oP_i$.
+	\item $\oB_i  \pluseq \oP_i$.
 	
 	
 	\item  $\oP_i \minuseq \oP_i$.
+	
+	\item Set $\tcount_i \asn 0$.
+	
 	
 	\item  $\historylog \pluseq (\sid,\rollover,i,\oB_i,\oP_i)$
 	
@@ -368,9 +384,9 @@ We use proof and POK  for the   following  relations:
 \paragraph{History.}
 
 \begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
-	\item[Participating parties.] $\Pc_i$ and \Cc.
+	\item[Participating parties.] $\Uc_i$ and \Cc.
 		
-	\item Operation: \Cc: send  $\historylog$ to $\Pc_i$.
+	\item Operation: \Cc: send  $\historylog$ to $\Uc_i$.
 	
 \end{protocol}
 
