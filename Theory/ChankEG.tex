@@ -77,26 +77,29 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 \begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: ElGamal in-the-exponent encryption]\label{alg:EGinExp}~
 	
 	
-\item[Key generation:] $\EgKG(1^b)$ samples $e\getsr \Z_q$, and outputs $(e,E\asn  e\cdot G)$.
+\item[Key generation:] $\EgKG(1^b)$ samples $e\getsr \Z_q$, and outputs $((1^b,e),E\asn  e\cdot G)$.
 	
 	\item[Encryption:] $\EgEnc_E(a)$  samples $e\getsr \Z_q$, and outputs  $\tA \asn (r\cdot G, r\cdot E + a \cdot G)$
 	
 	
-		\item[Decryption:] $\EgDec_e(\tA)$,   
+		\item[Decryption:] $\EgDec_{1^b,e}(\tA)$,   
 		\begin{enumerate}
 			\item 	Let $M \asn \tA_2 - e\cdot \tA_2$.
 			
-			\item Find (using brute force) $m\le b$ so that $m\cdot G = M$. Abort if no such $m$ exists.
+			\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
 			
 			\item Output $m$.
 		\end{enumerate}
 		
-		\item[Addition:] Addition over  $\cG^2$, \ie for $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_0+\tB_0,\tA_1+\tB_1)$.
+		\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_0+\tB_0,\tA_1+\tB_1)$.}
+		
+		\item[Minus:]  The inverse in $\cG^2$.
+		
 \end{algorithm}	
-
+When clear from the context,  will omit the parameter $1^b$ from the secret key of the scheme.
 
 \begin{theorem}[Security  of \cref{alg:EGinExp}]\label{thm:EGinExp}
-	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of plaintext in $(b)$,   for $1^b$ being the input of the key generation algorithm:
+	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the input of the key generation algorithm:
 \end{theorem}
 
 
@@ -180,23 +183,18 @@ For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}   
 		\item Output $m$.
 	\end{enumerate}
 	
-	\item[Addition:] For $\oA,\oB \in (\cG^2)^\ell$, $\oA +\oB \eqdef (\tA_0+\tB_0,\ldots,\tA_{\ell-1}+\tB_{\ell-1})$.
+	\item[Addition:] Vector addition.\footnote{For $\oA,\oB \in (\cG^2)^\ell$, $\oA +\oB \eqdef (\tA_0+\tB_0,\ldots,\tA_{\ell-1}+\tB_{\ell-1})$.}
 	
-
+	\item[Minus:]  Vector negation.
+	                     
 	
 \end{algorithm}
 
 
 \begin{theorem}[Security  of \cref{alg:ChunkEGa}]\label{thm:EGinExp}
-	Assuming \DDH is hard over $\cG$, then \cref{alg:ChunkEGa} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveats:  
-	\begin{enumerate}
-		\item 	The description only guaranteed to work on encryptions of plaintext  $a$ so that $\basefactor(a)\in (b)^\ell$,   for $1^b$ being the input of the key generation algorithm.
-		
-		\item The additive homomorphic  properties only guaranteed to hold for pair of encryptions of  $a_0$ and $a_1$ \resp, so that $\basefactor(a_0)+ \basefactor(a_1) \in (q)^\ell$.
-	\end{enumerate}
+	Assuming \DDH is hard over $\cG$, then \cref{alg:ChunkEGa} is  a perfectly binding,  semantically secure additively homophobic scheme over $\Z_q$, with the following caveat work on encryptions of plaintext  $a$ so that $\basefactor(a)\in (-b,b)^\ell$ ($1^b$ being the input of the key generation algorithm).
 \end{theorem}
 
-Note that the second limitation on the scheme stated in \cref{thm:EGinExp} might kick in also when  \emph{subtracting}  two encryptions of  $a_0$ and $a_1$ with $\basefactor(a_0),\basefactor(a_1)\in (b)^\ell$: the action $\oA_1 - \oA_0$ translates to $\oA_1 + \oA_0'$ where $\oA_0'$ is an encryption of $a_0'$ with  $\basefactor(a_0')_i = \basefactor(a_0)_i$.
 
 \subsection{Zero-Knowledge  Proofs for the Scheme }\label{sec:ChanksEG:Proofs}
 In this section, we define the ZK and POK proofs used in  \cref{sec:MainProtocol}.
@@ -368,18 +366,14 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 
 
 \subsection{Adjusting  \cref{prot:ConfidentialTransactions}}\label{sec:ChanksEG:Adjusting}
-Since the chunk ElGamal  scheme has some shortcoming to be considered as truly additive  homomorphic shame, see \cref{rem:ChunkEG}, instantiating \cref{prot:ConfidentialTransactions} with the new scheme  requires some adjustments.
-
-\Inote{Set bound parameter  for decryption algorithm}
+Since the chunk ElGamal  scheme has some shortcoming to be considered as truly additive  homomorphic shame, see \cref{thm:ChunkEG}, instantiating \cref{prot:ConfidentialTransactions} with the new scheme  requires some adjustments.
 
 \begin{enumerate}
-	\item[Transfer.]  The sender also provide proofs that
 	
-	\begin{enumerate}
-		\item $X_d$ is decryptable (\ie using \pZK{\rDec} with parameter $b\asn 2^c$).
-		
-		\item $B_s$ is \emph{point-wise} larger  equal than $X_s$, \Inote{do we need it?}
-	\end{enumerate} 
+	\item[Init:] Set the parameter of the encryption key generation algorithm to  $b \asn 2^{c}\cdot \pcount$.
+	 
+	\item[Transfer.]  The sender also provide proofs that $X_d$ is decryptable (\ie using \pZK{\rDec} with parameter $b\asn 2^c$).
+	
 	
 	\item[Rollover:] The rollover over operation should be updated to allow the account holder to ``normalize''  it active balance: to make it decryptable. Specifically
 	
