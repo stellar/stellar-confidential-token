@@ -20,8 +20,8 @@
 }
 
 
-\newcommand{\rDec}{{\cR_{\sf Dec}}}
-\newcommand{\rDecDef}
+\newcommand{\rFsh}{{\cR_{\sf Fsh}}}
+\newcommand{\rFshDef}
 {
 	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
 		\sland \oa_i \in (b)}
@@ -116,7 +116,7 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 \begin{description}
 	\item[Task:] ZKPOK for $\rEgKeyGen = \rEgKeyGenDef$.
 	
-\item[Proof:] \Inote{Schnorr proof. Give ref}
+\item[Proof:] This is just standard Schnorr proof for discrete log \cite{Shoup00b}.
 \end{description}
 
 
@@ -125,7 +125,7 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 \begin{description}
 	\item[Task:] ZKPOK for $\rEGEnc=\rEGEncDef$.
 	
-	\item[Proof:] \Inote{Schnorr proof. Give ref}
+	\item[Proof:] See  \cite[Protocol A.2]{HaitnerLNR23}.
 	
 \end{description}
 
@@ -134,7 +134,7 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 \begin{description}
 	\item[Task:] ZKP for $\rEgEq =\rEgEqDef$.
 	
-	\item[Proof:] \Inote{Schnorr proof. Give ref}
+	\item[Proof:] The sigma protocol for this relation concatenates, with the same challenge $e$ and answer $z$, two proofs of $\rEGEnc$. 
 \end{description}
 
 
@@ -340,11 +340,11 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
  
 
 
-\item[Decryptability.]  ~
-
+\item[Freshness.]  ~
+Proving that each of the entries of the  ciphertext are small. 
 
 \begin{description}
-	\item[Task:] ZKP for $\rDec =\rDecDef$.
+	\item[Task:] ZKP for $\rFsh =\rFshDef$.
 	
 	\item[\Pc:] On  input  $((\pk,\oA,b),(\oa,\orr)$:
 	
@@ -372,7 +372,7 @@ Since the chunk ElGamal  scheme has some shortcoming to be considered as truly a
 	
 	\item[Init:] Set the parameter of the encryption key generation algorithm to  $b \asn 2^{c}\cdot \pcount$.
 	 
-	\item[Transfer.]  The sender also provide proofs that $X_d$ is decryptable (\ie using \pZK{\rDec} with parameter $b\asn 2^c$).
+	\item[Transfer.]  The sender also provide proofs that $X_d$ is fresh (\ie using \pZK{\rFsh} with parameter $b\asn 2^c$).
 	
 	
 	\item[Rollover:] The rollover over operation should be updated to allow the account holder to ``normalize''  it active balance: to make it decryptable. Specifically

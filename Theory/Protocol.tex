@@ -1,6 +1,6 @@
 
 \newcommand{\init}{\mathsf{init}}
-\newcommand{\issue}{\mathsf{issue}}
+\newcommand{\mint}{\mathsf{mint}}
 \newcommand{\transfer}{\mathsf{transfer}}
 \newcommand{\audit}{\mathsf{audit}}
 \newcommand{\rollover}{\mathsf{rollover}}
@@ -12,23 +12,14 @@
 
 \newcommand{\historylog}{\mathsf{log}}
 \newcommand{\sConfTran}{\mathsf{ConfTrans}}
-\newcommand{\pluseq}{\mathrel{+}=}
-\newcommand{\minuseq}{\mathrel{-}=}
-\newcommand{\unioneq}{\mathrel{\cup}=}
-
 \newcommand{\fConfTran}{\MathAlgX{\cF_\sConfTran}}
 \newcommand{\pConfTran}{\MathAlgX{\Pi_\sConfTran}}
 
 \newcommand{\largest}{{\mathsf{lrg}}}
 \newcommand{\posvst}{{\mathsf{pos}}}
-\newcommand{\tempst}{{\mathsf{tmp}}}
-
-\newcommand{\Issuer}{{\MathAlgX{Iss}}}
 \newcommand{\Chain}{{\MathAlgX{C}}}
 \newcommand{\pcount}{p_{\mathsf{pcount}} }
 \newcommand{\psize}{p_{\mathsf{size}} }
-
-
 
 
 \newcommand{\rEnc}{{\cR_{\sf Enc}}}
@@ -74,19 +65,19 @@
 }
 
 
-\section{The Confidential Transaction Protocol}\label{sec:MainProtocol}
-
+\section{The Confidential Transactions Protocol}\label{sec:MainProtocol}
+In this section we define the confidential transactions scheme, and prove its security. The ideal functionality for the scheme is define in \cref{sec:MainProtocol:Ideal}, the protocol itself in \cref{sec:MainProtocol:Protocol}, and its security is proved in  \cref{prot:ConfidentialTransactions}.
 
 
 
 \subsection{The Ideal Functionality}\label{sec:MainProtocol:Ideal}
-
+In this section we define the ideal functionality for the confidential transactions scheme. The functionality  captures the relevant parts of the actual scheme, which typically invoked using smart contracts over a block chain. Specifically, we model the  the chain as a single (honest) entity, the \textit{chain holder}, assume money flows into the system by a single (honest) party, the \textit{mint}, and assume fixed number of \textit{users}.We also assume an a initial starting phase,  \textit{init}.
 
 \begin{functionality}[\fConfTran: Confidential transactions]\label{func:ConfidentialTransactions}~
 	
 	
 	
-	\item[Parties:]	Issuer \Ic, chain holder  \Cc and users  $\Uc_1, 
+	\item[Parties:]	Mint \Mc, chain holder  \Cc and users  $\Uc_1, 
 	\ldots,\Uc_n$.
 	
 	
@@ -101,7 +92,7 @@
 			\item  $\historylog \asn \emptyset$.
 		\end{enumerate}
 		
-			\item[Issue.]   Upon receiving $(\sid,\issue,x,d)$ from  \Cc and \Ic:
+			\item[Mint.]   Upon receiving $(\sid,\mint,x,d)$ from  \Cc and \Mc:
 		\begin{enumerate}
 			
 			
@@ -111,7 +102,7 @@
 			
 			\item $\pendbalance_d \pluseq x$.
 			
-			\item Set $\historylog \unioneq {(\sid,\issue,d,x,\tcount_d)}$.
+			\item Set $\historylog \unioneq {(\sid,\mint,d,x,\tcount_d)}$.
 		\end{enumerate}
 		
 		
@@ -189,7 +180,7 @@ We split  the protocol into several sub-protocols defined below, and  use the  f
 
 
 	
-\item[Parties:] Issuer \Ic, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+\item[Parties:] Mintr \Mc, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
 
 \item[Parameters:] $\pcount,\psize,q \in \N$.
 
@@ -253,9 +244,9 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 			\end{enumerate}
 \end{protocol}
 
-\paragraph{Issue.}
-\begin{protocol}[\pConfTran.Issue]~\label{prot:ConfidentialTransactions:Issue}
-	\item[Participating parties.] \Ic and \Cc.
+\paragraph{Mint.}
+\begin{protocol}[\pConfTran.Mint]~\label{prot:ConfidentialTransactions:Mint}
+	\item[Participating parties.] \Mc and \Cc.
 	
 	
 	
@@ -269,7 +260,7 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 			
 			\item Set $\oP_i \pluseq \Enc_{pk_i}(x))$.
 				
-		\item Broadcast $\historylog \unioneq (\sid,\issue,d,x,\oP_i,\tcount_d)$.
+		\item Broadcast $\historylog \unioneq (\sid,\mint,d,x,\oP_i,\tcount_d)$.
 				 	
 		
 	\end{enumerate}
@@ -398,7 +389,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 
 \subsection{Security of \cref{prot:ConfidentialTransactions}}
 \begin{theorem}[Security of \cref{prot:ConfidentialTransactions}]\label{thm:ConfidentialTransactions}
-Assuming  $(\KeyGen,\Enc,\Dec)$ is CPA secure, then \cref{prot:ConfidentialTransactions} UC-realizes \cref{func:ConfidentialTransactions}.
+Assuming  $(\KeyGen,\Enc,\Dec)$ is CPA secure, then \cref{prot:ConfidentialTransactions} UC-realizes (with static security\Inote{?}) \cref{func:ConfidentialTransactions} against semi-honest chain holder and mint.
 \end{theorem}
 
 \begin{proof}
