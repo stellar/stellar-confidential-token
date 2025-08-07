@@ -58,7 +58,7 @@
 
 
 
-\section{The Chunk ElGamal  Encryption Scheme}\label{sec:ChanksEG}
+\section{The Chunk-ElGamal  Encryption Scheme}\label{sec:ChanksEG}
 In this section we define the (efficient)  close to being additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
 The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $a_i$. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
 \begin{enumerate}
@@ -70,7 +70,7 @@ The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   addi
 In \cref{sec:ChanksEG:EG} we formally define the ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme} and the related ZK proofs, are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} tp work with the new scheme.
 
 
-\subsection{ElGamal In-the-Exponent Scheme}\label{sec:ChanksEG:EG}
+\subsection{ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:EG}
 
 Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
 
@@ -150,7 +150,7 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 \end{description}
 
 	
-\subsection{The Chunk ElGamal  Scheme}\label{sec:ChanksEG:EGScheme}
+\subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEG:EGScheme}
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
 
 
