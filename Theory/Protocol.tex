@@ -69,6 +69,10 @@
 In this section we define the confidential transactions scheme, and prove its security. The ideal functionality for the scheme is define in \cref{sec:MainProtocol:Ideal}, the protocol itself in \cref{sec:MainProtocol:Protocol}, and its security is proved in  \cref{prot:ConfidentialTransactions}.
 
 
+\begin{remark}[$\sid$]\label{rem:sid}
+Recall that all ideal functionalities operations below and the protocol execution get $\sid\in \zs$ as common input. The $\sid$ is stored in the log and passed as common input to the proofs. To keep the text simpler, we omit it from the following text.
+\end{remark}
+
 
 \subsection{The Ideal Functionality}\label{sec:MainProtocol:Ideal}
 In this section we define the ideal functionality for the confidential transactions scheme. The functionality  captures the relevant parts of the actual scheme, which typically invoked using smart contracts over a block chain. Specifically, we model the  the chain as a single (honest) entity, the \textit{chain holder}, assume money flows into the system by a single (honest) party, the \textit{mint}, and assume fixed number of \textit{users}. We also assume an a initial starting phase,  \textit{init}.  
@@ -87,45 +91,46 @@ In this section we define the ideal functionality for the confidential transacti
 	\begin{description}
 		\item[Init.] Upon receiving $\init$ from  all parties: 
 		\begin{enumerate}
-			\item  For each $i\in [n]$:  $\balance_i,\pendbalance_i \asn 0$, $\tcount_i \asn 0$, and  $\historylog_i \asn \emptyset$.
+			\item  For each $i\in [n]$:  $\balance_i\asn 0,\pendbalance_i \asn 0$, $\tcount_i \asn 0$,  $\historylog_i \asn \emptyset$.
 			
 			\item  $\historylog \asn \emptyset$.
 		\end{enumerate}
 		
-			\item[Mint.]   Upon receiving $(\sid,\mint,x,d)$ from  \Cc and \Mc:
+			\item[Mint.]   Upon receiving $(\mint,d,x)$ from  \Cc and \Mc:
 		\begin{enumerate}
 			
 			
-			\item \Assert{$x\in (\psize)$, $\tcount_d\le  \pcount$ and $d\in [n]$}.
+			\item \Assert{$d\in [n] \land x\in (\psize) \sland \tcount_d\le  \pcount$}.
 			
 			\item $\tcount_d^{++}$.
 			
 			\item $\pendbalance_d \pluseq x$.
 			
-			\item Set $\historylog \unioneq {(\sid,\mint,d,x,\tcount_d)}$.
+			\item Set $\historylog \unioneq {(\mint,d,\tcount_d,x)}$.
 		\end{enumerate}
 		
 		
-		\item[Transfer.]    Upon receiving  $(\sid,\transfer,d)$ from  \Cc and  $\Uc_s$, with  $\Uc_s$ using private input $x$. 
+		\item[Transfer.]    Upon receiving  $(\transfer,d)$ from  \Cc and  $\Uc_s$, with  $\Uc_s$ using private input $x$. 
 		
 	
 		\begin{enumerate}
-			\item \Assert{$x\in (\pcount)$, $\tcount\le  \psize$, $\balance_s  \ge x$ and $d \in [n]$}.
+			\item \Assert{$  d \in [n] \sland x\in (\psize) \sland \tcount\le  \pcount \sland \balance_s  \ge x $}.
 			
 				\item $\tcount^{++}$.
 				
 				
 			\item $\balance_s \minuseq x$.
 			
-			\item   $\pendbalance_d \unioneq x$.
+			\item   $\pendbalance_d \pluseq x$.
 			
-			\item Set $\historylog_d \unioneq {(\sid,\transfer,s,x)}$
 			
-			\item Set $\historylog \unioneq {(\sid,\transfer,s,d)}$
+			\item  $\historylog_d \unioneq {(\transfer,s,x)}$
+			
+			\item  $\historylog \unioneq {(\transfer,s,d)}$
 			
 		\end{enumerate}
 		
-		\item[Rollover.]     Upon receiving $(\sid,\rollover)$ from  party $\Uc_i$ and \Cc,  party \Cc
+		\item[Rollover.]     Upon receiving $\rollover$ from  party $\Uc_i$ and \Cc,  party \Cc
 		
 		\begin{enumerate}
 			
@@ -133,35 +138,33 @@ In this section we define the ideal functionality for the confidential transacti
 			\item $\tcount \asn 0$.
 			
 			
-			\item Set $\balance_i  \pluseq \pendbalance_i$.
+			\item  $\balance_i  \pluseq \pendbalance_i$.
 			
-			\item Set $\pendbalance_i  \asn 0$.
+			\item  $\pendbalance_i  \asn 0$.
 			
-			\item Set $\historylog \unioneq (\sid,\rollover,i)$
+			\item  $\historylog \unioneq (\rollover,i)$
 			
 			
 		\end{enumerate}
 
 		
-			\item[Withraw.]     Upon receiving $(\sid,\withraw,x)$ from  party $\Uc_i$ and \Cc,  party \Cc
+			\item[Withraw.]     Upon receiving $(\withraw,x)$ from  party $\Uc_i$ and \Cc,  party \Cc
 		
 		\begin{enumerate}
 			
 			
-			 \item \Assert{$x\in \N$, $\balance_i  \ge x$ and $i \in [n]$}.
+			 \item \Assert{$i \in [n] \sland  x\in (q) \sland \balance_i  \ge x$}.
 			
 			\item $\balance_i \minuseq x$.
 			
 			
-			\item Set $\historylog \unioneq {(\sid,\withraw,i,x)}$
+			\item  $\historylog \unioneq {(\withraw,i,x)}$
 			
 			
 		\end{enumerate}
 		
 		
-		\item[History.]     Upon receiving $(\sid,\history)$ from  party $\Uc_i$ and \Cc:  
-		
-		Send $(\historylog,\historylog_i)$ to  $\Uc_i$.	 
+		\item[History.]     Upon receiving $\history$ from  party $\Uc_i$ and \Cc:   Send $(\historylog,\historylog_i)$ to  $\Uc_i$.	 
 		
 		\item[Audit.]      \Inote{TODO}
 		
@@ -171,16 +174,16 @@ In this section we define the ideal functionality for the confidential transacti
 
 
 \subsection{The Protocol}\label{sec:MainProtocol:Protocol}
-Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$.  We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
+Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$, and denote the ciphertexts of the scheme using  overlined capital letters.   We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
 
-\paragraph{Main protocol.}
+
 We split  the protocol into several sub-protocols defined below, and  use the  following environment to define the common part the different sub-protocols share, \eg global parameter. 
 
 \begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
 
 
 	
-\item[Parties:] Mintr \Mc, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+\item[Parties:] Mint \Mc, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
 
 \item[Parameters:] $\pcount,\psize,q \in \N$.
 
@@ -188,7 +191,9 @@ We split  the protocol into several sub-protocols defined below, and  use the  f
 \end{protocol}
 
 
-\paragraph{Init.}
+\subsubsection{Init}
+
+
 This sub-protocol is were the encryption key are sampled and shared, and the chain manager \Cc set the initial values of the chain. The protocol  uses ZKPOK proof for the relation:
 \begin{description}
 	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.
@@ -198,13 +203,13 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 \begin{protocol}[\pConfTran.Init]~\label{prot:ConfidentialTransactions:Init}
 	
 
-	\item[Participating parties.] All parties.
+	\item[Parties.] All parties.
 			
 			
 	\item[Proofs:]   \piZKPOK{\rKeyGen}. 
 	
-	
-	\item[Algorithms:]    \KeyGen.
+%	\item[Common input:] $\sid \in \zs$.
+	%\item[Algorithms:]    \KeyGen.
 	
 			
 \item[Operation:] ~
@@ -214,59 +219,58 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 				
 				\item   $\Uc_i$, for  all $i\in [n]$:
 				\begin{enumerate}
-					\item Set $(pk_i,sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
+					\item  $(\pk_i,\sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
 					
-					\item Store $sk_i$.
 					
-					\item Let $\pi_i \getsr \pZKPOK{\rKeyGen}(pk_i,r_i)$.
+					\item  $\pi_i \getsr \pZKPOK{\rKeyGen}(\pk_i,r_i)$.
 					
-					\item Send $(pk_i,\pi_i)$ to \Cc.
+					\item Send $(\pk_i,\pi_i)$ to \Cc.
 					
 					
 				\end{enumerate}
 				
-				\item \Cc:
+				\item \Cc: ~
+				
 				\begin{enumerate}
+				
+				\item For all $i\in [n]$: 
+				
+				\begin{enumerate}
+					\item 	 $\vZKPOK{\rKeyGen}(pk_i,\pi_i)$.\footnote{Here and after,  \Cc aborts and publish the prover identity if the   proof is not verified.}
 					
-					\item Call $\sset{ \vZKPOK{\rKeyGen}(pk_i,\pi_i)}_{i\in [n]}$. Abort and publish $i$, if the \ith  proof is not verified. 
-										
-					\item Store $\set{pk_i}_{i\in [n]}$.
+					\item $\Enc_{\pk_i}(0),\oB_i\asn \Enc_{\pk_i}(0),\tcount_i 
+					\asn 0$.
 				\end{enumerate}
-				
-				
-				\item \Cc: 
-				\begin{enumerate}
-					\item 	Broadcast $\sset{\oP_i\getsr \Enc_{pk_i}(0),\oB_i\asn \Enc_{pk_i}(0),\tcount_i 
-					\asn 0}_{i\in [n]}$.
-					
-					\item    Broadcast $\historylog \asn \emptyset$.
+			
+		
+			\item     $\historylog \asn \emptyset$.
 				\end{enumerate}								
 			\end{enumerate}
 \end{protocol}
 
-\paragraph{Mint.}
+\subsubsection{Mint}
+
 \begin{protocol}[\pConfTran.Mint]~\label{prot:ConfidentialTransactions:Mint}
-	\item[Participating parties.] \Mc and \Cc.
+	\item[Parties:] \Mc and \Cc.
 	
 	
 	
-	\item[Common input.] $\sid$, $x\in \N$ and $d\in [n]$.
+	\item[Common input:]  $d\in [n]$ and $x\in (\psize)$.
 	
 	\item[Operation:]  \Cc~
-	
-		\item \Cc:  
+
 		\begin{enumerate}
-			\item \Assert{$x\in [\psize]$ and $\tcount_d  \le \pcount$}
+			\item \Assert{$d\in [n] \sland \tcount_d  \le \pcount \sland x\in (\psize)$}
 			
-			\item Set $\oP_i \pluseq \Enc_{pk_i}(x))$.
+			\item  $\oP_d \pluseq \Enc_{\pk_d}(x)$.
 				
-		\item Broadcast $\historylog \unioneq (\sid,\mint,d,x,\oP_i,\tcount_d)$.
+		\item   $\historylog \unioneq (\mint,d,x,\tcount_d,\oP_d)$.
 				 	
 		
 	\end{enumerate}
 \end{protocol}
 
-\paragraph{Transfer.}
+\subsubsection{Transfer}
 
 The protocol uses ZK and ZKPOK proofs for the   following  relations:
 
@@ -282,17 +286,17 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 
 
 \begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
-	\item[Participating parties:] $\Uc_s$ and \Cc.
+	\item[Parties:] $\Uc_s$ and \Cc.
 	
 \item[Proofs:]   \piZK{\rRp},\pZK{\rEq},\pZK{\rLrgEq}
 
 
-\item[Algorithms:]    \Dec.
+%\item[Algorithms:]    \Dec.
 
 	
 	\item[Common input:] $d\in [n]$.
 	
-	\item[$\Uc_s$'s private  input.] $x \in \N$.
+	\item[$\Uc_s$'s private  input:] $x \in (\psize)$.
 	
 \item[Operation:] ~
 	
@@ -300,46 +304,49 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 		\item  $\Uc_s$: 
 		
 		\begin{enumerate}
-			\item $X_d \getsr \Enc_{\pk_d}(x;r)$ for $r^d \getsr \cD$.
+			\item $\oX_d \getsr \Enc_{\pk_d}(x;r_d)$ for $r_d \getsr \cD$.
 			
 		
-			\item $\pi^\RPs \getsr \pZK{\rRp}((\pk_d,X_s,\psize),(x,r))$.
+			\item $\pi^\RPs \getsr \pZK{\rRp}((\pk_d,\oX_d,\psize),(x,r_d))$.
 			
 			
-			\item $X_s \getsr \Enc_{\pk_s}(x;r)$ for $r^s \getsr \cD$.
+			\item $\oX_s \getsr \Enc_{\pk_s}(x;r)$ for $r_s \getsr \cD$.
 			
 			
 			
-			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,X_s,X_s),(x,r_s,r_d))$.
+			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oX_s,\oX_s),(x,r_s,r_d))$.
 			
 			
 			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
 			
 			
-			\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,X_s,\oB_s),(x,r_s,r_b))$.
+			\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,\oX_s,\oB_s),(x,r_s,r_b))$.
 			
 			
-			\item Send $(X_s,X_d,\pi^\RPs,\pi^\Eqs,\pi^\LrgEqs)$ to \Cc.
+			\item Send $(X_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\LrgEqs)$ to \Cc.
 		\end{enumerate}
 		
 		
 		\item  \Cc: 
 		
 		\begin{enumerate}
-			\item  Call $\vZKPOK{\rRp}((\pk_d,X_s,\psize),\pi^\RPs)$,
 			
-			 $\vZKPOK{\Eqs}((\pk_s,\pk_d,X_s,X_s),\pi^\RPs)$ and $\vZKPOK{\rLrgEq}((\pk_s,X_s,\oB_s),\pi^\RPs)$.
+			\item  $\Assert{\tcount_d \le \pcount}$.
+				
+			\item   $\vZKPOK{\rRp}((\pk_d,\oX_d,\psize),\pi^\RPs)$,
 			
-		\item Verify $\tcount_d \le \pcount$.
+			 $\vZKPOK{\Eqs}((\pk_s,\pk_d,\oX_s,\oX_s),\pi^\Eqs)$, $\vZKPOK{\rLrgEq}((\pk_s,\oX_s,\oB_s),\pi^\LrgEqs)$. 
+			
+	
 		
 		
-		     \item  Set $U_s \minuseq X_s$. 
+		     \item   $\oB_s \minuseq \oX_s$. 
               
-              \item  Set $\oP_d \pluseq X_d$. 
+              \item  $\oP_d \pluseq X_d$. 
               
               \item $\tcount_d^{++}$.
               
-		     \item Publish  $\historylog \unioneq (\sid,\transfer,s,d,U_s,\oP_d)$.
+		     \item  $\historylog \unioneq (\transfer,s,d,\oB_s,\oP_d)$.
 		     
 		\end{enumerate}
 		
@@ -349,7 +356,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 
 
 
-\paragraph{Rollover.}
+\subsubsection{Rollover}
 
 \begin{protocol}[\pConfTran.Rollover]~\label{prot:ConfidentialTransactions:Rollover}
 	\item[Participating parties.] $\Uc_i$ and \Cc.
@@ -363,10 +370,10 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	
 	\item  $\oP_i \minuseq \oP_i$.
 	
-	\item Set $\tcount_i \asn 0$.
+	\item  $\tcount_i \asn 0$.
 	
 	
-	\item  $\historylog \pluseq (\sid,\rollover,i,\oB_i,\oP_i)$
+	\item  $\historylog \pluseq (\rollover,i,\oB_i,\oP_i)$
 	
 	
 \end{enumerate}
@@ -374,17 +381,19 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \end{protocol}
 
 
-\paragraph{History.}
+\subsubsection{History}
 
 \begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
-	\item[Participating parties.] $\Uc_i$ and \Cc.
+	\item[Parties.] $\Uc_i$ and \Cc.
 		
-	\item Operation: \Cc: send  $\historylog$ to $\Uc_i$.
+	\item Operation: \Cc: Send  $\historylog$ to $\Uc_i$.
 	
 \end{protocol}
 
 
-\paragraph{Audit.} \Inote{TODO}
+\subsubsection{Audit} 
+
+\Inote{TODO}
 
 
 \subsection{Security of \cref{prot:ConfidentialTransactions}}
