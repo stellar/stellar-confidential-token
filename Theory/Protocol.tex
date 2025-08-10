@@ -106,7 +106,7 @@ In this section we define the ideal functionality for the confidential transacti
 			
 			\item $\pendbalance_d \pluseq x$.
 			
-			\item Set $\historylog \unioneq {(\mint,d,\tcount_d,x)}$.
+			\item Send $(\mint,d,x)$ to all parties.
 		\end{enumerate}
 		
 		
@@ -124,9 +124,11 @@ In this section we define the ideal functionality for the confidential transacti
 			\item   $\pendbalance_d \pluseq x$.
 			
 			
-			\item  $\historylog_d \unioneq {(\transfer,s,x)}$
+		%	\item  $\historylog_d \unioneq {(\transfer,s,x)}$
 			
-			\item  $\historylog \unioneq {(\transfer,s,d)}$
+		%	\item  $\historylog \unioneq {(\transfer,s,d)}$ 
+		
+		\item Send $(\transfer,s,d)$ to all parties, and $x$ to $\Uc_d$.
 			
 		\end{enumerate}
 		
@@ -142,9 +144,10 @@ In this section we define the ideal functionality for the confidential transacti
 			
 			\item  $\pendbalance_i  \asn 0$.
 			
-			\item  $\historylog \unioneq (\rollover,i)$
+		%	\item  $\historylog \unioneq (\rollover,i)$
 			
 			
+			\item  Send $ (\rollover,i)$ to all parties.
 		\end{enumerate}
 
 		
@@ -158,13 +161,14 @@ In this section we define the ideal functionality for the confidential transacti
 			\item $\balance_i \minuseq x$.
 			
 			
-			\item  $\historylog \unioneq {(\withraw,i,x)}$
+			%\item  $\historylog \unioneq {(\withraw,i,x)}$
 			
+			\item Send $(\withraw,i,x)$ to all parties,
 			
 		\end{enumerate}
 		
 		
-		\item[History.]     Upon receiving $\history$ from  party $\Uc_i$ and \Cc:   Send $(\historylog,\historylog_i)$ to  $\Uc_i$.	 
+	%	\item[History.]     Upon receiving $\history$ from  party $\Uc_i$ and \Cc:   Send $(\historylog,\historylog_i)$ to  $\Uc_i$.	 
 		
 		\item[Audit.]      \Inote{TODO}
 		
@@ -203,7 +207,7 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 \begin{protocol}[\pConfTran.Init]~\label{prot:ConfidentialTransactions:Init}
 	
 
-	\item[Parties.] All parties.
+	\item[Participating parties.] All parties.
 			
 			
 	\item[Proofs:]   \piZKPOK{\rKeyGen}. 
@@ -238,12 +242,14 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 				\begin{enumerate}
 					\item 	 $\vZKPOK{\rKeyGen}(pk_i,\pi_i)$.\footnote{Here and after,  \Cc aborts and publish the prover identity if the   proof is not verified.}
 					
-					\item $\Enc_{\pk_i}(0),\oB_i\asn \Enc_{\pk_i}(0),\tcount_i 
+					\item $\oP_i\getsr \Enc_{\pk_i}(0),\oB_i\asn \Enc_{\pk_i}(0),\tcount_i 
 					\asn 0$.
+					
+			
 				\end{enumerate}
 			
-		
-			\item     $\historylog \asn \emptyset$.
+		\item Broadcast $(\init,\sset{\pk_i,\oB_i,\oP_i}_{i\in [n]})$
+		%	\item     Broadcast $\historylog \asn \emptyset$.
 				\end{enumerate}								
 			\end{enumerate}
 \end{protocol}
@@ -264,8 +270,9 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 			
 			\item  $\oP_d \pluseq \Enc_{\pk_d}(x)$.
 				
-		\item   $\historylog \unioneq (\mint,d,x,\tcount_d,\oP_d)$.
-				 	
+	%	\item   $\historylog \unioneq (\mint,d,x,\tcount_d,\oP_d)$.
+			
+			\item Broadcast 	 	$(\mint,d,x,\oP_d)$.
 		
 	\end{enumerate}
 \end{protocol}
@@ -346,8 +353,9 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
               
               \item $\tcount_d^{++}$.
               
-		     \item  $\historylog \unioneq (\transfer,s,d,\oB_s,\oP_d)$.
+		    % \item  $\historylog \unioneq (\transfer,s,d,\oB_s,\oP_d)$.
 		     
+		     \item Broadcast $(\transfer,s,d,\oB_s,\oP_d)$.
 		\end{enumerate}
 		
 	\end{enumerate}
@@ -359,7 +367,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \subsubsection{Rollover}
 
 \begin{protocol}[\pConfTran.Rollover]~\label{prot:ConfidentialTransactions:Rollover}
-	\item[Participating parties.] $\Uc_i$ and \Cc.
+	\item[Parties.] $\Uc_i$ and \Cc.
 	
 \item[Operation:] \Cc:
 	
@@ -373,14 +381,14 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	\item  $\tcount_i \asn 0$.
 	
 	
-	\item  $\historylog \pluseq (\rollover,i,\oB_i,\oP_i)$
+	\item  Broadcast $(\rollover,i,\oB_i,\oP_i)$
 	
 	
 \end{enumerate}
 	
 \end{protocol}
 
-
+\remove{
 \subsubsection{History}
 
 \begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
@@ -389,7 +397,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	\item Operation: \Cc: Send  $\historylog$ to $\Uc_i$.
 	
 \end{protocol}
-
+}
 
 \subsubsection{Audit} 
 
