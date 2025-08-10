@@ -89,12 +89,7 @@ In this section we define the ideal functionality for the confidential transacti
 	
 	
 	\begin{description}
-		\item[Init.] Upon receiving $\init$ from  all parties: 
-		\begin{enumerate}
-			\item  For each $i\in [n]$:  $\balance_i\asn 0,\pendbalance_i \asn 0$, $\tcount_i \asn 0$,  $\historylog_i \asn \emptyset$.
-			
-			\item  $\historylog \asn \emptyset$.
-		\end{enumerate}
+		\item[Init.] Upon receiving $\init$ from  all parties: for each $i\in [n]$:  set $\balance_i\asn 0,\pendbalance_i \asn 0$, $\tcount_i \asn 0$.
 		
 			\item[Mint.]   Upon receiving $(\mint,d,x)$ from  \Cc and \Mc:
 		\begin{enumerate}
@@ -128,7 +123,7 @@ In this section we define the ideal functionality for the confidential transacti
 			
 		%	\item  $\historylog \unioneq {(\transfer,s,d)}$ 
 		
-		\item Send $(\transfer,s,d)$ to all parties, and $x$ to $\Uc_d$.
+		\item Send $(\transfer,s,d)$ to all parties, and send $x$ to $\Uc_d$.
 			
 		\end{enumerate}
 		
