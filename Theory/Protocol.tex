@@ -290,7 +290,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
 	\item[Parties:] $\Uc_s$ and \Cc.
 	
-\item[Proofs:]   \piZK{\rRp},\pZK{\rEq},\pZK{\rLrgEq}
+\item[Proofs:]   \piZK{\rRp},\piZK{\rEq},\piZK{\rLrgEq}
 
 
 %\item[Algorithms:]    \Dec.
@@ -316,7 +316,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			
 			
 			
-			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oX_s,\oX_s),(x,r_s,r_d))$.
+			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oX_s,\oX_d),(x,r_s,r_d))$.
 			
 			
 			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
@@ -325,7 +325,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,\oX_s,\oB_s),(x,r_s,r_b))$.
 			
 			
-			\item Send $(X_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\LrgEqs)$ to \Cc.
+			\item Send $(\oX_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\LrgEqs)$ to \Cc.
 		\end{enumerate}
 		
 		
