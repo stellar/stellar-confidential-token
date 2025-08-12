@@ -1,36 +1,31 @@
 
+\newcommand{\basefactor}{\MathAlgX{baseFcts}}
+\newcommand{\Fshs}{{\sf Fsh}}
 
 
-%%ElGamal In the exponent
+\remove{
+%ElGamal In the exponent
 \newcommand{\EgKG}{\MathAlgX{EgGen}}
 \newcommand{\EgEnc}{\MathAlgX{EgEnc}}
 \newcommand{\EgDec}{\MathAlgX{EgDec}}
-
-
-
-
-
 \newcommand{\rEgKeyGen}{{\cR_{\sf EGKeyGen}}}
-
-
 \newcommand{\rEgKeyGenDef}
 {
 	\set{(E,e))\colon e\cdot G= E}
 }
-
-
 \newcommand{\rEGEnc}{{\cR_{\sf EgEnc}}}
+
 
 \newcommand{\rEGEncDef}
 {
 	\set{((E,\tA),(a,r))\colon \EgEnc_E(a;r)= \tA}
 }
 
-\newcommand{\Fshs}{{\sf Fsh}}
+
 \newcommand{\rFsh}{{\cR_\Fshs}}
 \newcommand{\rFshDef}
 {
-	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
+	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \tEgEnc_\pk(\oa_i;\orr_i)= \oA_i  
 		\sland \oa_i \in (b)}
 }
 
@@ -42,15 +37,15 @@
 {
 	\set{((E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \EgEnc_{E_i}(a;r_i)= \tA_i}
 }
-
-
-\newcommand{\EgRPs}{{\sf EgRp}}
-\newcommand{\rEgRp}{\cR_\EgRPs}
-
-\newcommand{\rEgRpDef}
-{
-	\set{((E,\tA,b),(a,r))\colon \EgEnc_E(a;r)= \tA \sland a\in (b)}
 }
+
+%\newcommand{\EgRPs}{{\sf EgRp}}
+%\newcommand{\rEgRp}{\cR_\EgRPs}
+
+%\newcommand{\rEgRpDef}
+%{
+%	\set{((E,\tA,b),(a,r))\colon \EgEnc_E(a;r)= \tA \sland a\in (b)}
+%}
 
 
 
@@ -76,7 +71,7 @@
 
 
 \newcommand{\rtFshs}{{{\sf EgFsh}}}
-\newcommand{\rtFsh}{\cR_\tEGEncDefs}
+\newcommand{\rtFsh}{\cR_\rtFshs}
 \newcommand{\rtFshDef}
 {
 	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \tEgEnc_\pk(\oa_i;\orr_i)= \oA_i  
@@ -129,16 +124,16 @@
 
 \section{The Chunk-ElGamal  Encryption Scheme}\label{sec:ChanksEG}
 In this section we define the (efficient)  close to being additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
-The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $a_i$. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
+The idea is to bootstrap the so-called   \textit{twisted ElGamal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $a_i$. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
 \begin{enumerate}
 	\item Decrypt   each $A_i$ to get $a_i  \cdot G$.
 	\item Use brute force to find $a$.\footnote{One can use standard   processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
 	
 	\item Reconstruct $a$.
 \end{enumerate}
-In \cref{sec:ChanksEG:EG} we formally define the ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme} and the related ZK proofs, are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} tp work with the new scheme.
+In \cref{sec:ChanksEG:EG} we formally define the twisted ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme} and the related ZK proofs, are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} tp work with the new scheme.
 
-
+\remove{
 \subsection{ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:EG}
 
 Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
@@ -218,6 +213,7 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 
 \end{description}
 
+}
 
 \subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:TEG}
 
@@ -287,7 +283,7 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 	
 	\item[Equality.] ~
 	\begin{description}
-		\item[Task:] ZKP for $\rEgEq =\rtEgEqDef$.
+		\item[Task:] ZKP for $\rtEgEq =\rtEgEqDef$.
 		
 		\item[Proof:] The sigma protocol for this relation concatenates, with the same challenge $e$ and answer $z$, two proofs of $\rtEGEnc$. 
 	\end{description}
@@ -310,22 +306,22 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
 
 
-\newcommand{\basefactor}{\MathAlgX{baseF}}
+
 \begin{definition}[Base factorization]\label{def:basefactor}
 For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}    2^{i c} \cdot a_i$.
 \end{definition}
 
-\Inote{update to use twisted EG. In particular, get  $H$ as parameter}
+
 \begin{algorithm}[$(\KeyGen,\Enc,\Dec)$: Chunk ElGamal adaptively homomorphic encryption]\label{alg:ChunkEGa}~
 	
-	\item[Key generation:] $\KeyGen(1^b)$: act as $\EgKG(1^b)$.
+	\item[Key generation:] $\KeyGen(1^b,H)$: act as $\tEgKG(1^b,H)$.
 	
 	\item[Encryiption:] $\Enc_\pk(a)$
 	
 	\begin{enumerate}
 		\item Compute $(a_0,\ldots,a_{\ell-1}) \asn \basefactor(a)$.
 		
-		\item For each $i\in (\ell)$: let $\tA_i \getsr \EgEnc_\pk(a_i)$.
+		\item For each $i\in (\ell)$: let $\tA_i \getsr \tEgEnc_\pk(a_i)$.
 		
 		\item Output $\oA \asn (\tA_0,\ldots, \tA_{\ell-1})$.
 		
@@ -333,7 +329,7 @@ For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}   
 	 
 	\item[Decription:] $\Dec_\sk(\oM,b)$   
 	\begin{enumerate}
-		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_\sk(\oM_i,b)$.
+		\item 	 For each $i\in (\ell)$: let $m_i \getsr \tEgDec_\sk(\oM_i,b)$.
 		
 		\item Let  $m \asn \sum_{i \in (\ell)}   2^{i c} \cdot  m_i $.
 		
@@ -364,7 +360,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 	\begin{description}
 		\item[Task:] ZKPOK for $\rKeyGen=\rKeyGenDef$.
 		
-		\item[Proof:] Same as \piZKPOK{\rEgKeyGen}. 
+		\item[Proof:] Same as \piZKPOK{\rtEgKeyGen}. 
 		
 	\end{description}
 	
@@ -378,7 +374,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 		
 		\item[\Pc:] On  input  $((\pk,\oA),(\oa,\orr)$.
 		\begin{enumerate}
-			\item For each $i\in (\ell)$: let  $\pi_i \asn \piZKPOK{\rEGEnc}((\pk,\oA_i),(\oa_i,\orr_i))$. 
+			\item For each $i\in (\ell)$: let  $\pi_i \asn \piZKPOK{\rtEGEnc}((\pk,\oA_i),(\oa_i,\orr_i))$. 
 			
 			\item Output $\pi \asn (\pi_0,\ldots, \pi_{\ell-1})$.
 			
@@ -387,7 +383,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 		
 	\item[\Vc:] On  input  $((\pk,\oA),\pi = (\pi_0,\ldots, \pi_{\ell-1}))$:
 	
-	 Accept iff  $\vZK{\rEGEnc}((\pk,\tA_i), \pi_i)$ for all $i\in (\ell)$.
+	 Accept iff  $\vZK{\rtEGEnc}((\pk,\tA_i), \pi_i)$ for all $i\in (\ell)$.
 		
 	\end{description}
 	
@@ -411,7 +407,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 			
 		\end{enumerate}
 		
-		\item Output $\pi \asn \pZK{\rEgEq}((\pk,\tA_0,\tA_1), (a,r_0,r_1))$.
+		\item Output $\pi \asn \pZK{\rtEgEq}((\pk,\tA_0,\tA_1), (a,r_0,r_1))$.
 				 
 	\end{enumerate}
 	
@@ -420,7 +416,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 	\begin{enumerate}
 		\item Generate $\tA_0$ and  $\tA_1$ as done by \Pc.
 		
-	\item Apply $\vZK{\rEgEq}((\pk,\tA_0,\tA_1), \pi)$.
+	\item Apply $\vZK{\rtEgEq}((\pk,\tA_0,\tA_1), \pi)$.
 	
 	\end{enumerate}
 	
@@ -443,7 +439,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 		\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
 		\item    $r \asn  \sum_{i\in (\ell)}  2^c \cdot \orr_i$. 
         
-        \item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,b), (a,r))$.
+        \item  Output $\pi \asn \pZK{\rtEgRp}((\pk,\tA,b), (a,r))$.
         
 	\end{enumerate}
 	
@@ -452,7 +448,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 	
 	\begin{enumerate}
 		\item   Generate $\tA$ as by \Pc.
-		\item  Output $\vZK{\rEgRp}((\pk,\tA,b), \pi)$.
+		\item  Output $\vZK{\rtEgRp}((\pk,\tA,b), \pi)$.
 		
 	\end{enumerate}
 	
@@ -501,19 +497,19 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 Proving that each of the entries of the  ciphertext are small. 
 
 \begin{description}
-	\item[Task:] ZKP for $\rFsh =\rFshDef$.
+	\item[Task:] ZKP for $\rtFsh =\rtFshDef$.
 	
 	\item[\Pc:] On  input  $((\pk,\oA,b),(\oa,\orr)$:
 	
 	\begin{enumerate}
-		\item For each $i\in (\ell)$: $\pi_i \asn \pZK{\rEgRp}((\pk,\tA_i,b), (\oa_i,\orr_i))$.
+		\item For each $i\in (\ell)$: $\pi_i \asn \pZK{\rtEgRp}((\pk,\tA_i,b), (\oa_i,\orr_i))$.
 		\item Output $\pi \asn (\pi_0,\ldots, \pi_{\ell-1})$.
 	\end{enumerate}
 	 
 	 
 	 	\item[\Vc:] On  input  $((\pk,\oA,b), \pi= (\pi_0,\ldots, \pi_{\ell-1}))$:
 	 
-	 Accept iff  $\vZK{\rEgRp}((\pk,\tA_i,b), \pi_i)$ for all $i\in (\ell)$.
+	 Accept iff  $\vZK{\rtEgRp}((\pk,\tA_i,b), \pi_i)$ for all $i\in (\ell)$.
 	 
 	 
 \end{description}
@@ -529,7 +525,7 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 	
 	\item[Init:] Set the parameter of the encryption key generation algorithm to  $b \asn 2^{c}\cdot \pcount$.
 	 
-	\item[Transfer.]  The sender also provide proofs that $X_d$ is fresh (\ie using \pZK{\rFsh} with parameter $b\asn 2^c$).
+	\item[Transfer.]  The sender also provide proofs that $X_d$ is fresh (\ie using \pZK{\rtFsh} with parameter $b\asn 2^c$).
 	
 	
 	\item[Rollover:] The rollover over operation should be updated to allow the account holder to ``normalize''  its active balance: to make it fresh. Specifically
@@ -546,7 +542,7 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 			\item Generate a proof $\pi_\Eqs$ (\ie using \pZK{\rEq})   that $\oP_i+\oB_i = \oP_i'+ \oB_i'$.
 			
 			
-			\item  Generate proofs $\pi^P_\Fshs$ and $\pi^B\Fshs$ (\ie using \pZK{\rFsh})   that $\oP_i'$ and $\oB_i'$ are fresh.
+			\item  Generate proofs $\pi^P_\Fshs$ and $\pi^B_\Fshs$ (\ie using \pZK{\rtFsh})   that $\oP_i'$ and $\oB_i'$ are fresh.
 			
 			\item Send $(\oP_i',\oB_i',\pi_\Eqs,\pi^P_\Fshs,\pi^B_\Fshs)$ to \Cc.
 		
