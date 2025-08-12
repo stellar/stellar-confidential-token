@@ -1,10 +1,17 @@
 
+
+
+%%ElGamal In the exponent
 \newcommand{\EgKG}{\MathAlgX{EgGen}}
 \newcommand{\EgEnc}{\MathAlgX{EgEnc}}
 \newcommand{\EgDec}{\MathAlgX{EgDec}}
 
 
+
+
+
 \newcommand{\rEgKeyGen}{{\cR_{\sf EGKeyGen}}}
+
 
 \newcommand{\rEgKeyGenDef}
 {
@@ -33,7 +40,7 @@
 
 \newcommand{\rEgEqDef}
 {
-	\set{((E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \; \EgEnc_{E_i}(a;r_i)= \tA_i}
+	\set{((E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \EgEnc_{E_i}(a;r_i)= \tA_i}
 }
 
 
@@ -42,17 +49,79 @@
 
 \newcommand{\rEgRpDef}
 {
-	\set{((E,\tA,b),(a,r))\colon \Enc_E(a;r)= \tA \sland a\in (b)}
+	\set{((E,\tA,b),(a,r))\colon \EgEnc_E(a;r)= \tA \sland a\in (b)}
 }
 
 
-\newcommand{\EgLrgs}{{\sf EgLrger}}
-\newcommand{\rEgLrg}{\cR_\EgLrgs}
 
-\newcommand{\rEgLrgDef}
+%%%%%%Twisted EG in the exponent
+\newcommand{\tEgKG}{\MathAlgX{\widetilde{EgGen}}}
+\newcommand{\tEgEnc}{\MathAlgX{\widetilde{EgEnc}}}
+\newcommand{\tEgDec}{\MathAlgX{\widetilde{EgDec}}}
+
+\newcommand{\tEgKeyGens}{{{\sf EgKG}}}
+\newcommand{\rtEgKeyGen}{\cR_\tEgKeyGens}
+\newcommand{\rtEgKeyGenDef}
 {
-	\set{((E,\tA_0,\ttA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \EgEnc_\pk(a_i;r_i)= A_i \sland a_1 -a_0 \in [q]} 
+	\set{(E,e))\colon e\cdot G= E}
 }
+
+
+\newcommand{\tEGEncs}{{{\sf EgEnc}}}
+\newcommand{\rtEGEnc}{\cR_\tEGEncs}
+\newcommand{\rtEGEncDef}
+{
+	\set{((H,E,\tA),(a,r))\colon \tEgEnc_{(H,E)}(a;r)= \tA}
+}
+
+
+\newcommand{\rtFshs}{{{\sf EgFsh}}}
+\newcommand{\rtFsh}{\cR_\tEGEncDefs}
+\newcommand{\rtFshDef}
+{
+	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \tEgEnc_\pk(\oa_i;\orr_i)= \oA_i  
+		\sland \oa_i \in (b)}
+}
+
+
+\newcommand{\rtEgEqs}{{{\sf EgEq}}}
+\newcommand{\rtEgEq}{\cR_\rtEgEqs}
+\newcommand{\rtEgEqDef}
+{
+	\set{(((H,E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \tEgEnc_{(H,E_i)}(a;r_i)= \tA_i}
+}
+
+
+\newcommand{\tEgRps}{{{\sf tEgRp}}}
+\newcommand{\rtEgRp}{\cR_\tEgRps}
+\newcommand{\rtEgRpDef}
+{
+	\set{((H,E,\tA,b),(a,r))\colon \tEgEnc_{(H,E)}(a;r)= \tA \sland a\in (b)}
+}
+
+
+
+%%%%Pedersen
+\newcommand{\Ped}{\MathAlgX{Ped}}
+
+
+
+\newcommand{\PedEncs}{{\sf PedEnc}}
+\newcommand{\rPedEnc}{\cR_\PedEncs}
+
+\newcommand{\rPedEncDef}
+{
+	\set{((H,A),(a,r))\colon \Ped_H(a;r)= A}
+}
+
+
+%\newcommand{\EgLrgs}{{\sf EgLrger}}
+%\newcommand{\rEgLrg}{\cR_\EgLrgs}
+
+%\newcommand{\rEgLrgDef}
+%{
+%	\set{((E,\tA_0,\ttA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \EgEnc_\pk(a_i;r_i)= A_i \sland a_1 -a_0 \in [q]} 
+%}
 
 
 
@@ -77,14 +146,14 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 \begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: ElGamal in-the-exponent encryption]\label{alg:EGinExp}~
 	
 	
-\item[Key generation:] $\EgKG(1^b)$ samples $e\getsr \Z_q$, and outputs $((1^b,e),E\asn  e\cdot G)$.
+\item[Key generation:] $\EgKG(1^b)$ samples $e\getsr \Z_q$, and outputs $(\sk \asn e,\pk \asn (1^b,E)\asn  e\cdot G)$.
 	
-	\item[Encryption:] $\EgEnc_E(a)$  samples $e\getsr \Z_q$, and outputs  $\tA \asn (r\cdot G, r\cdot E + a \cdot G)$
+	\item[Encryption:] $\EgEnc_E(a)$  samples $r\getsr \Z_q$, and outputs  $\tA \asn (r\cdot G, r\cdot E + a \cdot G)$
 	
 	
-		\item[Decryption:] $\EgDec_{1^b,e}(\tA)$,   
+		\item[Decryption:] $\EgDec_{e,1^b}(\tA)$,   
 		\begin{enumerate}
-			\item 	Let $M \asn \tA_2 - e\cdot \tA_2$.
+			\item 	Let $M \asn \tA_2 - e\cdot \tA_1$.
 			
 			\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
 			
@@ -96,7 +165,7 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 		\item[Minus:]  The inverse in $\cG^2$.
 		
 \end{algorithm}	
-When clear from the context,  will omit the parameter $1^b$ from the secret key of the scheme.
+When clear from the context,  will omit the parameter $1^b$ from the public  key of the scheme.
 
 \begin{theorem}[Security  of ElGamal in-the-exponent]\label{thm:EGinExp}
 	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the input of the key generation algorithm:
@@ -142,12 +211,99 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 \begin{description}
 	\item[Task:] ZKP for $\rEgRp =\rEgRpDef$.
 	
-	\item[Proof:] \Inote{Bullet proof. Give ref}
+	\item[Proof:] We use \textit{bullet proofs} \cite{SP:BBBPWM18}. \Inote{Are we using \textit{twisted ElGamal?}} 
 \end{description}
 
 
 
 \end{description}
+
+
+\subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:TEG}
+
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generators $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\tEgKG,\tEgEnc,\tEgDec)$ is defined below/ Note that it  gets  $H\in \cG$ as an  additional parameter.%\footnote{We will later assume that it is hard to compute the discrete log log $H$ in \wrt $G$, which holds assuming $H$ is sampled at random from the $\cG$.} 
+
+\begin{algorithm}[$(\tEgKG,\tEgEnc,\tEgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:TEGinExp}~
+	
+	
+	\item[Key generation:] $\tEgKG(1^b,H)$ samples $e\getsr \Z_q$, and outputs $(\sk 
+	\asn e,\pk \asn (1^b,H,E\asn  e^{-1}\cdot H))$.
+	
+	\item[Encryption:] $\tEgEnc_{(H,E)}(a)$  samples $r\getsr \Z_q$, and outputs  $\tA \asn (r\cdot E, \Ped_H(a;r))$, for 
+	$\Ped_H(a;r) \eqdef r\cdot H + a \cdot G$.
+	
+	
+	\item[Decryption:] $\tEgDec_{(1^b,H,e)}(\tA)$,   
+	\begin{enumerate}
+		\item 	Let $M \asn \tA_2 - e\cdot \tA_2$.
+		
+		\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
+		
+		\item Output $m$.
+	\end{enumerate}
+	
+	\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_0+\tB_0,\tA_1+\tB_1)$.}
+	
+	\item[Minus:]  The inverse in $\cG^2$.
+	
+\end{algorithm}	
+When clear from the context,  will omit the parameters $1^b$ from the public key of the scheme.
+
+\begin{theorem}[Security  of twisted-ElGamal in-the-exponent]\label{thm:tEGinExp}
+	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the input of the key generation algorithm:
+\end{theorem}
+
+
+
+\subsubsection{Zero-Knowledge Proofs}
+In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relations regrading the above scheme.  
+
+\paragraph{Warning!} The  following proofs are sound only if the prover does \emph{not} known the discrete log of $H$ \wrt to $G$.\footnote{This holds, for instance,  assuming discrete  log is hard over $\cG$, and $H,G$ are chosen independently  and uniformly in $\cG$.}
+
+\begin{description}
+	\item[Knowledge of secret key.] ~
+	
+	
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rtEgKeyGen = \rtEgKeyGenDef$.
+		
+		\item[Proof:] This is just standard Schnorr proof for discrete log \cite{Shoup00b}.
+	\end{description}
+	
+	
+	\item[Knowledge of plain text.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rtEGEnc=\rtEGEncDef$.
+		
+		\item[Proof:] Apply the Knowledge of plain text proof (see  \cite[Protocol A.1]{HaitnerLNR23}) for the relation
+		
+		$$\rPedEnc = \rPedEncDef $$
+		Namely, the proof is only applied to  $\tA_1$, \ie the right hand side of the ciphertext. 
+		
+	\end{description}
+	
+	
+	\item[Equality.] ~
+	\begin{description}
+		\item[Task:] ZKP for $\rEgEq =\rtEgEqDef$.
+		
+		\item[Proof:] The sigma protocol for this relation concatenates, with the same challenge $e$ and answer $z$, two proofs of $\rtEGEnc$. 
+	\end{description}
+	
+	
+	\item[In range.] ~
+	\begin{description}
+		\item[Task:] ZKP for $\rtEgRp =\rtEgRpDef$.
+		
+		\item[Proof:] Use \textit{bullet proofs} \cite{SP:BBBPWM18} on $\tA_1$ (\ie right hand side of $\tA$). 
+	\end{description}
+	
+	
+	
+\end{description}
+
 
 	
 \subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEG:EGScheme}
@@ -159,6 +315,7 @@ In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. Th
 For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}    2^{i c} \cdot a_i$.
 \end{definition}
 
+\Inote{update to use twisted EG. In particular, get  $H$ as parameter}
 \begin{algorithm}[$(\KeyGen,\Enc,\Dec)$: Chunk ElGamal adaptively homomorphic encryption]\label{alg:ChunkEGa}~
 	
 	\item[Key generation:] $\KeyGen(1^b)$: act as $\EgKG(1^b)$.
