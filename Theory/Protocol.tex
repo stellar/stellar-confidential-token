@@ -312,20 +312,27 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			\item $\pi^\RPs \getsr \pZK{\rRp}((\pk_d,\oX_d,\psize),(x,r_d))$.
 			
 			
-			\item $\oX_s \getsr \Enc_{\pk_s}(x;r)$ for $r_s \getsr \cD$.
-			
-			
-			
-			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oX_s,\oX_d),(x,r_s,r_d))$.
+		%	\item $\oX_s \getsr \Enc_{\pk_s}(x;r)$ for $r_s \getsr \cD$.
 			
 			
 			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
 			
+			\item $\oB_s' \getsr \Enc_{\pk_d}(b-x;r_b')$ for $r_b' \getsr \cD$.
 			
-			\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,\oX_s,\oB_s),(x,r_s,r_b))$.
+			
+		 
+
 			
 			
-			\item Send $(\oX_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\LrgEqs)$ to \Cc.
+			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oB_s- \oB_s',\oX_d),(x,r_b - r_b',r_d))$.
+			
+			
+		
+			
+		%	\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,\oX_s,\oB_s),(x,r_s,r_b))$.
+			
+			
+			\item Send $(\oB_s',\oX_d,\pi^\RPs,\pi^\Eqs)$ to \Cc.
 		\end{enumerate}
 		
 		
@@ -335,14 +342,13 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			
 			\item  $\Assert{\tcount_d \le \pcount}$.
 				
-			\item   $\vZKPOK{\rRp}((\pk_d,\oX_d,\psize),\pi^\RPs)$,
-			
-			 $\vZKPOK{\Eqs}((\pk_s,\pk_d,\oX_s,\oX_s),\pi^\Eqs)$, $\vZKPOK{\rLrgEq}((\pk_s,\oX_s,\oB_s),\pi^\LrgEqs)$. 
+			\item   $\vZKPOK{\rRp}((\pk_d,\oX_d,\psize),\pi^\RPs)$
+			 and $\vZK{\rEq}((\pk_s,\pk_d,\oB_s- \oB_s',\oX_d),\pi^\Eqs )$. 
 			
 	
 		
 		
-		     \item   $\oB_s \minuseq \oX_s$. 
+		     \item   $\oB_s\asn \oB_s'$. 
               
               \item  $\oP_d \pluseq X_d$. 
               
