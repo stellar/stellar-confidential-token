@@ -75,7 +75,7 @@ The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   addi
 	
 	\item Reconstruct $a$.
 \end{enumerate}
-In \cref{sec:ChanksEG:tEG}, we formally define the  ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. Actually, we use a ``twisted'' variant of this scheme, that enjoys more efficient Schnorr proofs.   The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme}, and the related ZK proofs are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} to work with this almost homomorphic scheme.
+In \cref{sec:ChanksEG:tEG}, we formally define the  ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. Actually, we use a ``twisted'' variant of this scheme, that supports somewhat more efficient proofs in our settings.   The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme}, and the related ZK proofs are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} to work with this almost homomorphic scheme.
 
 \subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:TEG}
 Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\tEgKG,\tEgEnc,\tEgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter.
@@ -106,8 +106,15 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 \end{algorithm}	
 When clear from the context,  will omit the parameters $1^b$ from the public key of the scheme.
 
+Namely, the right hand side if a twisted ElGamal ciphertext is just a  Pedersen  commitment \cite{Pedersen91} (of the same palaintext). This change enable  using proofs that  support  Pedersen commitment on the ciphertext without changing it, but doing that  should be done with care.
+\begin{enumerate}
+	\item The parameter $H$ should be chosen so that the prover does not know that discrete log of $H$ \wrt $G$. (Otherwise, a proof of the Pedersen part means nothing).
+	
+	\item When using a proof of  the Pedersen part (which should always be POK, since Pedersen is perfectly hiding), it should \emph{always} be accompanied with a POK of the palaintext for the whole EG encryption (otherwise, the palaintext and randomness  extracted by the  Pedersen POK, might be  inconsistent with  EG publicj key)  
+\end{enumerate}
+
 \begin{theorem}[Security  of twisted-ElGamal in-the-exponent]\label{thm:tEGinExp}
-	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the input of the key generation algorithm:
+	Assuming DDH is hard over $\cG$, then \cref{alg:tEGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the parameter  of the key generation algorithm:
 \end{theorem}
 
 
@@ -133,10 +140,10 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 	\begin{description}
 		\item[Task:] ZKPOK for $\rtEGEnc=\rtEGEncDef$.
 		
-		\item[Proof:] Apply the Knowledge of plain text proof (see  \cite[Protocol A.1]{HaitnerLNR23}) for the relation
+		\item[Proof:] Apply the Knowledge of plain text proof (see  \cite[Protocol A.2]{HaitnerLNR23}) for the relation
 		
-		$$\rPedEnc = \rPedEncDef $$
-		Namely, the proof is only applied to  $\tA_1$, \ie the right hand side of the ciphertext. 
+	%	$$\rPedEnc = \rPedEncDef $$
+	%	Namely, the proof is only applied to  $\tA_1$, \ie the right hand side of the ciphertext. 
 		
 	\end{description}
 	
@@ -153,13 +160,21 @@ In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relat
 	\begin{description}
 		\item[Task:] ZKP for $\rtEgRp =\rtEgRpDef$.
 		
-		\item[Proof:] Use \textit{bullet proofs} \cite{SP:BBBPWM18} on $\tA_1$ (\ie right hand side of $\tA$). 
+		\item[Proof:]  The proof consists of two parts:
+		\begin{enumerate}
+			\item  \textit{bullet (POK) proofs} \cite{SP:BBBPWM18} on $\tA_1$ (\ie right hand side of $\tA$).   
+			
+			
+			
+			\item   $\rtEGEnc$ ZKPOK  for the whole $\tA$.
+		\end{enumerate}
+		
 	\end{description}
-	
-	
-	
 \end{description}
 
+\begin{remark}[Efficiency]
+	The saving in the above proofs comparing to using non twisted EG, is in not sending two additional   group elements in the In-range proofs;  we do not have to provide the Pedersen commitment (one group element)  for the plain text and prove it is consistent with the EG encryption (three group elements). Yet, we still have to preform an EG POK proof (two group elements).
+\end{remark}	
 
 	
 \subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEG:EGScheme}
@@ -437,4 +452,5 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 \begin{enumerate}
 	\item The bullet proofs used  in the In range and the freshness proofs can be batched. 
 	
+	\item The Schnorr proofs can be batched. In particular, the one performed in the different In-range proofs.  
 \end{enumerate}
