@@ -9,3 +9,4 @@ build/ConfidentialTransaction_Theory-blx.bib
 *.toc
 .DS_Store
 Theory/build/ConfidentialTransaction_Theory.pdf
+Theory/build/ConfidentialTransaction_Theory-blx.bib

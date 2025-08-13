@@ -96,7 +96,7 @@ In this section we define the ideal functionality for the confidential transacti
 		\begin{enumerate}
 			
 			
-			\item \Assert{$x\in (\psize)$, $\tcount_d\le  \pcount$ and $d\in [n]$}.
+			\item \Assert{$x\in (\pcount)$, $\tcount_d\le  \psize$ and $d\in [n]$}.
 			
 			\item $\tcount_d^{++}$.
 			
@@ -117,7 +117,7 @@ In this section we define the ideal functionality for the confidential transacti
 				
 			\item $\balance_s \minuseq x$.
 			
-			\item   $\pendbalance_d \unioneq x$.
+			\item   $\pendbalance_d \pluseq x$.
 			
 			\item Set $\historylog_d \unioneq {(\sid,\transfer,s,x)}$
 			
@@ -204,7 +204,7 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 	\item[Proofs:]   \piZKPOK{\rKeyGen}. 
 	
 	
-	\item[Algorithms:]    \KeyGen.
+	%\item[Algorithms:]    \KeyGen.
 	
 			
 \item[Operation:] ~
@@ -214,13 +214,13 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 				
 				\item   $\Uc_i$, for  all $i\in [n]$:
 				\begin{enumerate}
-					\item Set $(pk_i,sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
+					\item Set $(\pk_i,\sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
 					
-					\item Store $sk_i$.
+					\item Store $\sk_i$.
 					
 					\item Let $\pi_i \getsr \pZKPOK{\rKeyGen}(pk_i,r_i)$.
 					
-					\item Send $(pk_i,\pi_i)$ to \Cc.
+					\item Send $(\pk_i,\pi_i)$ to \Cc.
 					
 					
 				\end{enumerate}
@@ -230,16 +230,16 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 					
 					\item Call $\sset{ \vZKPOK{\rKeyGen}(pk_i,\pi_i)}_{i\in [n]}$. Abort and publish $i$, if the \ith  proof is not verified. 
 										
-					\item Store $\set{pk_i}_{i\in [n]}$.
+					\item Set $\set{\pk_i}_{i\in [n]}$.
 				\end{enumerate}
 				
 				
 				\item \Cc: 
 				\begin{enumerate}
-					\item 	Broadcast $\sset{\oP_i\getsr \Enc_{pk_i}(0),\oB_i\asn \Enc_{pk_i}(0),\tcount_i 
+					\item 	Set $\sset{\oP_i\getsr \Enc_{pk_i}(0),\oB_i\asn \Enc_{pk_i}(0),\tcount_i 
 					\asn 0}_{i\in [n]}$.
 					
-					\item    Broadcast $\historylog \asn \emptyset$.
+					\item    Set $\historylog \asn \emptyset$.
 				\end{enumerate}								
 			\end{enumerate}
 \end{protocol}
@@ -254,13 +254,12 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 	
 	\item[Operation:]  \Cc~
 	
-		\item \Cc:  
 		\begin{enumerate}
 			\item \Assert{$x\in [\psize]$ and $\tcount_d  \le \pcount$}
 			
-			\item Set $\oP_i \pluseq \Enc_{pk_i}(x))$.
+			\item Set $\oP_i \pluseq \Enc_{pk_i}(x)$.
 				
-		\item Broadcast $\historylog \unioneq (\sid,\mint,d,x,\oP_i,\tcount_d)$.
+		\item Set $\historylog \unioneq (\sid,\mint,d,x,\oP_i,\tcount_d)$.
 				 	
 		
 	\end{enumerate}
@@ -287,12 +286,12 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \item[Proofs:]   \piZK{\rRp},\pZK{\rEq},\pZK{\rLrgEq}
 
 
-\item[Algorithms:]    \Dec.
+%\item[Algorithms:]    \Dec.
 
 	
 	\item[Common input:] $d\in [n]$.
 	
-	\item[$\Uc_s$'s private  input.] $x \in \N$.
+	\item[$\Uc_s$'s private  input:] $x \in \N$.
 	
 \item[Operation:] ~
 	
@@ -310,10 +309,10 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			
 			
 			
-			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,X_s,X_s),(x,r_s,r_d))$.
+			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,X_s,X_d),(x,r_s,r_d))$.
 			
 			
-			\item $(b,r^b) \asn \Dec_{sk_s}(\oB_s)$.
+			\item $(b,r^b) \asn \Dec_{\sk_s}(\oB_s)$.
 			
 			
 			\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,X_s,\oB_s),(x,r_s,r_b))$.
