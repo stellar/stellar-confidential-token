@@ -2,53 +2,6 @@
 \newcommand{\basefactor}{\MathAlgX{baseFcts}}
 \newcommand{\Fshs}{{\sf Fsh}}
 
-
-\remove{
-%ElGamal In the exponent
-\newcommand{\EgKG}{\MathAlgX{EgGen}}
-\newcommand{\EgEnc}{\MathAlgX{EgEnc}}
-\newcommand{\EgDec}{\MathAlgX{EgDec}}
-\newcommand{\rEgKeyGen}{{\cR_{\sf EGKeyGen}}}
-\newcommand{\rEgKeyGenDef}
-{
-	\set{(E,e))\colon e\cdot G= E}
-}
-\newcommand{\rEGEnc}{{\cR_{\sf EgEnc}}}
-
-
-\newcommand{\rEGEncDef}
-{
-	\set{((E,\tA),(a,r))\colon \EgEnc_E(a;r)= \tA}
-}
-
-
-\newcommand{\rFsh}{{\cR_\Fshs}}
-\newcommand{\rFshDef}
-{
-	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \tEgEnc_\pk(\oa_i;\orr_i)= \oA_i  
-		\sland \oa_i \in (b)}
-}
-
-
-\newcommand{\EgEqs}{{\sf EgEq}}
-\newcommand{\rEgEq}{\cR_\Eqs}
-
-\newcommand{\rEgEqDef}
-{
-	\set{((E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \EgEnc_{E_i}(a;r_i)= \tA_i}
-}
-}
-
-%\newcommand{\EgRPs}{{\sf EgRp}}
-%\newcommand{\rEgRp}{\cR_\EgRPs}
-
-%\newcommand{\rEgRpDef}
-%{
-%	\set{((E,\tA,b),(a,r))\colon \EgEnc_E(a;r)= \tA \sland a\in (b)}
-%}
-
-
-
 %%%%%%Twisted EG in the exponent
 \newcommand{\tEgKG}{\MathAlgX{\widetilde{EgGen}}}
 \newcommand{\tEgEnc}{\MathAlgX{\widetilde{EgEnc}}}
@@ -110,114 +63,22 @@
 }
 
 
-%\newcommand{\EgLrgs}{{\sf EgLrger}}
-%\newcommand{\rEgLrg}{\cR_\EgLrgs}
-
-%\newcommand{\rEgLrgDef}
-%{
-%	\set{((E,\tA_0,\ttA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \EgEnc_\pk(a_i;r_i)= A_i \sland a_1 -a_0 \in [q]} 
-%}
-
-
 
 
 
 \section{The Chunk-ElGamal  Encryption Scheme}\label{sec:ChanksEG}
-In this section we define the (efficient)  close to being additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
-The idea is to bootstrap the so-called   \textit{twisted ElGamal in-the exponent}   additive homomorphic encryption  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present message $m\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some integer that divides $[t]$, and encrypt using    additive homomorphic EG each of the $a_i$. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
+In this section, we define the  (almost) additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
+The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption/commitment  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present a message $a\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some integer  dividing $t$, and encrypt each of the $a_i$ using    additive homomorphic EG. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
 \begin{enumerate}
 	\item Decrypt   each $A_i$ to get $a_i  \cdot G$.
-	\item Use brute force to find $a$.\footnote{One can use standard   processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
+	\item Use brute force to find $a$.\footnote{One can use    processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
 	
 	\item Reconstruct $a$.
 \end{enumerate}
-In \cref{sec:ChanksEG:EG} we formally define the twisted ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme} and the related ZK proofs, are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} tp work with the new scheme.
-
-\remove{
-\subsection{ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:EG}
-
-Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is define as follows:
-
-\begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: ElGamal in-the-exponent encryption]\label{alg:EGinExp}~
-	
-	
-\item[Key generation:] $\EgKG(1^b)$ samples $e\getsr \Z_q$, and outputs $(\sk \asn e,\pk \asn (1^b,E)\asn  e\cdot G)$.
-	
-	\item[Encryption:] $\EgEnc_E(a)$  samples $r\getsr \Z_q$, and outputs  $\tA \asn (r\cdot G, r\cdot E + a \cdot G)$
-	
-	
-		\item[Decryption:] $\EgDec_{e,1^b}(\tA)$,   
-		\begin{enumerate}
-			\item 	Let $M \asn \tA_2 - e\cdot \tA_1$.
-			
-			\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
-			
-			\item Output $m$.
-		\end{enumerate}
-		
-		\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_0+\tB_0,\tA_1+\tB_1)$.}
-		
-		\item[Minus:]  The inverse in $\cG^2$.
-		
-\end{algorithm}	
-When clear from the context,  will omit the parameter $1^b$ from the public  key of the scheme.
-
-\begin{theorem}[Security  of ElGamal in-the-exponent]\label{thm:EGinExp}
-	Assuming DDH is hard over $\cG$, then \cref{alg:EGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the input of the key generation algorithm:
-\end{theorem}
-
-
-
-\subsubsection{Zero-Knowledge Proofs}
-In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relations regrading the above scheme. 
-	
-	
-\begin{description}
-	\item[Knowledge of secret key.] ~
-    
-
-
-\begin{description}
-	\item[Task:] ZKPOK for $\rEgKeyGen = \rEgKeyGenDef$.
-	
-\item[Proof:] This is just standard Schnorr proof for discrete log \cite{Shoup00b}.
-\end{description}
-
-
-\item[Knowledge of plain text.] ~
-
-\begin{description}
-	\item[Task:] ZKPOK for $\rEGEnc=\rEGEncDef$.
-	
-	\item[Proof:] See  \cite[Protocol A.2]{HaitnerLNR23}.
-	
-\end{description}
-
-
-\item[Equality.] ~
-\begin{description}
-	\item[Task:] ZKP for $\rEgEq =\rEgEqDef$.
-	
-	\item[Proof:] The sigma protocol for this relation concatenates, with the same challenge $e$ and answer $z$, two proofs of $\rEGEnc$. 
-\end{description}
-
-
-\item[In range.] ~
-\begin{description}
-	\item[Task:] ZKP for $\rEgRp =\rEgRpDef$.
-	
-	\item[Proof:] We use \textit{bullet proofs} \cite{SP:BBBPWM18}. \Inote{Are we using \textit{twisted ElGamal?}} 
-\end{description}
-
-
-
-\end{description}
-
-}
+In \cref{sec:ChanksEG:tEG}, we formally define the  ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. Actually, we use a ``twisted'' variant of this scheme, that enjoys more efficient Schnorr proofs.   The chunk ElGamal  scheme is defined in \cref{sec:ChanksEG:EGScheme}, and the related ZK proofs are defined in \cref{sec:ChanksEG:Proofs}. Finally, in \cref{sec:ChanksEG:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} to work with this almost homomorphic scheme.
 
 \subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEG:TEG}
-
-Throughout we fix a cyclic  additive $q$-size group $\cG$ with generators $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\tEgKG,\tEgEnc,\tEgDec)$ is defined below/ Note that it  gets  $H\in \cG$ as an  additional parameter.%\footnote{We will later assume that it is hard to compute the discrete log log $H$ in \wrt $G$, which holds assuming $H$ is sampled at random from the $\cG$.} 
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\tEgKG,\tEgEnc,\tEgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter.
 
 \begin{algorithm}[$(\tEgKG,\tEgEnc,\tEgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:TEGinExp}~
 	
@@ -231,7 +92,7 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generators $G$. T
 	
 	\item[Decryption:] $\tEgDec_{(1^b,H,e)}(\tA)$,   
 	\begin{enumerate}
-		\item 	Let $M \asn \tA_2 - e\cdot \tA_2$.
+		\item 	Let $M \asn \tA_1 - e\cdot \tA_0$.
 		
 		\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
 		
