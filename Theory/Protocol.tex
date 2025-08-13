@@ -280,7 +280,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	
 	\item[Equality.] $\rEq =\rEqDef$, \ie  encryptions of the same pair under different public keys.
 	
-	\item[Larger than.] $\rLrgEq =\rLrgEqDef$, \ie encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
+%	\item[Larger than.] $\rLrgEq =\rLrgEqDef$, \ie encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
 \end{description}
 
 
@@ -355,7 +355,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
               
 		    % \item  $\historylog \unioneq (\transfer,s,d,\oB_s,\oP_d)$.
 		     
-		     \item Broadcast $(\transfer,s,d,\oB_s,\oP_d)$.
+		     \item Broadcast $(\transfer,s,d,\oP_d)$.
 		\end{enumerate}
 		
 	\end{enumerate}
@@ -381,7 +381,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	\item  $\tcount_i \asn 0$.
 	
 	
-	\item  Broadcast $(\rollover,i,\oB_i,\oP_i)$
+	\item  Broadcast $(\rollover,i)$
 	
 	
 \end{enumerate}

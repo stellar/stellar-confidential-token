@@ -254,7 +254,6 @@ When clear from the context,  will omit the parameters $1^b$ from the public key
 \subsubsection{Zero-Knowledge Proofs}
 In \cref{sec:ChanksEG:EGScheme} we make use of ZK proofs for the following relations regrading the above scheme.  
 
-\paragraph{Warning!} The  following proofs are sound only if the prover does \emph{not} known the discrete log of $H$ \wrt to $G$.\footnote{This holds, for instance,  assuming discrete  log is hard over $\cG$, and $H,G$ are chosen independently  and uniformly in $\cG$.}
 
 \begin{description}
 	\item[Knowledge of secret key.] ~
@@ -519,12 +518,18 @@ Proving that each of the entries of the  ciphertext are small.
 
 
 \subsection{Adjusting  \cref{prot:ConfidentialTransactions}}\label{sec:ChanksEG:Adjusting}
-Since the decryption procedure of of chunk-ElGamal  encryption scheme only guarantees to work on certain type of ciphertexts, see \cref{thm:ChunkEG}, instantiating \cref{prot:ConfidentialTransactions} with this scheme  requires some adjustments.
+Since the decryption procedure of of chunk-ElGamal  encryption scheme only guarantees to work on certain type of ciphertexts, see \cref{thm:ChunkEG} and take a group element, \ie $H$, as an additional parameter,  instantiating \cref{prot:ConfidentialTransactions} with this scheme  requires some adjustments.
 
 \begin{enumerate}
 	
-	\item[Init:] Set the parameter of the encryption key generation algorithm to  $b \asn 2^{c}\cdot \pcount$.
-	 
+	\item[Init:] 
+	\begin{enumerate}
+		\item The parties  call an ideal functionality that returns $H \getsr \cG$.\footnotetext{Can be implemented using a proper protocol, ot sampled by a trusted  setup.}
+		  
+		\item 	Each $\Uc_i$ sets the parameters of the encryption key generation algorithm to $(1^b,H)$, for  $b \asn 2^{c}\cdot \pcount$.
+
+	\end{enumerate}
+ 
 	\item[Transfer.]  The sender also provide proofs that $X_d$ is fresh (\ie using \pZK{\rtFsh} with parameter $b\asn 2^c$).
 	
 	
@@ -542,15 +547,20 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 			\item Generate a proof $\pi_\Eqs$ (\ie using \pZK{\rEq})   that $\oP_i+\oB_i = \oP_i'+ \oB_i'$.
 			
 			
-			\item  Generate proofs $\pi^P_\Fshs$ and $\pi^B_\Fshs$ (\ie using \pZK{\rtFsh})   that $\oP_i'$ and $\oB_i'$ are fresh.
+		%	\item  Generate proofs $\pi^P_\Fshs$ and $\pi^B_\Fshs$ (\ie using \pZK{\rtFsh})   that $\oP_i'$ and $\oB_i'$ are fresh.
 			
 			\item Send $(\oP_i',\oB_i',\pi_\Eqs,\pi^P_\Fshs,\pi^B_\Fshs)$ to \Cc.
+		%
+			\item Send $(\oP_i',\oB_i',\pi_\Eqs)$ to \Cc.
+		
 		
 		\end{enumerate}
 		
 		\item $\Cc$:
 			\begin{enumerate}
-				\item Verify $\pi_\Eqs,\pi^P_\Fshs$ and $\pi^B_\Fshs$.
+			%	\item Verify $\pi_\Eqs,\pi^P_\Fshs$ and $\pi^B_\Fshs$.
+				
+					\item Verify $\pi_\Eqs$.
 				
 				\item Set $\oP_i  \asn \oP_i'$  and $\oB_i  \asn \oB_i'$.
 				
