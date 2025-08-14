@@ -43,7 +43,7 @@
 
 \newcommand{\rEqDef}
 {
-	\set{((\pk_0,\pk_1,\oA_0,\oA_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{\pk_i}(a;r_i)= \A_i}
+	\set{((\pk_0,\pk_1,\oA_0,\oA_1),(w_0,r_1))\colon   \KeyGen(w_0) = (\sk_0,\pk_0) \sland \Enc_{\pk_1}(\Dec_{\sk_0}(\oA_0);r_1)= \A_1}
 }
 
 
@@ -173,7 +173,7 @@ In this section we define the ideal functionality for the confidential transacti
 
 
 \subsection{The Protocol}\label{sec:MainProtocol:Protocol}
-Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$, and denote the ciphertexts of the scheme using  overlined capital letters.   We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
+Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$, and denote the ciphertexts of the scheme using  overlined capital letters.  % We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
 
 
 We split  the protocol into several sub-protocols defined below, and  use the  following environment to define the common part the different sub-protocols share, \eg global parameter. 
@@ -237,13 +237,13 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 				\begin{enumerate}
 					\item 	 $\vZKPOK{\rKeyGen}(pk_i,\pi_i)$.\footnote{Here and after,  \Cc aborts and publish the prover identity if the   proof is not verified.}
 					
-					\item $\oP_i\getsr \Enc_{\pk_i}(0),\oB_i\asn \Enc_{\pk_i}(0),\tcount_i 
+					\item $\oP_i\getsr \Enc_{\pk_i}(0),\oA_i\asn \Enc_{\pk_i}(0),\tcount_i 
 					\asn 0$.
 					
 			
 				\end{enumerate}
 			
-		\item Broadcast $(\init,\sset{\pk_i,\oB_i,\oP_i}_{i\in [n]})$
+		\item Broadcast $(\init,\sset{\pk_i,\oA_i,\oP_i}_{i\in [n]})$
 		%	\item     Broadcast $\historylog \asn \emptyset$.
 				\end{enumerate}								
 			\end{enumerate}
@@ -278,7 +278,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \begin{description}
 	\item[In range.] $\rRp =\rRpDef$, \ie  encryption of values in $[\psize]$.
 	
-	\item[Equality.] $\rEq =\rEqDef$, \ie  encryptions of the same pair under different public keys.
+	\item[Equality.] $\rEq =\rEqDef$, \ie  encryptions of the same value, witness is the  secret key for the $\pk_0$ and the randomness of  $\oA_1$.
 	
 %	\item[Larger than.] $\rLrgEq =\rLrgEqDef$, \ie encryptions of the  pair of values $(a_0,a_1)$, under the same public key, with $a_1 \ge a_0$.
 \end{description}
@@ -314,24 +314,24 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 		%	\item $\oX_s \getsr \Enc_{\pk_s}(x;r)$ for $r_s \getsr \cD$.
 			
 			
-			\item $(b,r^b) \asn \Dec_{\sk_s}(\oB_s)$.
+			\item $a \asn \Dec_{\sk_s}(\oA_s)$.
 			
-			\item $\oB_s' \getsr \Enc_{\pk_d}(b-x;r_b')$ for $r_b' \getsr \cD$.
+			\item $\oA_s' \getsr \Enc_{\pk_s}(a-x)$.
 			
 			
 		 
 
 			
 			
-			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oB_s- \oB_s',\oX_d),(x,r_b - r_b',r_d))$.
+			\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oA_s- \oA_s',\oX_d),(x,\sk_s,r_d))$.
 			
 			
 		
 			
-		%	\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,\oX_s,\oB_s),(x,r_s,r_b))$.
+		%	\item $\pi^\LrgEqs \getsr \pZK{\rLrgEq}((\pk_s,\oX_s,\oA_s),(x,r_s,r_b))$.
 			
 			
-			\item Send $(\oB_s',\oX_d,\pi^\RPs,\pi^\Eqs)$ to \Cc.
+			\item Send $(\oA_s',\oX_d,\pi^\RPs,\pi^\Eqs)$ to \Cc.
 		\end{enumerate}
 		
 		
@@ -342,18 +342,18 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			\item  $\Assert{\tcount_d \le \pcount}$.
 				
 			\item   $\vZKPOK{\rRp}((\pk_d,\oX_d,\psize),\pi^\RPs)$
-			 and $\vZK{\rEq}((\pk_s,\pk_d,\oB_s- \oB_s',\oX_d),\pi^\Eqs )$. 
+			 and $\vZK{\rEq}((\pk_s,\pk_d,\oA_s- \oA_s',\oX_d),\pi^\Eqs )$. 
 			
 	
 		
 		
-		     \item   $\oB_s\asn \oB_s'$. 
+		     \item   $\oA_s\asn \oA_s'$. 
               
               \item  $\oP_d \pluseq X_d$. 
               
               \item $\tcount_d^{++}$.
               
-		    % \item  $\historylog \unioneq (\transfer,s,d,\oB_s,\oP_d)$.
+		    % \item  $\historylog \unioneq (\transfer,s,d,\oA_s,\oP_d)$.
 		     
 		     \item Broadcast $(\transfer,s,d,\oP_d)$.
 		\end{enumerate}
@@ -373,7 +373,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	
 	\begin{enumerate}
 	
-	\item $\oB_i  \pluseq \oP_i$.
+	\item $\oA_i  \pluseq \oP_i$.
 	
 	
 	\item  $\oP_i \minuseq \oP_i$.

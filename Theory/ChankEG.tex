@@ -34,11 +34,16 @@
 
 \newcommand{\rtEgEqs}{{{\sf EgEq}}}
 \newcommand{\rtEgEq}{\cR_\rtEgEqs}
+
+%\newcommand{\rtEgEqDef}
+%{
+%	\set{(((H,E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \tEgEnc_{(H,E_i)}(a;r_i)= \tA_i}
+%}
+
 \newcommand{\rtEgEqDef}
 {
-	\set{(((H,E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \tEgEnc_{(H,E_i)}(a;r_i)= \tA_i}
+	\set{((H,E_0,E_1,\tA_0,\tA_1),(e_0,r_1))\colon   e_0 \cdot G = E_0 \sland \tEgEnc_{E_1}(\Dec_{e_0}(\oA_0);r_1)= \A_1}
 }
-
 
 \newcommand{\tEgRps}{{{\sf tEgRp}}}
 \newcommand{\rtEgRp}{\cR_\tEgRps}
