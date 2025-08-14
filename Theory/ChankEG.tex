@@ -166,7 +166,7 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		letting  $\wEgEnc_{H,E}(A;r) \eqdef (r\cdot E,r\cdot H + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$. Namely, encryption and decryption of group elements. 
 		
 		
-		Letting  $\wEgEnc_{E}(A;r) \eqdef (r\cdot G,r\cdot E + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.
+		%Letting  $\wEgEnc_{E}(A;r) \eqdef (r\cdot G,r\cdot E + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.
 		
 	
 		\item[Protocol:] %The sigma protocol for this relation concatenates, with the same challenge $e$ and answer $z$, two proofs of $\rEgEnc$. 
@@ -185,13 +185,19 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 				
 				\item Let $E'_0 \asn e'_0 \cdot G$.
 				
+				
 				\item Let $A\asn \wEgDec_{e_0}(\oA_0)$.
+				
+				\item  Let  $\oA_1' \getsr \wEgEnc_{(H,E_1)}(A;r'_1)$.
 				
 				\item Let $(L_0,R_0) \asn \oA_0$.
 				
-				\item Let $R'_0 \asn e_0' \cdot L_0  +A$ and $\oA_1' \getsr \wEgEnc_{(H,E_1)}(A;r'_1)$.
+				\item Let $L_0' \asn L_0 \cdot e_0^{-1}  \cdot  e_0'$.
 				
-				\item Send $(E'_0,R_0',\oA_1')$ to \Vc.
+				
+				
+				
+				\item Send $(E'_0,L_0',\oA_1')$ to \Vc.
 			\end{enumerate}
 			
 			\item \Vc: Send $t\getsr \Z_q$ to \Pc.
