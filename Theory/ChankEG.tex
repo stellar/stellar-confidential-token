@@ -208,7 +208,7 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 			\begin{enumerate}
 			\item $e''_0\cdot G = t\cdot E_0 + E_0'$.
 			
-			\item  $\wEgEnc_{E_1}(t\cdot R_0 + R_0' - e''_0 \cdot L_0;r_1'')) = t\cdot \oA_1 + \oA_1'$.
+			\item  $\wEgEnc_{E_1}(t\cdot R_0 + R_0' - e''_0 \cdot L_0;r_1'') = t\cdot \oA_1 + \oA_1'$.
 		\end{enumerate}
 		\end{enumerate}
 		
@@ -226,11 +226,16 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		\begin{enumerate}
 			\item Sample $e_0'',r_1'',t\getsr \Z_q$.
 			
-			\item Sample $R_0'',E_0'',\oA_1'' \getsr  \cG$.
+			%\item Sample $R_0'',\oA_1'' \getsr  \cG$.
 			
 			
-			\item Let $E_0' \asn  e_0'' \cdot Gt \cdot E_0$.
+			\item Let $E_0' \asn e''_0\cdot G- t\cdot E_0$.
 			
+			\item Let $R_0' \getsr \cG$.
+			
+			\item Let $ \oA_1' \asn \wEgEnc_{E_1}(t\cdot R_0 + R_0' - e''_0 \cdot L_0;r_1'') - t\cdot \oA_1$.
+			
+			\item  Output $(E'_0,R_0',\oA_1',t,e''_0,,r''_1)$. 
 			
 		\end{enumerate}		
 	\end{description}
