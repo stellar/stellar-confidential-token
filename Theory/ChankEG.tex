@@ -169,35 +169,44 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		%Letting  $\wEgEnc_{E}(A;r) \eqdef (r\cdot G,r\cdot E + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.
 		
 	
-		\item[Protocol:] %The sigma protocol for this relation concatenates, with the same challenge $e$ and answer $z$, two proofs of $\rEgEnc$. 
-	\end{description}
 	
 	
 	\begin{protocol}[Equality proof]~
-		%\item[Operations]~
+		
+			\item[Common input:] $(H,E_0,E_1,\tA_0,\tA_1)$.
+			
+			
+				\item[\Pc's input:] $(e,r)$.
+		\item[Operations]~
 		\begin{enumerate}
 			\item \Pc:
 			
 			\begin{enumerate}
 		
 				
-				\item Sample $e'_0,r'_1\getsr  \Z_q$.
+				\item Sample $e'_0\getsr  \Z_q$.
 				
 				\item Let $E'_0 \asn e'_0 \cdot G$.
 				
+				\item Let $(L_0,R_0) \asn \oA_0$.
+				
+				
+				\item Let $R_0' \asn R_0  + L_0 \cdot (e_0'- e_0) $.
+					
 				
 				\item Let $A\asn \wEgDec_{e_0}(\oA_0)$.
 				
+					\item Sample $r'_1\getsr  \Z_q$.
+					
 				\item  Let  $\oA_1' \getsr \wEgEnc_{(H,E_1)}(A;r'_1)$.
 				
-				\item Let $(L_0,R_0) \asn \oA_0$.
 				
-				\item Let $L_0' \asn L_0 \cdot e_0^{-1}  \cdot  e_0'$.
-				
+			%	\item Let $L_0' \asn L_0 \cdot e_0^{-1}  \cdot  e_0'$.
 				
 				
 				
-				\item Send $(E'_0,L_0',\oA_1')$ to \Vc.
+				
+				\item Send $(E_0',R_0',\oA_1')$ to \Vc.
 			\end{enumerate}
 			
 			\item \Vc: Send $t\getsr \Z_q$ to \Pc.
@@ -226,7 +235,14 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		\item[Correctness] clear.
 		
 		
-		\item[Special soudness:] clear \Inote{verify}.
+		\item[Special soudness:] Let $(u,t^0,(e''_0)^0,(r''_1)^0)$ and  $(u,t^0,(e''_1)^1,(r''_1)^1)$, for $u \asn (E_0',R_0',\oA_1')$, be two accepting transcripts.
+		
+		\begin{enumerate}
+			\item Let $e_0\asn ((e''_0)^1 -(e''_0)^0)/t$.  It is easy to verity  $e_0 \cdot G = E_0$.
+			
+				\item Let $r_1\asn ((r''_1)^1 -(r''_1)^0)/t$.  It is easy to verity  $\wEgEnc_{H,E_1}(\wEgDec_{e_0}(\oA_0)  =\oA_1$
+			
+		\end{enumerate}
 		
 		\item[ZK:]~ 
 		\begin{enumerate}
@@ -241,11 +257,12 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 			
 			\item Let $ \oA_1' \asn \wEgEnc_{E_1}(t\cdot R_0 + R_0' - e''_0 \cdot L_0;r_1'') - t\cdot \oA_1$.
 			
-			\item  Output $(E'_0,R_0',\oA_1',t,e''_0,,r''_1)$. 
+			\item  Output $(E'_0,R_0',\oA_1',t,e''_0,r''_1)$. 
 			
 		\end{enumerate}		
 	\end{description}
 	\end{proof}
+\end{description}
 	\item[In range.] ~
 	\begin{description}
 		\item[Task:] ZKP for $\rEgRp =\rEgRpDef$.
@@ -260,7 +277,10 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		\end{enumerate}
 		
 	\end{description}
+
 \end{description}
+
+
 
 \begin{remark}[Efficiency]
 	The saving in the above proofs comparing to using non twisted EG, is in not sending two additional   group elements in the In-range proofs;  we do not have to provide the Pedersen commitment (one group element)  for the plain text and prove it is consistent with the EG encryption (three group elements). Yet, we still have to preform an EG POK proof (two group elements).
