@@ -25,14 +25,14 @@
 \newcommand{\rEnc}{{\cR_{\sf Enc}}}
 \newcommand{\rEncDef}
 {
-	\set{((\pk,A),(a,r))\colon \Enc_\pk(a;r)= A}
+	\sset{((\pk,A),(a,r))\colon \Enc_\pk(a;r)= A}
 }
 
 \newcommand{\rKeyGen}{{\cR_{\sf KeyGen}}}
 
 \newcommand{\rKeyGenDef}
 {
-	\set{(\pk,w))\colon \KeyGen(w)= (\cdot,\pk)}
+	\sset{(\pk,w))\colon \KeyGen(w)= (\cdot,\pk)}
 }
 
 
@@ -43,7 +43,7 @@
 
 \newcommand{\rEqDef}
 {
-	\set{((\pk_0,\pk_1,\oA_0,\oA_1),(w_0,r_1))\colon   \KeyGen(w_0) = (\sk_0,\pk_0) \sland \Enc_{\pk_1}(\Dec_{\sk_0}(\oA_0);r_1)= \A_1}
+	\sset{((\pk_0,\pk_1,\oA_0,\oA_1),(w,r))\colon   \KeyGen(w) = (\sk_0,\pk_0) \sland \Enc_{\pk_1}(\Dec_{\sk_0}(\oA_0);r)= \oA_1}
 }
 
 
@@ -52,7 +52,7 @@
 
 \newcommand{\rRpDef}
 {
-	\set{((\pk,\oA,b),(a,r))\colon \Enc_\pk(a;r)= \oA \sland a\in (b)}
+	\sset{((\pk,\oA,b),(a,r))\colon \Enc_\pk(a;r)= \oA \sland a\in (b)}
 }
 
 
@@ -61,7 +61,7 @@
 
 \newcommand{\rLrgEqDef}
 {
-	\set{((\pk,\oA_0,\oA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \Enc_\pk(a_i;r_i)= \oA_i \sland a_1 -a_0 \in (q)} 
+	\sset{((\pk,\oA_0,\oA_1),(a_0,r_0,a_1,r_1))\colon \forall i\in \zo \; \Enc_\pk(a_i;r_i)= \oA_i \sland a_1 -a_0 \in (q)} 
 }
 
 
