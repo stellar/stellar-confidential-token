@@ -22,7 +22,7 @@
 \newcommand{\rEgEnc}{\cR_\EgEncs}
 \newcommand{\rEgEncDef}
 {
-	\set{((H,E,\tA),(a,r))\colon \EgEnc_{(H,E)}(a;r)= \tA}
+	\sset{((H,E,\tA),(a,r))\colon \EgEnc_{(H,E)}(a;r)= \tA}
 }
 
 
@@ -30,7 +30,7 @@
 \newcommand{\rtFsh}{\cR_\rtFshs}
 \newcommand{\rtFshDef}
 {
-	\set{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
+	\sset{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
 		\sland \oa_i \in (b)}
 }
 
@@ -48,14 +48,14 @@
 
 \newcommand{\rEgEqDef}
 {
-	\set{((H,E_0,E_1,\tA_0,\tA_1),(e_0,r_1))\colon   e_0 \cdot G = E_0 \sland \wEgEnc_{H,E_1}(\wEgDec_{e_0}(\oA_0);r_1)= \A_1}
+	\sset{((H,E_0,E_1,\tA_0,\tA_1),(e,r))\colon   e\cdot   G = E_0 \land \wEgEnc_{(H,E_1)}(\wEgDec_{e}(\oA_0);r)= \A_1}
 }
 
 \newcommand{\EgRps}{{{\sf EgRp}}}
 \newcommand{\rEgRp}{\cR_\EgRps}
 \newcommand{\rEgRpDef}
 {
-	\set{((H,E,\tA,b),(a,r))\colon \EgEnc_{(H,E)}(a;r)= \tA \sland a\in (b)}
+	\sset{((H,E,\tA,b),(a,r))\colon \EgEnc_{(H,E)}(a;r)= \tA \sland a\in (b)}
 }
 
 
@@ -70,7 +70,7 @@
 
 \newcommand{\rPedEncDef}
 {
-	\set{((H,A),(a,r))\colon \Ped_H(a;r)= A}
+	\sset{((H,A),(a,r))\colon \Ped_H(a;r)= A}
 }
 
 
@@ -161,7 +161,9 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 	
 	\item[Equality.]~
 	\begin{description}
-		\item[Task:] ZKP for $\rEgEq =\rEgEqDef$.
+		\item[Task:] ZKP for 
+		
+		$\rEgEq =\rEgEqDef$.
 		
 		letting  $\wEgEnc_{H,E}(A;r) \eqdef (r\cdot E,r\cdot H + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$. Namely, encryption and decryption of group elements. 
 		
@@ -184,21 +186,22 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 			\begin{enumerate}
 		
 				
-				\item Sample $e'_0\getsr  \Z_q$.
+				\item Sample $e'\getsr  \Z_q$.
 				
-				\item Let $E'_0 \asn e'_0 \cdot G$.
+				\item Let $E'_0 \asn e' \cdot G$.
 				
 				\item Let $(L_0,R_0) \asn \oA_0$.
 				
 				
-				\item Let $R_0' \asn R_0  + L_0 \cdot (e_0'- e_0) $.
-					
+			 \item Sample $A' \getsr \cG$.
+			 
 				
-				\item Let $A\asn \wEgDec_{e_0}(\oA_0)$.
+					\item Let $R_0' \asn e' \cdot  L_0  +A' $.
 				
-					\item Sample $r'_1\getsr  \Z_q$.
+				
+					\item Sample $r'\getsr  \Z_q$.
 					
-				\item  Let  $\oA_1' \getsr \wEgEnc_{(H,E_1)}(A;r'_1)$.
+				\item  Let  $\oA_1' \getsr \wEgEnc_{(H,E_1)}(A';r')$.
 				
 				
 			%	\item Let $L_0' \asn L_0 \cdot e_0^{-1}  \cdot  e_0'$.
@@ -215,7 +218,7 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 			\begin{enumerate}
 			
 				
-				\item Send $(e''_0 \asn t\cdot e_0 + e_0',r''_1 \asn r_1 + r_1')$ to \Vc. 
+				\item Send $(e'' \asn t\cdot e + e',r'' \asn r + r')$ to \Vc. 
 			\end{enumerate}
 		
 		\item \Vc: Verify  
@@ -223,7 +226,7 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 			\begin{enumerate}
 			\item $e''_0\cdot G = t\cdot E_0 + E_0'$.
 			
-			\item  $\wEgEnc_{E_1}(t\cdot R_0 + R_0' - e''_0 \cdot L_0;r_1'') = t\cdot \oA_1 + \oA_1'$.
+			\item  $\wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - e'' \cdot L_0;r'') = t\cdot \oA_1 + \oA_1'$.
 		\end{enumerate}
 		\end{enumerate}
 		
@@ -235,31 +238,43 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		\item[Correctness] clear.
 		
 		
-		\item[Special soudness:] Let $(u,t^0,(e''_0)^0,(r''_1)^0)$ and  $(u,t^0,(e''_1)^1,(r''_1)^1)$, for $u \asn (E_0',R_0',\oA_1')$, be two accepting transcripts.
+		\item[Special soudness:] Let $(u,t^0,(e''_0)^0,(r'')^0)$ and  $(u,t^0,(e'')^1,(r'')^1)$, for $u \asn (E_0',R_0',\oA_1')$, be two accepting transcripts.
 		
 		\begin{enumerate}
-			\item Let $e_0\asn ((e''_0)^1 -(e''_0)^0)/t$.  It is easy to verity  $e_0 \cdot G = E_0$.
+			\item Let $e\asn ((e'')^1 -(e'')^0)/t$.  Since the transcripts are accepting, it holds that   $e \cdot G = E_0$.
 			
-				\item Let $r_1\asn ((r''_1)^1 -(r''_1)^0)/t$.  It is easy to verity  $\wEgEnc_{H,E_1}(\wEgDec_{e_0}(\oA_0)  =\oA_1$
+			
+			\item Write 
+			\begin{align*}
+			&\frac1t (\wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - (e'')^1 \cdot L_0;(r'')^1) - \wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - (e'')^0 \cdot L_0;(r'')^0))=\\
+			&= \wEgEnc_{H,E_1}(\wEgDec_{e_0}(\oA_0);r_1)
+			\end{align*}
+			for $e \asn ((e'')^1 - (e'')^0)/t$ and $r \asn ((r'')^1 - (r'')^0)/t$.  Since the transcripts are accepting, the above equals to $\oA_1$.
+			
 			
 		\end{enumerate}
 		
-		\item[ZK:]~ 
+		
+			\item[ZK:]~ 
 		\begin{enumerate}
-			\item Sample $e_0'',r_1'',t\getsr \Z_q$.
+			\item Sample $e'',r'',t\getsr \Z_q$ and $R_0' \getsr \cG$.
 			
 			%\item Sample $R_0'',\oA_1'' \getsr  \cG$.
 			
 			
-			\item Let $E_0' \asn e''_0\cdot G- t\cdot E_0$.
+			\item Let $E_0' \asn e''\cdot G- t\cdot E_0$.
 			
-			\item Let $R_0' \getsr \cG$.
 			
-			\item Let $ \oA_1' \asn \wEgEnc_{E_1}(t\cdot R_0 + R_0' - e''_0 \cdot L_0;r_1'') - t\cdot \oA_1$.
+		
+			\item Let $ \oA_1' \asn \wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - e'' \cdot L_0;r'') - t\cdot \oA_1$.
 			
-			\item  Output $(E'_0,R_0',\oA_1',t,e''_0,r''_1)$. 
+			\item  Output $(E'_0,R_0',\oA_1',t,e'',r'')$. 
 			
 		\end{enumerate}		
+		
+		The distribution of  $(R_0',t,e'',r'')$  in the real and emulated executions is identical (\ie uniformly distributed in the domain).   The proof follows since in both executions the value of  $(E'_0,\oA_1')$  is the same function of the rest of the transcript. 
+		
+		\Inote{Smthg is weird about this part. How come $R_0' $ is unrestricted?}
 	\end{description}
 	\end{proof}
 \end{description}
