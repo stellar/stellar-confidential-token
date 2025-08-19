@@ -47,10 +47,10 @@
 %\newcommand{\wEgEnc}{\MathAlgX{\widehat{EgEnc}}}
 \newcommand{\wEgDec}{\MathAlgX{\widehat{EgDec}}}
 
-\newcommand{\rEgEqWrS}{{{\sf EgEqWr}}}
-\newcommand{\rEgEqWr}{\cR_\rEgEqWrS}
+\newcommand{\EgEqSkS}{{{\sf EgEqSk}}}
+\newcommand{\rEgEqSk}{\cR_\EgEqSkS}
 
-\newcommand{\rEgEqWrDef}
+\newcommand{\rEgEqSkDef}
 {
 	\sset{((H,E,\tA_0,\tA_1),e)\colon   e\cdot   G = E \sland \wEgDec_e(\oA_0)= \wEgDec_e(\oA_1)}
 }
@@ -101,7 +101,7 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 
 
 
-\begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:TEGinExp}~
+\begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:tEGinExp}~
 	
 	
 	\item[Key generation:] $\EgKG(1^b,H)$ samples $e\getsr \Z_q$, and outputs $(\sk 
@@ -141,8 +141,6 @@ Namely, the right hand side if a twisted ElGamal ciphertext is just a  Pedersen 
 
 
 \subsubsection{Zero-Knowledge Proofs}\label{sec:ChanksEg:Eg:ZK}
-
-\Inote{Keeping the randomness  used to generate $\oA_s$,  leads to more effceint proof}
 
 In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relations regrading the above scheme.  
 
@@ -184,9 +182,9 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 		
 		Namely, the relation  is of  ciphertexts that encrypt the  same value under the different  public key, where the witness  is the plaintext and the two randomness used by the encryption algorithm.
 		
-		\item[Proof:] The Sigma protocol for this relation concatenates, with the same challenge $t$, two proofs of $\rEgEnc$. 
+		\item[Protocol:] The Sigma protocol for this relation concatenates, with the same challenge $t$, two proofs of $\rEgEnc$. 
 
-\item[Proof for the case $E_0=E_1$:] For this case, the proof is somewhat simpler. \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $r$ (\ie $r\asn r_1 -r_0$) so that  $\tB  = r\cdot (E,H)$. The Sigma protocol for this relation concatenates, with the same challenge $t$, two discrete log proofs. (Thus, prover only sends two group elements, vs four above.)
+\item[Protocol for the case $E_0=E_1$:] For this case, the proof is somewhat simpler. \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $r$ (\ie $r\asn r_1 -r_0$) so that  $\tB  = r\cdot (E,H)$. The Sigma protocol for this relation concatenates, with the same challenge $t$, two discrete log proofs. (Thus, prover only sends two group elements, vs four above.)
 
         		
 \end{description}
@@ -200,14 +198,14 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 \begin{description}
 	\item[Task:] ZKP for 
 	
-	 $\rEgEqWr =\rEgEqWrDef$.
+	 $\rEgEqSk =\rEgEqSkDef$.
 	
 	
 	letting   $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$. 
 	
 	Namely, the relation  is of  ciphertexts that encrypt the  same value under the same public key. The witness is the secret key.
 	
-	\item[Proof:] \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $e$ so that  $e\cdot \tB_R  = \tB_L$. This is just the standard Schnorr proof for discrete log.
+	\item[Protocol:] \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $e$ so that  $e\cdot \tB_R  = \tB_L$. This is just the standard Schnorr proof for discrete log.
 	
 \end{description}
 
@@ -222,7 +220,13 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 			
 			
 			\item   $\rEgEnc$ ZKPOK  for the whole $\tA$.
+			
+			
 		\end{enumerate}
+
+
+\item[Efficiency.]
+	The saving in the above protocol comparing to using  non-twisted EG, is in  two  group elements in the proof size;  the prover does not have to provide a new Pedersen commitment (one group element)  for the plain text and prove it is consistent with the EG encryption (three group elements). Yet, he still has to preform an EG POK proof (two group elements).
 		
 	\end{description}
 
@@ -230,12 +234,10 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 
 
 
-\begin{remark}[Efficiency]
-	The saving in the above proofs comparing to using non twisted EG, is in not sending two additional   group elements in the In-range proofs;  we do not have to provide the Pedersen commitment (one group element)  for the plain text and prove it is consistent with the EG encryption (three group elements). Yet, we still have to preform an EG POK proof (two group elements).
-\end{remark}	
+
 
 	
-\subsubsection{Threshold Encryption Variant}\label{sec:ChanksEg:Eg:Tsh}	
+\subsubsection{Threshold Encryption}\label{sec:ChanksEg:Eg:Tsh}	
 
 \Inote{TODO}
 \subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEg:EgScheme}
@@ -410,33 +412,43 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 		\begin{proof}
 			\Inote{TODO}
 		\end{proof}
-\item[In range using sceret key.]~  
+\item[In-range proof using sceret key.]~  
 
 \begin{description}
 	\item[Task:] POK for $\rRpSk =\rRpSkDef$.
 	
 	
-	\item[Protocol:] Similar line to the protocol for $\rRp$, but  the prover encrypt the value in $\tA$ using  fresh randomness (that it kn0es) and continue as above.
+	\item[Protocol:] Similar line to the protocol for $\rRp$, but  the prover  decrypt $\tA$, encrypt the plaintext sing  fresh randomness, and continues as above.
 	
 	
 	\begin{description}
-		\item[\Pc:] On input $((\pk,\oA,b),e)$:
+		\item[\Pc:] On input $((E,\oA,b),e)$:
 		
 		\begin{enumerate}
-			\item   $a \asn  \sum_{i\in (\ell)}   2^c \cdot \oa_i$. 
+		
 			\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
-			\item    $r \asn  \sum_{i\in (\ell)}  2^c \cdot \orr_i$. 
 			
-			\item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,b), (a,r))$.
+			\item   $a \asn  \Dec_e(\tA)$.
 			
+			\item   $\tA' \asn \Enc_E(a;r)$ for $r\getsr \Z_q$.
+			
+				
+			
+			\item  Let  $\pi^\EgEqSkS \getsr \pZK{\rEgEqSk}((E,\tA,\tA'
+			), e)$.
+				
+			\item  Let  $\pi^\EgRps \getsr \pZK{\rEgRp}((E,\tA',b), (a,r))$.
+			
+			\item Send $(\pi^\EgEqSkS,\pi^\EgRps)$ to \Vc.
 		\end{enumerate}
 		
 		
-		\item[\Vc:] On input $((\pk,\oA,b),\pi)$:
+		\item[\Vc:] On input $((\pk,\tA',b),\pi^\EgEqSkS,\pi^\EgRps)$:
 		
 		\begin{enumerate}
 			\item   Generate $\tA$ as by \Pc.
-			\item  Output $\vZK{\rEgRp}((\pk,\tA,b), \pi)$.
+			\item  Call $\pZK{\rEgEqSk}((E,\tA,\tA'
+			), \pi^\EgEqSkS)$ and  $\pZK{\rEgRp}((E,\tA',b), (a,r))$.
 			
 		\end{enumerate}
 		
