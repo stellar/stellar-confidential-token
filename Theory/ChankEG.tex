@@ -14,7 +14,7 @@
 \newcommand{\rEgKeyGen}{\cR_\EgKeyGens}
 \newcommand{\rEgKeyGenDef}
 {
-	\set{(E,e))\colon e\cdot G= E}
+	\sset{(E,e))\colon e\cdot G= E}
 }
 
 
@@ -38,15 +38,26 @@
 \newcommand{\rEgEqs}{{{\sf EgEq}}}
 \newcommand{\rEgEq}{\cR_\rEgEqs}
 
-
-
-\newcommand{\wEgEnc}{\MathAlgX{\widehat{EgEnc}}}
-\newcommand{\wEgDec}{\MathAlgX{\widehat{EgDec}}}
-
 \newcommand{\rEgEqDef}
 {
-	\sset{((H,E_0,E_1,\tA_0,\tA_1),(e,r))\colon   e\cdot   G = E_0 \sland \wEgEnc_{(H,E_1)}(\wEgDec_{e}(\oA_0);r)= \A_1}
+	\sset{(((H,E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \EgEnc_{(H,E_i)}(a;r_i)= \tA_i}
 }
+
+
+%\newcommand{\wEgEnc}{\MathAlgX{\widehat{EgEnc}}}
+\newcommand{\wEgDec}{\MathAlgX{\widehat{EgDec}}}
+
+\newcommand{\rEgEqWrS}{{{\sf EgEqWr}}}
+\newcommand{\rEgEqWr}{\cR_\rEgEqWrS}
+
+\newcommand{\rEgEqWrDef}
+{
+	\sset{((H,E,\tA_0,\tA_1),e)\colon   e\cdot   G = E \sland \wEgDec_e(\oA_0)= \wEgDec_e(\oA_1)}
+}
+
+
+
+
 
 \newcommand{\EgRps}{{{\sf EgRp}}}
 \newcommand{\rEgRp}{\cR_\EgRps}
@@ -86,7 +97,9 @@ The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   addi
 In \cref{sec:ChanksEg:Eg}, we formally define the  ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. Actually, we use a ``twisted'' variant of this scheme, that supports somewhat more efficient proofs in our settings.   The chunk ElGamal  scheme is defined in \cref{sec:ChanksEg:EgScheme}, and the related ZK proofs are defined in \cref{sec:ChanksEg:Proofs}. Finally, in \cref{sec:ChanksEg:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} to work with this almost homomorphic scheme.
 
 \subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEg:Eg}
-Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter.
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter. The ciphertext of the encryption scheme are elements of $\cG \times \cG$. We will mark such  ciphertexts   using tilde, and  address  the left-hand side and right-hand side of such  a ciphertext $\tA$,  by $\tA_L$ and  $\tA_R$, respectively. 
+
+
 
 \begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:TEGinExp}~
 	
@@ -94,20 +107,20 @@ Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. Th
 	\item[Key generation:] $\EgKG(1^b,H)$ samples $e\getsr \Z_q$, and outputs $(\sk 
 	\asn e,\pk \asn (1^b,H,E\asn  e^{-1}\cdot H))$.
 	
-	\item[Encryption:] $\EgEnc_{(H,E)}(a)$  samples $r\getsr \Z_q$, and outputs  $\tA \asn (r\cdot E, \Ped_H(a;r))$, for 
+	\item[Encryption:] $\EgEnc_{(H,E)}(a)$  samples $r\getsr \Z_q$, and outputs  $\tA  = (\tA _L,\tA _R)\asn (r\cdot E, \Ped_H(a;r))$, for 
 	$\Ped_H(a;r) \eqdef r\cdot H + a \cdot G$.
 	
 	
 	\item[Decryption:] $\EgDec_{(1^b,H,e)}(\tA)$,   
 	\begin{enumerate}
-		\item 	Let $M \asn \tA_1 - e\cdot \tA_0$.
+		\item 	Let $M \asn \tA_R - e\cdot \tA_L$.
 		
 		\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
 		
 		\item Output $m$.
 	\end{enumerate}
 	
-	\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_0+\tB_0,\tA_1+\tB_1)$.}
+	\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_L+\tB_L,\tA_R+\tB_R)$.}
 	
 	\item[Minus:]  The inverse in $\cG^2$.
 	
@@ -127,7 +140,10 @@ Namely, the right hand side if a twisted ElGamal ciphertext is just a  Pedersen 
 
 
 
-\subsubsection{Zero-Knowledge Proofs}
+\subsubsection{Zero-Knowledge Proofs}\label{sec:ChanksEg:Eg:ZK}
+
+\Inote{Keeping the randomness  used to generate $\oA_s$,  leads to more effceint proof}
+
 In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relations regrading the above scheme.  
 
 
@@ -146,7 +162,9 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 	\item[Knowledge of plain text.] ~
 	
 	\begin{description}
-		\item[Task:] ZKPOK for $\rEgEnc=\rEgEncDef$.
+		\item[Task:] ZKPOK for 
+		
+		$\rEgEnc=\rEgEncDef$.
 		
 		\item[Protocol:]   \cite[Protocol A.2]{HaitnerLNR23}.
 		
@@ -156,130 +174,43 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 	\end{description}
 	
 	
-	\item[Equality.]~
-	
-	
-	\Inote{Give a version assuming knowledge of randomness.}
+	\item[Equality using randomness.] 
+
 	
 	
 	\begin{description}
-		\item[Task:] ZKP for 
-		
-		$\rEgEq =\rEgEqDef$.
-		
-		letting  $\wEgEnc_{H,E}(A;r) \eqdef (r\cdot E,r\cdot H + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$. Namely, encryption and decryption of group elements. 
+		\item[Task:] ZKP for  $\rEgEq =\rEgEqDef$.
 		
 		
-		%Letting  $\wEgEnc_{E}(A;r) \eqdef (r\cdot G,r\cdot E + A)$ and $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.
+		Namely, the relation  is of  ciphertexts that encrypt the  same value under the different  public key, where the witness  is the plaintext and the two randomness used by the encryption algorithm.
 		
-	
-	
-	
-	\begin{protocol}[Equality proof]~
-		
-			\item[Common input:] $(H,E_0,E_1,\tA_0,\tA_1)$.
-			
-			
-				\item[\Pc's input:] $(e,r)$.
-		\item[Operations]~
-		\begin{enumerate}
-			\item \Pc:
-			
-			\begin{enumerate}
-		
-				
-				\item Sample $e'\getsr  \Z_q$.
-				
-				\item Let $E'_0 \asn e' \cdot G$.
-				
-				\item Let $(L_0,R_0) \asn \oA_0$.
-				
-				
-			 \item Sample $A' \getsr \cG$.
-			 
-				
-					\item Let $R_0' \asn e' \cdot  L_0  +A' $.
-				
-				
-					\item Sample $r'\getsr  \Z_q$.
-					
-				\item  Let  $\oA_1' \getsr \wEgEnc_{(H,E_1)}(A';r')$.
-				
-				
-			%	\item Let $L_0' \asn L_0 \cdot e_0^{-1}  \cdot  e_0'$.
-				
-				
-				
-				
-				\item Send $(E_0',R_0',\oA_1')$ to \Vc.
-			\end{enumerate}
-			
-			\item \Vc: Send $t\getsr \Z_q$ to \Pc.
-			
-			\item \Pc: 
-			\begin{enumerate}
-			
-				
-				\item Send $(e'' \asn t\cdot e + e',r'' \asn r + r')$ to \Vc. 
-			\end{enumerate}
-		
-		\item \Vc: Verify  
-		
-			\begin{enumerate}
-			\item $e''_0\cdot G = t\cdot E_0 + E_0'$.
-			
-			\item  $\wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - e'' \cdot L_0;r'') = t\cdot \oA_1 + \oA_1'$.
-		\end{enumerate}
-		\end{enumerate}
-		
-		
-	\end{protocol}
-	
-	\begin{proof}
-	\begin{description}
-		\item[Correctness] clear.
-		
-		
-		\item[Special soudness:] Let $(u,t^0,(e''_0)^0,(r'')^0)$ and  $(u,t^0,(e'')^1,(r'')^1)$, for $u \asn (E_0',R_0',\oA_1')$, be two accepting transcripts.
-		
-		\begin{enumerate}
-			\item Let $e\asn ((e'')^1 -(e'')^0)/t$.  Since the transcripts are accepting, it holds that   $e \cdot G = E_0$.
-			
-			
-			\item Write 
-			\begin{align*}
-			&\frac1t (\wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - (e'')^1 \cdot L_0;(r'')^1) - \wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - (e'')^0 \cdot L_0;(r'')^0))=\\
-			&= \wEgEnc_{H,E_1}(\wEgDec_{e_0}(\oA_0);r_1)
-			\end{align*}
-			for $e \asn ((e'')^1 - (e'')^0)/t$ and $r \asn ((r'')^1 - (r'')^0)/t$.  Since the transcripts are accepting, the above equals to $\oA_1$.
-			
-			
-		\end{enumerate}
-		
-		
-			\item[ZK:]~ 
-		\begin{enumerate}
-			\item Sample $e'',r'',t\getsr \Z_q$ and $R_0' \getsr \cG$.
-			
-			%\item Sample $R_0'',\oA_1'' \getsr  \cG$.
-			
-			
-			\item Let $E_0' \asn e''\cdot G- t\cdot E_0$.
-			
-			
-		
-			\item Let $ \oA_1' \asn \wEgEnc_{H,E_1}(t\cdot R_0 + R_0' - e'' \cdot L_0;r'') - t\cdot \oA_1$.
-			
-			\item  Output $(E'_0,R_0',\oA_1',t,e'',r'')$. 
-			
-		\end{enumerate}		
-		
-		The distribution of  $(R_0',t,e'',r'')$  in the real and emulated executions is identical (\ie uniformly distributed in the domain).   The proof follows since in both executions the value of  $(E'_0,\oA_1')$  is the same function of the rest of the transcript. 
-		
-		\Inote{Smthg is weird about this part. How come $R_0' $ is unrestricted?}
-	\end{description}
-	\end{proof}
+		\item[Proof:] The Sigma protocol for this relation concatenates, with the same challenge $t$, two proofs of $\rEgEnc$. 
+
+\item[Proof for the case $E_0=E_1$:] For this case, the proof is somewhat simpler. \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $r$ (\ie $r\asn r_1 -r_0$) so that  $\tB  = r\cdot (E,H)$. The Sigma protocol for this relation concatenates, with the same challenge $t$, two discrete log proofs. (Thus, prover only sends two group elements, vs four above.)
+
+        		
 \end{description}
+
+
+\item[Equality using secret key.]~
+
+
+
+
+\begin{description}
+	\item[Task:] ZKP for 
+	
+	 $\rEgEqWr =\rEgEqWrDef$.
+	
+	
+	letting   $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$. 
+	
+	Namely, the relation  is of  ciphertexts that encrypt the  same value under the same public key. The witness is the secret key.
+	
+	\item[Proof:] \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $e$ so that  $e\cdot \tB_R  = \tB_L$. This is just the standard Schnorr proof for discrete log.
+	
+\end{description}
+
 	\item[In range.] ~
 	\begin{description}
 		\item[Task:] ZKP for $\rEgRp =\rEgRpDef$.
@@ -304,6 +235,9 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 \end{remark}	
 
 	
+\subsubsection{Threshold Encryption Variant}\label{sec:ChanksEg:Eg:Tsh}	
+
+\Inote{TODO}
 \subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEg:EgScheme}
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
 
@@ -476,43 +410,41 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 		\begin{proof}
 			\Inote{TODO}
 		\end{proof}
-\remove{		
-\item[Larger than.]~  
+\item[In range using sceret key.]~  
 
 \begin{description}
-	\item[Task:] POK for $\rLrgEq =\rLrgEqDef$.
-	
-		\item[\Pc:]  On input $((\pk_0,\pk_1,\oA_0,\oA_1),(\oa,\orr_0,\orr_1))$: 
+	\item[Task:] POK for $\rRpSk =\rRpSkDef$.
 	
 	
-	\begin{enumerate}
-		
-		\item For both $j\in \zo$:
+	\item[Protocol:] Similar line to the protocol for $\rRp$, but  the prover encrypt the value in $\tA$ using  fresh randomness (that it kn0es) and continue as above.
+	
+	
+	\begin{description}
+		\item[\Pc:] On input $((\pk,\oA,b),e)$:
 		
 		\begin{enumerate}
-			\item   $a_j \asn  \sum_{i\in (\ell)}    2^c \cdot (\oa_j)_i$. 
+			\item   $a \asn  \sum_{i\in (\ell)}   2^c \cdot \oa_i$. 
+			\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
+			\item    $r \asn  \sum_{i\in (\ell)}  2^c \cdot \orr_i$. 
 			
-				\item    $\tA_j \asn  \sum_i  2^c \cdot (\oA_j)_i$. 
-				\item    $r_j \asn  \sum_{i\in (\ell)}  2^c \cdot (\orr_j)_i$. 
-				   
+			\item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,b), (a,r))$.
+			
 		\end{enumerate}
 		
-		\item Let $\tA \asn \tA_1 - \tA_0$, $a \asn a_1 - a_0$ and $r \asn r_1 - r_0$.
-		\item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,q), (a,r))$.
-	\end{enumerate}
-	
-	
-	\item[\Vc:]  On input $((\pk_0,\pk_1,\oA_0,\oA_1),\pi$: 
-	
-	\begin{enumerate}
-		\item  Generate $\tA$ as by \Pc.
 		
-		\item  Output $\vZK{\rEgRp}((\pk,\tA,q), \pi)$.
+		\item[\Vc:] On input $((\pk,\oA,b),\pi)$:
 		
-	\end{enumerate}
-\end{description}
-}
+		\begin{enumerate}
+			\item   Generate $\tA$ as by \Pc.
+			\item  Output $\vZK{\rEgRp}((\pk,\tA,b), \pi)$.
+			
+		\end{enumerate}
+		
+	\end{description}
 
+	
+\end{description}
+	
 \item[Freshness.]  ~
 Proving that each of the entries of the  ciphertext are small. 
 
