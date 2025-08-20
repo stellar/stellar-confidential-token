@@ -3,7 +3,7 @@
 \newcommand{\FshS}{{\sf Fsh}}
 
 %%%%%%Twisted EG in the exponent
-\newcommand{\EgKG}{\MathAlgX{EgGen}}
+\newcommand{\EgKg}{\MathAlgX{EgGen}}
 
 \newcommand{\EgEnc}{\MathAlgX{EgEnc}}
 \newcommand{\EgDec}{\MathAlgX{EgDec}}
@@ -97,14 +97,14 @@ The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   addi
 In \cref{sec:ChanksEg:Eg}, we formally define the  ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. Actually, we use a ``twisted'' variant of this scheme, that supports somewhat more efficient proofs in our settings.   The chunk ElGamal  scheme is defined in \cref{sec:ChanksEg:EgScheme}, and the related ZK proofs are defined in \cref{sec:ChanksEg:Proofs}. Finally, in \cref{sec:ChanksEg:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} to work with this almost homomorphic scheme.
 
 \subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEg:Eg}
-Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\EgKG,\EgEnc,\EgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter. The ciphertext of the encryption scheme are elements of $\cG \times \cG$. We will mark such  ciphertexts   using tilde, and  address  the left-hand side and right-hand side of such  a ciphertext $\tA$,  by $\tA_L$ and  $\tA_R$, respectively. 
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\EgKg,\EgEnc,\EgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter. The ciphertext of the encryption scheme are elements of $\cG \times \cG$. We will mark such  ciphertexts   using tilde, and  address  the left-hand side and right-hand side of such  a ciphertext $\tA$,  by $\tA_L$ and  $\tA_R$, respectively. 
 
 
 
-\begin{algorithm}[$(\EgKG,\EgEnc,\EgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:tEGinExp}~
+\begin{algorithm}[$(\EgKg,\EgEnc,\EgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:tEGinExp}~
 	
 	
-	\item[Key generation:] $\EgKG(1^b,H)$ samples $e\getsr \Z_q$, and outputs $(\sk 
+	\item[Key generation:] $\EgKg(1^b,H)$ samples $e\getsr \Z_q$, and outputs $(\sk 
 	\asn e,\pk \asn (1^b,H,E\asn  e^{-1}\cdot H))$.
 	
 	\item[Encryption:] $\EgEnc_{(H,E)}(a)$  samples $r\getsr \Z_q$, and outputs  $\tA  = (\tA _L,\tA _R)\asn (r\cdot E, \Ped_H(a;r))$, for 
@@ -236,10 +236,59 @@ In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relat
 
 
 
+\newcommand{\tsEgKg}{\MathAlgX{TshEgGen}}
+	
+\newcommand{\tsEgEnc}{\MathAlgX{TshEgEnc}}
+\newcommand{\tsEgDec}{\MathAlgX{TshEgDec}}
 	
 \subsubsection{Threshold Encryption}\label{sec:ChanksEg:Eg:Tsh}	
+In this section, we present a simple   threshold variant of the above scheme to serve for the  auditing capability  of the confidential translation protocol. The threshold scheme  $(\tsEgKg,\tsEgEnc,\tsEgDec)$ is defined as follows:
 
-\Inote{TODO}
+
+
+\begin{algorithm}[$(\tsEgKg,\tsEgEnc,\tsEgDec)$: Threshold, twisted ElGamal in-the-exponent encryption]\label{alg:tsEGinExp}~
+	
+	
+	\item[Key generation:] $\tsEgKg(1^b,H)$ each party generates its public key as in \EgKg.
+	
+	\item[Encryption:] $\tsEgEnc_{t,\pk_1,\ldots,\pk_n}(a)$:
+	
+	\begin{enumerate}
+		\item Sample a uniform degree $t-1$ polynomial  $p$ with $p(0)= a$. Let $\sset{c_i}$ denote its coefficients. 
+		
+		
+		\item For each $i\in [n]$: 
+		
+		\begin{enumerate}
+			\item Sample  $r_i\getsr \Z_q$.
+			
+			\item Let $\tC_i \asn \EgEnc_{\pk_i}(c_i)$.
+			
+			\item \Inote{POK?} 
+			
+		\end{enumerate}
+		
+		\item 
+	\end{enumerate}
+	
+	
+	\item[Decryption:] $\EgDec_{(1^b,H,e)}(\tA)$,   
+	\begin{enumerate}
+		\item 	Let $M \asn \tA_R - e\cdot \tA_L$.
+		
+		\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
+		
+		\item Output $m$.
+	\end{enumerate}
+	
+	\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_L+\tB_L,\tA_R+\tB_R)$.}
+	
+	\item[Minus:]  The inverse in $\cG^2$.
+	
+\end{algorithm}	
+When clear from the context,  will omit the parameters $1^b$ from the public key of the scheme.
+
+
 \subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEg:EgScheme}
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
 
@@ -252,7 +301,7 @@ For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}   
 
 \begin{algorithm}[$(\KeyGen,\Enc,\Dec)$: Chunk ElGamal adaptively homomorphic encryption]\label{alg:ChunkEGa}~
 	
-	\item[Key generation:] $\KeyGen(1^b,H)$: act as $\EgKG(1^b,H)$.
+	\item[Key generation:] $\KeyGen(1^b,H)$: act as $\EgKg(1^b,H)$.
 	
 	\item[Encryiption:] $\Enc_\pk(a)$
 	
