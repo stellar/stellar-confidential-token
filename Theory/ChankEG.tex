@@ -270,10 +270,6 @@ Namely, decryption without finding discrete log.
 
 
 
-\newcommand{\tsEgKg}{\MathAlgX{TshEgGen}}
-	
-\newcommand{\tsEgEnc}{\MathAlgX{TshEgEnc}}
-\newcommand{\tsEgDec}{\MathAlgX{TshEgDec}}
 	
 \subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEg:EgScheme}
 In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
@@ -585,6 +581,66 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 \end{enumerate}
 
 
+
+\newcommand{\tdKg}{\MathAlgX{TdGen}}
+
+\newcommand{\tdEnc}{\MathAlgX{TdEnc}}
+\newcommand{\tdDec}{\MathAlgX{TdDec}}
+
+\subsection{The TDH2 \Inote{?} Threshold Encryption Scheme }\label{sec:ChanksEg:TDH}	
+\Inote{Work in progress}
+
+In this section, we present   the TDH2 threshold  encryption scheme. 
+It will be used for the  auditing capability  of the confidential translation protocol.  
+
+In the following, fix the number of public keys to $n<q$ and the threshold $t \le n$, and the plain text domain $\zo^\ell$. The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
+
+
+\begin{notation}[Lagrange basis functions]
+ 	For $\cS \subseteq [n]$ and $i\in \cS$, let $\lambda_i^\cS \eqdef \prod_{j \in \cS \setminus \set{i}} \frac{-i}{j-i}$.
+\end{notation}
+
+\begin{algorithm}[$(\tdKg,\tdEnc,\tdDec)$: The TDH2  Encryption Scheme]\label{alg:TDH2}~
+	
+	\item[Oracles:] $h\colon \cG \mapsto \zo^\ell$. \Inote{define $\cD$}
+	\item[Key generation:] $\tdKg()$:
+	\begin{enumerate}
+		\item Sample  a uniform degree $t-1$ polynomial  $p$. 
+		
+		\item For each $i\in (n+1)$: Let $x_i \asn p(i)$.
+		
+		 
+		
+		 \item Output public key $E \asn x_0 \cdot G$, and secret keys $x_1,\ldots,x_n$.
+	\end{enumerate}
+	
+
+	
+	\item[Encryption:]  $\tdEnc_E(m;r)$ sample $r\getsr \Z_q$ and output $(r\cdot G, h(r\cdot E)  \xor m)$.\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
+	
+	
+	\item[Decryption:] Protocol $\tdDec(U,c)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, holding secret keys $\set{x_i}$, and combiner \Cc.
+	
+	\begin{enumerate}
+		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $U_i \asn x_i \cdot U$ to \Cc.
+		
+		\item  \Cc: Output $m \asn c \xor h(\sum_{i\in [t]}   \lambda_i^\cS \cdot U_i)$. 
+		
+
+	\end{enumerate}
+	 
+	
+\end{algorithm}	
+
+\subsubsection{Zero-knowledge Proofs}
+
+\remove{
+
+\newcommand{\tsEgKg}{\MathAlgX{TshEgGen}}
+
+\newcommand{\tsEgEnc}{\MathAlgX{TshEgEnc}}
+\newcommand{\tsEgDec}{\MathAlgX{TshEgDec}}
+
 \subsection{Threshold  ElGamal}\label{sec:ChanksEg:TshEg}	
 In this section, we present a simple   threshold variant of the twisted-ElGamal-in-the-exponent  scheme described in \cref{sec:ChanksEg:Eg}. The chunk version of this scheme, described below, will be used for the  auditing capability  of the confidential translation protocol. The threshold scheme  $(\tsEgKg,\tsEgEnc,\tsEgDec)$ is based on Feldman verifiable secret sharing defined as follows:
 
@@ -722,5 +778,5 @@ To chunk ElGammal  variant of the threshold scheme is straightforward: the encry
     
 	
 \end{enumerate} 
-
+}
 
