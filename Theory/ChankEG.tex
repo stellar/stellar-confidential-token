@@ -587,7 +587,7 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 \newcommand{\tdEnc}{\MathAlgX{TdEnc}}
 \newcommand{\tdDec}{\MathAlgX{TdDec}}
 
-\subsection{The TDH2 \Inote{?} Threshold Encryption Scheme }\label{sec:ChanksEg:TDH}	
+\subsection{Threshold Encryption Scheme }\label{sec:ChanksEg:TDH}	
 \Inote{Work in progress}
 
 In this section, we present   the TDH2 threshold  encryption scheme. 
@@ -602,7 +602,6 @@ In the following, fix the number of public keys to $n<q$ and the threshold $t \l
 
 \begin{algorithm}[$(\tdKg,\tdEnc,\tdDec)$: The TDH2  Encryption Scheme]\label{alg:TDH2}~
 	
-	\item[Oracles:] $h\colon \cG \mapsto \zo^\ell$. \Inote{define $\cD$}
 	\item[Key generation:] $\tdKg()$:
 	\begin{enumerate}
 		\item Sample  a uniform degree $t-1$ polynomial  $p$. 
@@ -616,7 +615,9 @@ In the following, fix the number of public keys to $n<q$ and the threshold $t \l
 	
 
 	
-	\item[Encryption:]  $\tdEnc_E(m;r)$ sample $r\getsr \Z_q$ and output $(r\cdot G, h(r\cdot E)  \xor m)$.\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
+	\item[Encryption:]  $\tdEnc_E(m;r)$ sample $r\getsr \Z_q$ and output $(r\cdot G, r\cdot E +  m\cdot G)$.
+	
+	%\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
 	
 	
 	\item[Decryption:] Protocol $\tdDec(U,c)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, holding secret keys $\set{x_i}$, and combiner \Cc.
@@ -631,6 +632,8 @@ In the following, fix the number of public keys to $n<q$ and the threshold $t \l
 	 
 	
 \end{algorithm}	
+
+\subsubsection{Distributed Key Generation}
 
 \subsubsection{Zero-knowledge Proofs}
 
