@@ -135,6 +135,7 @@ In this section we define the ideal functionality for the confidential transacti
 		
 		\begin{enumerate}
 			
+			\item $\Assert{\balance_i \le q/4}$
 			
 			\item $\tcount \asn 0$.
 			
@@ -310,6 +311,8 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 	
 \item[Operation:] ~
 	
+
+	
 	\begin{enumerate}
 		\item  $\Uc_s$: 
 		
@@ -326,20 +329,9 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 		\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oX_s, \oX_d),(x,r_s,r_d))$.
 			
 			
-		%	\item $a \asn \Dec_{\sk_s}(\oA_s)$.
-			
-		%	\item $\oA_s' \getsr \Enc_{\pk_s}(a-x)$.
-			
-			
-		 
-
-			
-	%		\item \Inote{}
-			
-	%	\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oA_s- \oA_s',\oX_s),(x,\sk_s,r_s))$.
 		
 			
-		\item $\pi^\RpSkS \getsr \pZK{\rRpSk}((\pk_s,\oA_s- \oX_s, q),\sk_s)$. 
+		\item $\pi^\RpSkS \getsr \pZK{\rRpSk}((\pk_s,\oA_s- \oX_s, q/2),\sk_s)$.\footnote{Assuming there are never at most  $q/\psize$  increments of $\oA_s$, it holds that  $oA_s$ is smaller than $q/2$. Since $\psize \le q/2$ as well, this check is equivalent to ``$\oA_s- \oX_s$ encrypts a positive value''. \Inote{Rephrase}} 
 			
 			
 			\item Send $(\oX_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\RpSkS)$ to \Cc.   
@@ -356,7 +348,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			
 			 $\vZK{\rEq}((\pk_s,\pk_d,\oX_s,\oX_d),\pi^\Eqs)$ and
 			 
-			  $\vZK{\rRpSk}((\pk_s,\oA_s-\oX_s,q),\pi^\RpSkS)$. 
+			  $\vZK{\rRpSk}((\pk_s,\oA_s-\oX_s,q/2),\pi^\RpSkS)$. 
 			
 	
 		
@@ -383,35 +375,32 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \begin{protocol}[\pConfTran.Rollover]~\label{prot:ConfidentialTransactions:Rollover}
 	\item[Parties.] $\Uc_i$ and \Cc.
 	
-\item[Operation:] \Cc:
-	
+\item[Operation:] ~
+%\begin{enumerate}
+%	\item $\Uc_i$: Send $\pi^\RpSkS \getsr \pZKPOK{\rRp}((\pk_s,\oA_i,q/4),\sk_i)$ to \Cc.
+	%\item 	
+	\Cc:
 	\begin{enumerate}
 	
+%	\item Call $\vZKPOK{\RpSkS}((\pk_s,\oA_i,q/4),\pi^\RPs)$.
+	
+		
 	\item $\oA_i  \pluseq \oP_i$.
 	
 	
-	\item  $\oP_i \minuseq \oP_i$.
+	\item  $\oP_i \asn \Enc_{\pk_i}(0;0)$.
 	
 	\item  $\tcount_i \asn 0$.
 	
 	
-	\item  Broadcast $(\rollover,i)$
+	\item  Broadcast $(\rollover,i)$.\footnote{No  need to publish  the new $\oP_i$, since everyone can compute it.}
 	
 	
+%\end{enumerate}
 \end{enumerate}
-	
 \end{protocol}
 
-\remove{
-\subsubsection{History}
 
-\begin{protocol}[\pConfTran.History]~\label{prot:ConfidentialTransactions:History}
-	\item[Parties.] $\Uc_i$ and \Cc.
-		
-	\item Operation: \Cc: Send  $\historylog$ to $\Uc_i$.
-	
-\end{protocol}
-}
 
 \subsubsection{Audit} 
 

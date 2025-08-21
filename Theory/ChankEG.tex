@@ -130,7 +130,7 @@ Let $\Ped_H(a;r) \eqdef r\cdot H + a \cdot G$.
 	\begin{enumerate}
 		\item 	Let $M \asn \tA_R - e\cdot \tA_L$.
 		
-		\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.
+		\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists. \Inote{It seems that in our application it suffices to check for $m\in (b)$,}
 		
 		\item Output $m$.
 	\end{enumerate}
@@ -527,7 +527,7 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 	
 	\item[Init:] 
 	\begin{enumerate}
-		\item The parties  call an ideal functionality that returns $H \getsr \cG$.\footnotetext{Can be implemented using a proper protocol, ot sampled by a trusted  setup.}
+		\item The parties  call an ideal functionality that returns $H \getsr \cG$.\footnote{Can be implemented using a proper protocol, ot sampled by a trusted  setup.}
 		  
 		\item 	Each $\Uc_i$ sets the parameters of the encryption key generation algorithm to $(1^b,H)$, for  $b \asn 2^{c}\cdot \pcount$.
 
@@ -535,6 +535,8 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
  
 	\item[Transfer.]  The sender also provide proofs that $X_d$ is fresh (\ie using \pZK{\rtFsh} with parameter $b\asn 2^c$).
 	
+	
+	\Inote{Sender refresh  his active balance }
 	
 	\item[Rollover:] The rollover over operation should be updated to allow the account holder to ``normalize''  its active balance: to make it fresh. Specifically
 	
@@ -589,13 +591,10 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 \newcommand{\tdEnc}{\MathAlgX{TshEnc}}
 \newcommand{\tdDec}{\MathAlgX{TshDec}}
 
-\subsection{Threshold Encryption Scheme }\label{sec:ChanksEg:TDH}	
+\subsection{Threshold ElGammal}\label{sec:ChanksEg:TDH}	
 \Inote{Work in progress}
 
-In this section, we present   the TDH2 threshold  encryption scheme. 
-It will be used for the  auditing capability  of the confidential translation protocol.  
-
-In the following, fix the number of public keys to $n<q$ and the threshold $t \le n$, and the plain text domain $\zo^\ell$. 
+In this section, we present   a threshold  variant of the ElGammal encryption scheme. It will be used for the  auditing capability  of the confidential translation protocol.   In the following, fix the number of public keys to $n<q$ and the threshold $t \le n$. 
 
 
 \subsubsection{Additional Preliminaries}\label{sec:ChanksEg:TDH:Pre}	
