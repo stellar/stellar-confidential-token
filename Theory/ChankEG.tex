@@ -157,6 +157,8 @@ Namely, the right hand side if a twisted ElGamal ciphertext is just a  Pedersen 
 
 \subsubsection{Zero-Knowledge Proofs}\label{sec:ChanksEg:Eg:ZK}
 
+\Inote{Remove unused proofs}
+
 In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relations regrading the above scheme.   We use the following notation:
 \begin{notation}
 Let   $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.  
@@ -582,10 +584,10 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 
 
 
-\newcommand{\tdKg}{\MathAlgX{TdGen}}
+\newcommand{\tdKg}{\MathAlgX{TshGen}}
 
-\newcommand{\tdEnc}{\MathAlgX{TdEnc}}
-\newcommand{\tdDec}{\MathAlgX{TdDec}}
+\newcommand{\tdEnc}{\MathAlgX{TshEnc}}
+\newcommand{\tdDec}{\MathAlgX{TshDec}}
 
 \subsection{Threshold Encryption Scheme }\label{sec:ChanksEg:TDH}	
 \Inote{Work in progress}
@@ -593,45 +595,59 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 In this section, we present   the TDH2 threshold  encryption scheme. 
 It will be used for the  auditing capability  of the confidential translation protocol.  
 
-In the following, fix the number of public keys to $n<q$ and the threshold $t \le n$, and the plain text domain $\zo^\ell$. The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
+In the following, fix the number of public keys to $n<q$ and the threshold $t \le n$, and the plain text domain $\zo^\ell$. 
 
 
+\subsubsection{Additional Preliminaries}\label{sec:ChanksEg:TDH:Pre}	
 \begin{notation}[Lagrange basis functions]
- 	For $\cS \subseteq [n]$ and $i\in \cS$, let $\lambda_i^\cS \eqdef \prod_{j \in \cS \setminus \set{i}} \frac{-i}{j-i}$.
+ 	For $\cS$, $z\in \cS$ and $x\in \Z_q$, let $\lambda_y^\cS(x) \eqdef \prod_{z \in \cS \setminus \set{y}} \frac{x-z}{y-z}$.
 \end{notation}
+
+\begin{fact}
+	Let $p$ be a  degree $t-1$ polynomial over $\Z_q$ and let $\cS \subseteq \Z_q$  be of size $t$.  Then for  any $x\in \Z_q$: $p(x) = \sum_{y \in \cS}   \lambda_y^\cS(x) \cdot p(y)$.
+\end{fact}
+
+\subsubsection{The Scheme}
+The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
+
 
 \begin{algorithm}[$(\tdKg,\tdEnc,\tdDec)$: The TDH2  Encryption Scheme]\label{alg:TDH2}~
 	
-	\item[Key generation:] $\tdKg()$:
+	\item[Key generation:] $\tdKg(1^b,H)$:
 	\begin{enumerate}
 		\item Sample  a uniform degree $t-1$ polynomial  $p$. 
 		
-		\item For each $i\in (n+1)$: Let $x_i \asn p(i)$.
+		\item For each $i\in (n+1)$: Let $e_i \asn p(i)$.
 		
 		 
 		
-		 \item Output public key $E \asn x_0 \cdot G$, and secret keys $x_1,\ldots,x_n$.
+		 \item Output public key $(1^b,H,E \asn e_0^{-1} \cdot G)$, and secret keys $\set{e_i}_{i\in [n]}$.
 	\end{enumerate}
 	
 
 	
-	\item[Encryption:]  $\tdEnc_E(m;r)$ sample $r\getsr \Z_q$ and output $(r\cdot G, r\cdot E +  m\cdot G)$.
+	\item[Encryption:]  $\tdEnc$:  Same like \EgEnc.
 	
 	%\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
 	
 	
-	\item[Decryption:] Protocol $\tdDec(U,c)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, holding secret keys $\set{x_i}$, and combiner \Cc.
+	\item[Decryption:] Protocol $\tdDec(\oA)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, party $\Pc_i$ holding secret keys $e_i$, and combiner \Cc.
 	
 	\begin{enumerate}
-		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $U_i \asn x_i \cdot U$ to \Cc.
+		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $A_i \asn e_i \cdot \tA_L$ to \Cc.\footnote{Depending on the context, we might ask $\Pc_i$ to prove that $A_i$ is  the correct value. This can be  done using   \piZKPOK{\rEgConsSk}.}
 		
-		\item  \Cc: Output $m \asn c \xor h(\sum_{i\in [t]}   \lambda_i^\cS \cdot U_i)$. 
 		
-
+		\item  \Cc: 
+		\begin{enumerate}
+			\item $M \asn \tA_R - \sum_{i\in [t]}   \lambda_i^\cS(0) \cdot A_i$.
+			
+			\item Find (using brute force) $m\in (-b, b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists.\footnote{I.e, \Cc reconstruct $m$ as done by  \EgDec.}
+			
+			\item Output $m$.
+		\end{enumerate}
 	\end{enumerate}
-	 
-	
 \end{algorithm}	
+
 
 \subsubsection{Distributed Key Generation}
 
