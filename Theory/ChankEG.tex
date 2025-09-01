@@ -128,6 +128,9 @@
 
 \newcommand{\randomH}{\MathAlgX{RanElm}}
 
+
+\newcommand{\Mult}{\MathAlgX{Mult}}
+
 \section{The Chunk-ElGamal  Encryption Scheme}\label{sec:ChanksEg}
 In this section, we define the  (almost) additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
 The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption/commitment  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present a message $a\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some inEgEr  dividing $t$, and encrypt each of the $a_i$ using    additive homomorphic EG. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
@@ -780,24 +783,33 @@ The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
 Note that the public key and the encryption algorithm of the above scheme are identical to that \cref{alg:tEGinExp}, the twisted ElGamal in-the-exponent encryption scheme. So almost all the machinery  developed on top of \cref{alg:tEGinExp} is applicable to the above scheme without any change, \ie the zero-knowledge protocols and chunk EG scheme. The only exception are the protocols that require knowledge of the secrete key, but those are irrelevant for are use case of   threshold encryption.
 
 \subsubsection{Distributed Key Generation}
-In this part we present a variant of the standard distributed key-generation  protocol for the key generation algorithm \tdKg described above. 
+In this part we present a variant of the standard distributed key-generation  protocol for the key generation algorithm \tdKg described above.  We make use of the following two-party multiplication   functionality.
 
-\Inote{Unfortunately, it seems we cannot use twisted EG here, since it has no simple  key-generation protocol  }
+\begin{functionality}[\Mult: two-party multiplication]\label{func:Mult}~
+\item[Parties:] $\Pc_0,\Pc_1$.
+\item[$\Pc_i$'s private input:] $a_i \in \Z_q$. A corrupt $\Pc_0$ can provide $o_0 \in \Z_q$.
 
-
-
-
+\item[Operation:] ~
+\begin{enumerate}
+	\item If $o_o$ is not set, sample $o_o \getsr \Z_q$.
+	
+	\item Send $o_0$ to $\Pc_0$ and $o_1 \asn a_0 \cdot a_1 - o_0$ to $\Pc_1$.
+\end{enumerate}
+ 
+\end{functionality}
+Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerMRT22} for an OT-base  implementation.\footnote{If we are fine with  using non-twisted threshold ElGamal, then the \Mult functionality is not needed, and the whole protocol gets simpler.}
 
 \begin{protocol}[Distributed key generation]\label{prot:TshEG:KG}~
 	
 	
 	\item[Paramters:] $1\le t\le n <q$.
 	
-	\item[Oracles:] \randomH.
+	\item[Oracles:] \randomH, \Mult.
 	
 	
 	\item[Parties:] $\Pc_1,\ldots,\Pc_n$.
 
+	\item[Oracles:] \Mult.
 	
 	\item[Proofs:] $\piZKPOK{\rPedGEq}$
 			
@@ -810,7 +822,7 @@ In this part we present a variant of the standard distributed key-generation  pr
 	\begin{enumerate}
 
        
-        \item Let $D\getsr \randomH()$. \commentni{Sample a common ephemeral: Pedersen public key}\footnote{In practice, we can use $H$.}
+        \item Call $\randomH$, Let $D$ be the common output. \commentni{Sample a common ephemeral: Pedersen public key}\footnote{In practice, we can use $H$.}
         
         
     	\item  	\commentni{Sample random polynomial and commit to its coefficients}
@@ -829,7 +841,7 @@ In this part we present a variant of the standard distributed key-generation  pr
 			\item Send   $\sset{C_{i,j} \asn \PedCom_D(c_{i,j};r^C_{i,j})}_{j\in (t-1)}$  to all parties. 
 			
 			
-			\item \Inote{We might need to prove also knowledge of   opening of $C_{i,0}$, using \pZKPOK{\rPed}. Let's wait for the security proof}
+		%	\item \Inote{We might need to prove also knowledge of   opening of $C_{i,0}$, using \pZKPOK{\rPed}. Let's wait for the security proof}
 			
 			%	\commentni{Commit to $p_i$'s coefficients}
 			
@@ -849,7 +861,7 @@ In this part we present a variant of the standard distributed key-generation  pr
 	
 			
 			
-			\item ~
+			\item 	\commentni{Generates the secret and verification keys}
 			
 			\begin{enumerate}
 				\item 	For all $\ell\in \nminusi$: Verify   $B_i(\ell) = \PedCom_D(p_\ell(i);r_{\ell,i})$.
@@ -865,13 +877,39 @@ In this part we present a variant of the standard distributed key-generation  pr
 			\end{enumerate}
 		
 				
-		\item ~
+		\item For all $\ell\in \nminusi$: Call $\vZKPOK{\rPedGEq}((H,B(\ell),E_\ell),\pi_\ell)$.
 		
+		
+		
+		\item 	\commentni{Generates the public key $E = e^{-1} \cdot H$}
+		
+		\Inote{The following sub-protocol  allows a corrupt party to induce wrong  $E$. This should be possible to  handled by verifying that the decryption works fine}
 		\begin{enumerate}
-			\item 	For all $\ell\in \nminusi$: Call $\vZKPOK{\rPedGEq}((H,B(\ell),E_\ell),\pi_\ell)$.
-		\end{enumerate}		
+			
+			
+			\item Let $a_i \asn p_i(0)$ and $b_i \getsr \Z_q$.
+			
+			\item For each $\ell \in \nminusi$, call $\Mult$ jointly with $\Pc_\ell$, twice. If $\ell < i$, use $a_i$ in the first call and $b_i$ in the second; otherwise, use  $b_i$ in the first call and $a_i$ in the second.    Let $c_{i,\ell}$ and $c'_{i,\ell}$ be the private  outputs of these calls.
+			
+			\item Output $c_i = a_i b_i  + \sum_{\ell \in  \nminusi} c_{i,\ell} + c_{i,\ell}'$.
+			
+			\item Let $c \asn \sum_{\ell \in c_i}$.
+			 
+			
+			
+			
+			
+			
+			\item Send $E'_i \asn b_i \cdot c^{-1} \cdot H$ to all parties.
+			
+			
+		\end{enumerate}
 		
-			\item Output $(1^b,H,?)$ as the public key, $\set{E_\ell}_{\ell \in [n]}$ as the verification keys, and $e_i$ as the secret key.
+		
+		
+			\item Output $(1^b,H,E \asn \sum_{\ell \in [n]} E_i')$ as the public key, $\set{E_\ell}_{\ell \in [n]}$ as the verification keys, and $e_i$ as the secret key.
+			
+		%	\Inote{Output $B(0)$ as the secrete key in case of non-twisted EG}
 		\end{enumerate}
 	
 	
@@ -879,9 +917,13 @@ In this part we present a variant of the standard distributed key-generation  pr
 
 
 \begin{theorem}[Security  of key-generation  protocol]\label{thm:TshEG:KG}
-	Assuming \DDH is hard over $\cG$, then \cref{prot:TshEG:KG} UC-realizes \tdKg in the \randomH-hybrid model.
+	Assuming \DDH is hard over $\cG$, then \cref{prot:TshEG:KG} UC-realizes \tdKg in the \sset{\randomH,{\Mult}}-hybrid model.
 \end{theorem}
 \begin{proof}
 	\Inote{TODO}
 \end{proof}
+
+
+\subsubsection{The Chunk Variant}\label{sec:ChanksEg:TshEG:Chunk}	
+Since the encryption algorithm  \cref{alg:Tsh} is exactly like that of the non-threshold case, its chunk variant is identical to the non-threshold case. The only difference are the zero-knowledge protocols  that requires the use of the secrete key, which in the threshold case is shared. Fortunately, it seems that  we do not need this protocols in out application.
 
