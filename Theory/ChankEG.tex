@@ -116,9 +116,15 @@
 \newcommand{\rPedEq}{\cR_\PedEqS}
 \newcommand{\rPedEqDef}
 {
-	\sset{((H,A_0,A_1),(a,r_0,r_1)))\colon \forall j \in \zo A = \Ped_H(a;r_j) = A_j}
+	\sset{((H,A_0,A_1),(a,r_0,r_1)))\colon \forall j \in \zo  \Ped_H(a;r_j) = A_j}
 }
 
+\newcommand{\PedGEqS}{{{\sf PedGrEq}}}
+\newcommand{\rPedGEq}{\cR_\PedGEqS}
+\newcommand{\rPedGEqDef}
+{
+	\sset{((H,A,B),(a,r))\colon \Ped_H(a;r) = A \sland a \cdot G = B}
+}
 
 \newcommand{\randomH}{\MathAlgX{RanElm}}
 
@@ -165,6 +171,15 @@ We will also use zero-knowledge proofs  for the following relations.
 		\item[Task:] ZKPOK for $\rPedEq = \rPedEqDef$.
 		
 		\item[Protocol:]  This is just the discrete log protocol for $A_1-A_0$ with witness and $r_1 - r_0$.
+	\end{description}
+	
+	
+		\item[Pedersen and group equality.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rPedGEq = \rPedGEqDef$.
+		
+		\item[Protocol:]  Concatenation of the $\rPed$ and $\rdl$ with the same challenge.
 	\end{description}
 	
 \end{description}
@@ -742,7 +757,7 @@ The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
 	%\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
 	
 	
-	\item[Decryption:] Protocol $\tdDec(\oA)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, party $\Pc_i$ holding secret keys $e_i$, and combiner \Cc.
+	\item[Decryption:] Protocol $\tdDec(\tA)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, party $\Pc_i$ holding secret keys $e_i$, and combiner \Cc.
 	
 	\begin{enumerate}
 		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $A_i \asn e_i \cdot \tA_L$ to \Cc.\footnote{Depending on the context, we might ask $\Pc_i$ to prove that $A_i$ is  the correct value. This can be  done using  the verification keys and  \piZKPOK{\rEgConsSk}.}
@@ -777,7 +792,7 @@ In this part we present a variant of the standard distributed key-generation  pr
 	\item[Parties:] $\Pc_1,\ldots,\Pc_n$.
 
 	
-	\item[Proofs:] $\piZKPOK{\rPedEq}$
+	\item[Proofs:] $\piZKPOK{\rPedGEq}$
 			
 	\item[Common input:]	$1^b,H$.
 	
@@ -813,68 +828,42 @@ In this part we present a variant of the standard distributed key-generation  pr
 			
 			\end{enumerate}
 			
+			\item[$\bullet$]  For $k,\ell \in [n]$, let $B_k(\ell)  \eqdef   \sum_{j\in (t-1)} C_{k,j} \cdot \ell^j$ and let $B(\ell) 
+			\eqdef \sum_{k \in [n]} B_k(\ell) $. 
 			
-				\item[$\bullet$]  $\forall \ell,\alpha \in [n]$, let $B_{\ell}(\alpha)  \eqdef   \sum_{j\in (t-1)} C_{\ell,j} \cdot \alpha^j$. 
-				
-			\item 	For each $\alpha\in [n]$:  
-			
-			%	\commentni{For each $\ell$, compute a commitment to $\set{p_\ell(\alpha)}_{\alpha \in [n]}$ using ${p_\ell}$'s coefficients}
-			%Upon receiving  $\set{C_{\ell,j}}_{j\in [t-1]}$ from all $\ell\in \nminusi$:
-			
-			
-			
-			
+			\item  \commentni{Send opening of $B_i(\ell)$ to $\Pc_\ell$}
 			
 			\begin{enumerate}
-					
-					\item Sample  $r_{i,\alpha}^Y \getsr\zq$.
-					
-					\item      Set  $Y_{i,\alpha} \asn  \PedCom_D(p_i(\alpha);r^Y_{i,\alpha})$
-					
-					\item Let $\pi_{i,\alpha} \getsr \pZKPOK{\rPedEq}((D,Y_{i,\alpha}, B_i(\alpha)),(p_i(\alpha),r^Y_{i,\alpha} , \sum_{j\in (t-1)} r_{i,j}^C \cdot \alpha^j))$.   
-					
+				\item For all $\ell \in [n]$: Set $r_{i,\ell} \asn  \sum_{j\in (t-1)} r_{i,j}^C \cdot \ell^j$.   
 				
+				\item For all $\ell \in \nminusi$: Send $(p_i(\ell),r_{i,\ell})$ to $\Pc_\ell$
+			\end{enumerate}
+			
+	
+			
+			
+			\item ~
+			
+			\begin{enumerate}
+				\item 	For all $\ell\in \nminusi$: Verify   $B_i(\ell) = \PedCom_D(p_\ell(i);r_{\ell,i})$.
+				
+				\item Let $e_i \asn  \sum_{\ell \in [n]} p_\ell(i)$, $E_i \asn e_i \cdot G$, and $r_i 
+				\asn  \sum_{\ell \in [n]} r_{\ell,i}$.
+				
+				
+				\item Let $\pi_i \asn \pZKPOK{\rPedGEq}((H,B(i),E_i),(e_i,r_i ))$.
+				
+				
+				\item Send $(E_i,\pi_i)$ to all parties.
+			\end{enumerate}
 		
 				
-					\item Send $(Y_{i,\alpha},\pi_{i,\alpha})$ to all parties. 
-				
-			\end{enumerate}
-			
-			
+		\item ~
 		
-			
-			
-			\item \commentni{?}			
-			\begin{enumerate}
-				\item   For all  $\ell \in \nminusi, \alpha\in [n]$:  Call $\vZKPOK{\rPedEq}((D,Y_{i,\alpha}, B_i(\alpha)),\pi_{\ell,\alpha})$.
-				
-				\item  For all $\ell\in \nminusi$:  Send $(p_i(\ell),r^Y_{i,\ell})$ to $\Pc_\ell$.
-				
-			\end{enumerate}
-			
-			
-			\item
-			
-			\begin{enumerate}
-				\item Abort    if $Y_{\ell,i} \neq \PedCom_D(p_{\ell,i};r^Y_{\ell,i})$ for some $\ell$.
-				
-				
-				\item   For all $\ell \in [n]$, let $Y_\ell= \sum_{j\in [n]} Y_{j,\ell}$.  
-				
-				
-				\commentni{$Y_\ell$ is a commitment to $\sum_{j\in [n]} p_j(\ell)$}
-				
-				
-				
-				\item Let  $y_i = \sum_{\ell\in [n]} p_{\ell,i}$  and $r_i = \sum_{\ell\in [n]} r^Y_{\ell,i}$.
-				
-				\commentni{$(y_i,r_i)$ is an opening of  $Y_i$}
-				
-				
-			\end{enumerate}
-			
-			
-			
+		\begin{enumerate}
+			\item 	For all $\ell\in \nminusi$: Call $\vZKPOK{\rPedGEq}((H,B(\ell),E_\ell),\pi_\ell)$.
+		\end{enumerate}		
+		
 			\item Output $(1^b,H)$ as the public key, $\set{Y_\ell}_{\ell \in [n]}$ as the verification keys, and $?$ as the secret key.
 		\end{enumerate}
 	
@@ -888,150 +877,4 @@ In this part we present a variant of the standard distributed key-generation  pr
 \begin{proof}
 	\Inote{TODO}
 \end{proof}
-
-\remove{
-
-\newcommand{\tsEgKg}{\MathAlgX{TshEgGen}}
-
-\newcommand{\tsEgEnc}{\MathAlgX{TshEgEnc}}
-\newcommand{\tsEgDec}{\MathAlgX{TshEgDec}}
-
-\subsection{Threshold  ElGamal}\label{sec:ChanksEg:TshEg}	
-In this section, we present a simple   threshold variant of the twisted-ElGamal-in-the-exponent  scheme described in \cref{sec:ChanksEg:Eg}. The chunk version of this scheme, described below, will be used for the  auditing capability  of the confidential translation protocol. The threshold scheme  $(\tsEgKg,\tsEgEnc,\tsEgDec)$ is based on Feldman verifiable secret sharing defined as follows:
-
-
-
-\begin{algorithm}[$(\tsEgKg,\tsEgEnc,\tsEgDec)$: Threshold, twisted ElGamal in-the-exponent encryption]\label{alg:tsEGinExp}~
-	
-	
-	\item[Key generation:] $\tsEgKg(1^b,H)$ each party generates its public key as in \EgKg.
-	
-	\item[Encryption:] $\tsEgEnc_{(t,\pk_1= (H,E_1),\ldots,\pk_n)}(a)$:
-	
-	\begin{enumerate}
-		\item Sample a uniform degree $t-1$ polynomial  $p$ with $p(0)= a$. 
-		
-		\item  For $i \in [n]$: Let $\tA_i \asn \EgEnc_{\pk_i}(p(i))$.
-		
-		
-		\item Output $(t,\pk_1,\ldots,\pk_n,\tA_1,\ldots,\tA_n)$
-		
-	\end{enumerate}
-	
-	
-	\item[Decryption:] Protocol $\tsEgDec(t,\pk_1,\ldots,\pk_n,\tA_1,\ldots,\tA_n)$ between parties  $\Pc_{u_1},\ldots,\Pc_{u_t}$ holding secret keys $\sk_{u_i}, \ldots,\sk_{u_t}$.
-	
-	\begin{enumerate}
-		\item 	Each $\Pc_{u_i}$:
-		
-		\begin{enumerate}
-			\item Let  $a_i \asn \EgDec_{\sk_{u_i}} (\tA_{u_i})$.
-			
-			\item  Send $a_i$ to other parties.\footnote{Depending on the context, we might ask $\Pc_{u_i}$ to prove that $a_i$ is  the correct decryption of $\tA_{u_i}$. This can be  done using   \piZKPOK{\rEgConsSk}.}
-		\end{enumerate} 
-		
-		\item Each party uses $\set{a_i}_{i\in [t]}$ to reconstruct 	the degree $t-1$ polynomial $p$ and  outputs $p(0)$.
-		
-		
-	\end{enumerate}
-	
-	\item[Addition:] For $u = (t,\pk_1,\ldots,\pk_n)$, 
-	
-	$(u,\tB_1,\ldots,\tB_n) + (u,\tB_1',\ldots,\tB_n') \eqdef (u,\tB_1+\tB_1',\ldots,\tB_n)$.
-	
-	
-	\item[Minus:]  For $u = (t,\pk_1,\ldots,\pk_n)$,  $(u,\tB_1,\ldots,\tB_n) \eqdef (u,-\tB_1,\ldots,-\tB_n) $.
-	
-\end{algorithm}	
-When clear from the context,  will omit the parameters $1^b$ from the public key of the scheme, and omit the  $(t,\pk_1,\ldots,\pk_n)$ part  from the ciphertexts.
-
-
-\newcommand{\TsEgEncs}{{{\sf tEgEnc}}}
-\newcommand{\rTsEgEnc}{\cR_\TsEgEncs}
-\newcommand{\rTsEgEncDef}
-{
-	\sset{((t,\pk_1,\ldots,\pk_n,\tA_1,\ldots,\tA_n),(a,r))\colon \tsEgEnc_{(t,\pk_1,\ldots,\pk_n)}(a;r)= (\tA_1,\ldots,\tA_n)}
-}
-
-
-
-\subsubsection{Zero-Knowledge Proofs}\label{sec:ChanksEg:tsEGinExp:ZK}
-
-
-\begin{description}
-
-
-
-
-\item[Knowledge of plain text.] ~
-
-\begin{description}
-	\item[Task:] ZKPOK for  $\rTsEgEnc=\rTsEgEncDef$.
-	
-	\item[\Pc:]   
-
-	\begin{enumerate}
-	\item Let $p$  and denote the degree $t-1$ polynomial  sampled by \tsEgEnc and let $\sset{c_i}$ denote its coefficients.   Let $\sset{r_i^{\tA}}$ denote the  randomness used to sample $\set{\tA_1}$  (all induced by the  witness randomness $r$).
-	
-	
-	\item For $j\in (t)$: 
-	
-	\begin{enumerate}
-		\item Sample  $r^C_j\getsr \Z_q$.
-		
-		\item Let $C_j \asn \Ped_{H}(c_j;r^C_j)$.
-		
-	\end{enumerate}
-	
-	\item  For $i \in [n]$: 
-	
-	
-	\begin{enumerate}
-		\item  Let $A_i \asn  \sum_{j\in (t)} C_j  \cdot i^j$ and let $r_i^A  \sum_{j\in (t)} r^C_j  \cdot i^j$ . \comment{Pedersen commitment to $p(i)$}
-		
-	
-		\item Let $\pi_i \getsr \pZKPOK{\rEgEqPed}((E_i,H,\tA_i,A_i),(r_i^{\tA},r_i^A))$.
-	\end{enumerate}
-	
-	\item Output $\sset{C_j}_{j\in (t)},\sset{\pi_i}_{i\in [n]}$
-\end{enumerate}
-
-
-\item[\Vc:]   ~
-
-\begin{enumerate}
-	
-	\item Generate   $\set{A_i}$ as done by \Pc.
-	
-	\item For each $i$: call $\vZKPOK{\rEgEqPed}((E_i,H,\tA_i,A_i),\pi_i)$.
-\end{enumerate}
-\end{description}
-\end{description}
-
-\subsubsection{Threshold   Chunk ElGammal}
-To chunk ElGammal  variant of the threshold scheme is straightforward: the encryption algorithm simply encrypt the $p(i)$'s using the  chunk ElGammal scheme (described by \cref{alg:ChunkEGa}), and the decryption protocol uses the relevant decryption algorithm.  The relevant ZK proofs are adapted a accordingly
-
-\begin{enumerate}
-	
-	\item For proving consistency of the plain text, as possibly done in the decryption  phase by each of the decryptors, the  prover first converts $\oA_i$   to $\tA_i$, and continues like in the original proof.
-	 
-	\item In the ZKPOK for  $\rTsEgEnc$, the prover
-	\begin{enumerate}
-		\item Proves freshness of each of the, now,   $\oA_i$'s.
-		
-		\item  	Converts the  $\sset{\oA_i}$ into $\sset{\tA_i}$, and continues like in the original protocol.
-		
-	\end{enumerate}
-
-    The verifier 
-    \begin{enumerate}
-    	\item Verifies the freshness proofs of the   $\oA_i$'s.
-    	
-    	\item  	Converts the  $\sset{\oA_i}$ into $\sset{\tA_i}$, and continues like in the original protocol.
-    	
-    \end{enumerate}
-    
-	
-\end{enumerate} 
-}
 
