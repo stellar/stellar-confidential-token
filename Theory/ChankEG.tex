@@ -717,7 +717,7 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 \newcommand{\tdDec}{\MathAlgX{TshDec}}
 
 \subsection{Threshold ElGammal}\label{sec:ChanksEg:TshEG}	
-In this section, we present   a threshold  variant of the ElGammal encryption scheme. It will be used for the  auditing capability  of the confidential translation protocol.   In the following, fix the number of public keys to $n<q$ and the threshold $t \le n$. 
+In this section, we present   a threshold  variant of the ElGammal encryption scheme. It will be used for the  auditing capability  of the confidential translation protocol.   In the following, fix the number of public keys to $n<q$ and a threshold $t \in [m]$. 
 
 
 \subsubsection{Additional Preliminaries}\label{sec:ChanksEg:TshEG:Pre}	
@@ -739,15 +739,18 @@ The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
 
 \begin{algorithm}[$(\tdKg,\tdEnc,\tdDec)$: The ElGamal threshold   Encryption Scheme]\label{alg:Tsh}~
 	
-	\item[Key generation:] $\tdKg(1^b,H)$:
+	\item[Paramters:] $1\le t\le n <q$.
+	
+	
+	\item[Key generation (standalone):] $\tdKg(1^b,H)$:
 	\begin{enumerate}
-		\item Sample  a uniform degree $t-1$ polynomial  $p$. 
+		\item Sample   uniformly a degree $t-1$ polynomial  $p$ over $Z_q$. 
 		
 		\item For each $i\in (n+1)$: Let $e_i \asn p(i)$.
 		
 		 
 		
-		 \item Output public key $(1^b,H,E \asn e_0^{-1} \cdot G)$, verification keys $\sset{E_ \asn e_i  \cdot G}_{i\in [n]}$, and secret keys $\set{e_i}_{i\in [n]}$.
+		 \item Output public key $(1^b,H,E \asn e_0^{-1} \cdot G)$, verification keys $\sset{E_i \asn e_i  \cdot G}_{i\in [n]}$, and secret keys $\set{e_i}_{i\in [n]}$.
 	\end{enumerate}
 	
 
@@ -757,7 +760,7 @@ The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
 	%\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
 	
 	
-	\item[Decryption:] Protocol $\tdDec(\tA)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for some $t$-size $\cS \subseteq [n]$, party $\Pc_i$ holding secret keys $e_i$, and combiner \Cc.
+	\item[Decryption:] Protocol $\tdDec(\tA)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for a $t$-size $\cS \subseteq [n]$, party $\Pc_i$ holding secret keys $e_i$, and combiner \Cc.
 	
 	\begin{enumerate}
 		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $A_i \asn e_i \cdot \tA_L$ to \Cc.\footnote{Depending on the context, we might ask $\Pc_i$ to prove that $A_i$ is  the correct value. This can be  done using  the verification keys and  \piZKPOK{\rEgConsSk}.}
@@ -779,6 +782,7 @@ Note that the public key and the encryption algorithm of the above scheme are id
 \subsubsection{Distributed Key Generation}
 In this part we present a variant of the standard distributed key-generation  protocol for the key generation algorithm \tdKg described above. 
 
+\Inote{Unfortunately, it seems we cannot use twisted EG here, since it has no simple  key-generation protocol  }
 
 
 
@@ -786,8 +790,11 @@ In this part we present a variant of the standard distributed key-generation  pr
 
 \begin{protocol}[Distributed key generation]\label{prot:TshEG:KG}~
 	
+	
+	\item[Paramters:] $1\le t\le n <q$.
+	
 	\item[Oracles:] \randomH.
-	\item[Paramters:] $t\le n \in \N$.
+	
 	
 	\item[Parties:] $\Pc_1,\ldots,\Pc_n$.
 
@@ -864,7 +871,7 @@ In this part we present a variant of the standard distributed key-generation  pr
 			\item 	For all $\ell\in \nminusi$: Call $\vZKPOK{\rPedGEq}((H,B(\ell),E_\ell),\pi_\ell)$.
 		\end{enumerate}		
 		
-			\item Output $(1^b,H)$ as the public key, $\set{Y_\ell}_{\ell \in [n]}$ as the verification keys, and $?$ as the secret key.
+			\item Output $(1^b,H,?)$ as the public key, $\set{E_\ell}_{\ell \in [n]}$ as the verification keys, and $e_i$ as the secret key.
 		\end{enumerate}
 	
 	
@@ -872,7 +879,7 @@ In this part we present a variant of the standard distributed key-generation  pr
 
 
 \begin{theorem}[Security  of key-generation  protocol]\label{thm:TshEG:KG}
-	Assuming \DDH is hard over $\cG$, then \cref{prot:TshEG:KG} UC-realizes \tdKg in the \randomH-hybrid model..
+	Assuming \DDH is hard over $\cG$, then \cref{prot:TshEG:KG} UC-realizes \tdKg in the \randomH-hybrid model.
 \end{theorem}
 \begin{proof}
 	\Inote{TODO}
