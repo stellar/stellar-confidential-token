@@ -766,12 +766,19 @@ The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
 	\item[Decryption:] Protocol $\tdDec(\tA)$ between parties  $\set{\Pc_i}_{i\in \cS}$ for a $t$-size $\cS \subseteq [n]$, party $\Pc_i$ holding secret keys $e_i$, and combiner \Cc.
 	
 	\begin{enumerate}
-		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $A_i \asn e_i \cdot \tA_L$ to \Cc.\footnote{Depending on the context, we might ask $\Pc_i$ to prove that $A_i$ is  the correct value. This can be  done using  the verification keys and  \piZKPOK{\rEgConsSk}.}
+		\item Party $\Pc_i$, for all $i\in \cS$:  Send   $A_i \asn e_i \cdot \tA_L$ to \Cc.
 		
+		\begin{itemize}
+			\item In the verified variant of this protocol,  $\Pc_i$ also proves that  $A_i$ is  computed correctly, using  the verification keys and  \piZKPOK{\rEgConsSk}.
+		\end{itemize}
 		
 		\item  \Cc: 
 		\begin{enumerate}
 			\item $M \asn \tA_R - \sum_{i\in [t]}   \lambda_i^\cS(0) \cdot A_i$.
+			
+			\begin{itemize}
+				\item In the verified variant of this protocol, \Cc also verifies the proofs.
+			\end{itemize}
 			
 			\item Find (using brute force) $m\in(b)$ so that $m\cdot G = M$. Abort if no such $m$ exists.\footnote{This part is identical to \EgDec.}
 			
@@ -883,7 +890,7 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 		
 		\item 	\commentni{Generates additive shares of  public key $E = e^{-1} \cdot H$}
 		
-		\Inote{The following sub-protocol  allows a corrupt party to induce wrong  $E$. This should be possible to  handled by verifying that the decryption works fine}
+
 		\begin{enumerate}
 			
 			
@@ -909,6 +916,10 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 		
 		\begin{enumerate}
 			\item 	Set $E \asn \sum_{\ell \in [n]} E_\ell$.
+			
+			\item If $i$ is one  of the  $t$ parties, interact in the verified variant of  $\tdDec$ on input $\EgEnc_E(0;0)$.
+			
+			\item Act as \Cc in $\tdDec$,  and verify the  decrypted value is $0$. \Inote{Hopefully, this check will catch if one of the parties misbehaves. Will see when we write the security proof.}
 		\end{enumerate}
 	
 		
