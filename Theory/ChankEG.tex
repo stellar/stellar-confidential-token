@@ -145,7 +145,7 @@ In \cref{sec:ChanksEg:Eg}, we formally define the  ElGamal in-the-exponent schem
 
 
 \subsection{Additional Preliminaries}\label{sec:ChanksEg:Pre}
-We will use access to an  ideal functionality \randomH that  returns a random element of $\cG$.\footnote{Can be implemented using a proper protocol, ot sampled by a trusted  setup.} We will also use \textit{Pedersen commitments} defined by $\Ped_H(a;r) \eqdef r\cdot H + a \cdot G$. 
+We will use access to an  ideal functionality \randomH that  returns a random element of $\cG$.\footnote{Can be implemented using a proper protocol,  sampled by a trusted  setup or using a random oracle.} We will also use \textit{Pedersen commitments} defined by $\Ped_H(a;r) \eqdef r\cdot H + a \cdot G$. 
 
 
 \paragraph{Zero-knowledge proofs.}
@@ -822,7 +822,7 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 	\begin{enumerate}
 
        
-        \item Call $\randomH$, Let $D$ be the common output. \commentni{Sample a common ephemeral: Pedersen public key}\footnote{In practice, we can use $H$.}
+        \item Call \randomH, Let $D$ be the common output. \commentni{Sample a common ephemeral: Pedersen public key}\footnote{In practice, we can use $H$.}
         
         
     	\item  	\commentni{Sample random polynomial and commit to its coefficients}
@@ -881,7 +881,7 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 		
 		
 		
-		\item 	\commentni{Generates the public key $E = e^{-1} \cdot H$}
+		\item 	\commentni{Generates additive shares of  public key $E = e^{-1} \cdot H$}
 		
 		\Inote{The following sub-protocol  allows a corrupt party to induce wrong  $E$. This should be possible to  handled by verifying that the decryption works fine}
 		\begin{enumerate}
@@ -905,9 +905,14 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 			
 		\end{enumerate}
 		
+		\item \commentni{Construct and verify public key $E$}
 		
+		\begin{enumerate}
+			\item 	Set $E \asn \sum_{\ell \in [n]} E_\ell$.
+		\end{enumerate}
+	
 		
-			\item Output $(1^b,H,E \asn \sum_{\ell \in [n]} E_i')$ as the public key, $\set{E_\ell}_{\ell \in [n]}$ as the verification keys, and $e_i$ as the secret key.
+		\item Output $(1^b,H,E)$ as the public key, $\set{E_\ell}_{\ell \in [n]}$ as the verification keys, and $e_i$ as the secret key.
 			
 		%	\Inote{Output $B(0)$ as the secrete key in case of non-twisted EG}
 		\end{enumerate}
