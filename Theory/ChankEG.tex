@@ -888,7 +888,7 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 		
 		
 		
-		\item 	\commentni{Generates additive shares of  public key $E = e^{-1} \cdot H$}
+		\item 	\commentni{Construct additive shares $\sset{E_\ell'}$ of  public key $E = e^{-1} \cdot H$}
 		
 
 		\begin{enumerate}
@@ -915,11 +915,11 @@ Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerM
 		\item \commentni{Construct and verify public key $E$}
 		
 		\begin{enumerate}
-			\item 	Set $E \asn \sum_{\ell \in [n]} E_\ell$.
+			\item 	Let $E \asn \sum_{\ell \in [n]} E'_\ell$.
 			
 			\item If $i$ is one  of the  $t$ parties, interact in the verified variant of  $\tdDec$ on input $\EgEnc_E(0;0)$.
 			
-			\item Act as \Cc in $\tdDec$,  and verify the  decrypted value is $0$. \Inote{Hopefully, this check will catch if one of the parties misbehaves. Will see when we write the security proof.}
+			\item Act as \Cc in $\tdDec$,  and verify the  decrypted value is $0$.\footnote{\Inote{Hopefully, this is sufficient to enforce the  parties to act honestly. Will see when we write the security proof.}}
 		\end{enumerate}
 	
 		
