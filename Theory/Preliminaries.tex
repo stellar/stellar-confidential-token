@@ -7,7 +7,6 @@ Let $\N$ denote the set of natural numbers.  For $n\in \N$, let $[n] \eqdef \set
 
 
 \subsection{Homomorphic Encryption}
-
 An homomorphic encryption over $\Z_q$ is a triplet $(\KeyGen,\Enc,\Dec)$ of efficient algorithms, with the standard correctness and semantic security properties.  In addition, there exist an efficient  addition operation denote $+$  such that for uniformly  generated public key  $\pk$, and any two  messages $x_0,x_1\in \Z_q$,  it holds that  $\Enc_\pk(x_0) + \Enc_\pk(x_1) $ are computationally indistinguishable from $\Enc_\pk(x_0+ x_1 \bmod q)$.
 
 

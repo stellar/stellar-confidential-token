@@ -22,14 +22,15 @@
 \newcommand{\psize}{p_{\mathsf{size}} }
 
 
-\newcommand{\rEnc}{{\cR_{\sf Enc}}}
+
+%Relations
+\newcommand{\rEnc}{\hyperref[rel:Enc]{\cR_{\sf Enc}}}
 \newcommand{\rEncDef}
 {
 	\sset{((\pk,\oA),(a,r))\colon \Enc_\pk(a;r)= \oA}
 }
 
-\newcommand{\rKeyGen}{{\cR_{\sf KeyGen}}}
-
+\newcommand{\rKeyGen}{\hyperref[rel:KeyGen]{\cR_{\sf KeyGen}}}
 \newcommand{\rKeyGenDef}
 {
 	\sset{(\pk,w))\colon \KeyGen(w)= (\cdot,\pk)}
@@ -39,9 +40,7 @@
 
 
 \newcommand{\Eqs}{{\sf Eq}}
-\newcommand{\rEq}{\cR_\Eqs}
-
-
+\newcommand{\rEq}{\hyperref[rel:Eq]{\cR_\Eqs}}
 \newcommand{\rEqDef}
 {
 	\set{((\pk_0,\pk_1,\oA_0,\oA_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{\pk_i}(a;r_i)= \A_i}
@@ -49,9 +48,7 @@
 
 
 \newcommand{\EqSks}{{\sf EqSk}}
-\newcommand{\rEqSk}{\cR_\EqSks}
-
-
+\newcommand{\rEqSk}{\hyperref[rel:EqSk]{\cR_\EqSks}}
 \newcommand{\rEqSkDef}
 {
 	\set{((\pk,\oA_0,\oA_1),w)\colon \KeyGen(w) = (\sk,\pk) \sland \Dec_\sk(\oA_0)= \Dec_\sk(\oA_1)  }
@@ -61,16 +58,14 @@
 
 
 \newcommand{\RPs}{{\sf Rp}}
-\newcommand{\rRp}{\cR_\RPs}
-
+\newcommand{\rRp}{\hyperref[rel:Rp]{\cR_\RPs}}
 \newcommand{\rRpDef}
 {
 	\sset{((\pk,\oA,b),(a,r))\colon \Enc_\pk(a;r)= \oA \sland a\in (b)}
 }
 
 \newcommand{\RpSkS}{{\sf RpSk}}
-\newcommand{\rRpSk}{\cR_\RpSkS}
-
+\newcommand{\rRpSk}{\hyperref[rel:RpSk]{\cR_\RpSkS}}
 \newcommand{\rRpSkDef}
 {
 	\sset{((\pk,\oA,b),w)\colon \KeyGen(w) = (\sk,\pk) \sland  \Dec_\sk(\oA) \in (b)}
@@ -211,7 +206,7 @@ We split  the protocol into several sub-protocols defined below, and  use the  f
 
 This sub-protocol is were the encryption key are sampled and shared, and the chain manager \Cc set the initial values of the chain. The protocol  uses ZKPOK proof for the relation:
 \begin{description}
-	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.
+	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.\label{rel:KeyGen}
 \end{description}
 
 
@@ -292,14 +287,21 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 The protocol uses ZK and ZKPOK proofs for the   following  relations:
 
 \begin{description}
-	\item[In range.] $\rRp =\rRpDef$, \ie  encryption of values in $[\psize]$, witness is random coins.
+	\item[In range.] $\rRp =\rRpDef$.\label{rel:Rp}
 	
-		\item[In range using secret key.] $\rRpSk =\rRpSkDef$, \ie  encryption of values in $[\psize]$, witness is secret key. 
+	Namely, encryption of values in $[\psize]$, witness is random coins.
+	
+		\item[In range using secret key.] $\rRpSk =\rRpSkDef$.\label{rel:RpSk}
+		
+		
+		Namely, encryption of values in $[\psize]$, witness is secret key. 
 		\begin{remark}
 			To prove this relation, see \cref{sec:ChanksEg:Eg:ZK}, the prover decrypts the ciphertext, encrypt it again using fresh randomness, and use this randomness as the witness for the proof above. By storing the random coins used to generate the original ciphertext, one significantly reduce the proof's cost.
 		\end{remark}
 		
-	\item[Equality.] $\rEq =\rEqDef$, \ie  encryptions of the same value, witness is the  secret key for the $\pk_0$ and the randomness of  $\oA_1$.
+	\item[Equality.] $\rEq =\rEqDef$. \label{rel:Eq}
+	
+	Namely,   encryptions of the same value, witness is the  secret key for the $\pk_0$ and the randomness of  $\oA_1$.
 	
 
 \end{description}
