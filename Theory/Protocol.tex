@@ -141,7 +141,7 @@ In this section we define the ideal functionality for the confidential transacti
 		
 		\begin{enumerate}
 			
-			\item $\Assert{\balance_i \le q/4}$
+			\item $\Assert{\balance_i \le q/4}$.\footnote{This check is to prevent overflow. In reality, it will never fire.}
 			
 			\item $\tcount \asn 0$.
 			
@@ -162,7 +162,7 @@ In this section we define the ideal functionality for the confidential transacti
 		\begin{enumerate}
 			
 			
-			 \item \Assert{$x\in (q) \sland \balance_i  \ge x$}.
+			 \item \Assert{$ \balance_i  \ge x$}.
 			
 			\item $\balance_i \minuseq x$.
 			
@@ -204,7 +204,7 @@ We split  the protocol into several sub-protocols defined below, and  use the  f
 \subsubsection{Init}
 
 
-This sub-protocol is were the encryption key are sampled and shared, and the chain manager \Cc set the initial values of the chain. The protocol  uses ZKPOK proof for the relation:
+This sub-protocol is were the encryption key are sampled and shared, and the chain manager \Cc set the initial balances  of all users to zero. The protocol  uses ZKPOK proof for the relation:
 \begin{description}
 	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.\label{rel:KeyGen}
 \end{description}
@@ -254,7 +254,7 @@ This sub-protocol is were the encryption key are sampled and shared, and the cha
 			
 				\end{enumerate}
 			
-		\item Broadcast $(\init,\sset{\pk_i,\oA_i,\oP_i}_{i\in [n]})$
+		\item Broadcast $(\init,\sset{\pk_i,\oA_i,\oP_i}_{i\in [n]})$.\footnote{Since all ciphertext are known constants, \Cc can skip actually broadcasting them.}
 		%	\item     Broadcast $\historylog \asn \emptyset$.
 				\end{enumerate}								
 			\end{enumerate}
@@ -318,7 +318,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 %\item[Algorithms:]    \Dec.
 
 	
-	\item[Common input:] $d\in [n]$.
+	\item[Common input:] $d\in [n]$. \comment{Payee (destination) name.}
 	
 	\item[$\Uc_s$'s private  input:] $x \in (\psize)$.
 	
@@ -344,7 +344,7 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 			
 		
 			
-		\item $\pi^\RpSkS \getsr \pZK{\rRpSk}((\pk_s,\oA_s- \oX_s, q/2),\sk_s)$.\footnote{Assuming there are never at most  $q/\psize$  increments of $\oA_s$, it holds that  $\oA_s$ is smaller than $q/2$. Since $\psize \le q/2$ as well, this check is equivalent to ``$\oA_s- \oX_s$ encrypts a positive value''. \Inote{Rephrase}} 
+		\item $\pi^\RpSkS \getsr \pZK{\rRpSk}((\pk_s,\oA_s- \oX_s, q/2),\sk_s)$.\footnote{Assuming there are never at most  $q/\psize$  increments of $\oA_s$, it holds that  $\oA_s$ is smaller than $q/2$. Since $\psize \le q/2$ as well, this check is equivalent to ``$\oA_s- \oX_s$ encrypts a non-negative value''. \Inote{Rephrase}} 
 			
 			
 			\item Send $(\oX_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\RpSkS)$ to \Cc.   
@@ -414,6 +414,9 @@ The protocol uses ZK and ZKPOK proofs for the   following  relations:
 \end{protocol}
 
 
+\subsubsection{Withdraw} 
+
+\Inote{TODO}
 
 \subsubsection{Audit} 
 

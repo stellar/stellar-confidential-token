@@ -149,7 +149,7 @@
 
 \section{The Chunk-ElGamal  Encryption Scheme}\label{sec:ChanksEg}
 In this section, we define the  (almost) additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
-The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption/commitment  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present a message $a\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some inEgEr  dividing $t$, and encrypt each of the $a_i$ using    additive homomorphic EG. To decry $\oA= (A_0,\ldots,A_{t/c})$, one  
+The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption/commitment  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present a message $a\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some inEgEr  dividing $t$, and encrypt each of the $a_i$ using    additive homomorphic EG. To decrypt $\oA= (A_0,\ldots,A_{t/c-1})$, one  
 \begin{enumerate}
 	\item Decrypt   each $A_i$ to get $a_i  \cdot G$.
 	\item Use brute force to find $a$.\footnote{One can use    processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
@@ -272,7 +272,7 @@ Namely, the right hand side if a twisted ElGamal ciphertext is just a  Pedersen 
 
 \Inote{Remove unused proofs}
 
-In \cref{sec:ChanksEg:EgScheme} we make use of ZK proofs for the following relations regrading the above scheme.   We use the following notation:
+In \cref{sec:ChanksEg:EgScheme}, we make use of ZK proofs for the following relations regrading the above scheme.   We use the following notation:
 \begin{notation}
 Let   $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.  
 \end{notation}
@@ -404,10 +404,11 @@ For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}   
 	
 	\item[Key generation:] $\KeyGen(1^b,H)$: act as $\EgKg(1^b,H)$.
 	
-	\item[Encryiption:] $\Enc_\pk(a)$
+	\item[Encryption:] $\Enc_\pk(a)$
 	
 	\begin{enumerate}
-		\item Compute $(a_0,\ldots,a_{\ell-1}) \asn \basefactor(a)$.
+		\item Compute $(a_0,\ldots,a_{\ell-1}) \asn \basefactor(a)$. 
+	\Inote{Define \basefactor}
 		
 		\item For each $i\in (\ell)$: let $\tA_i \getsr \EgEnc_\pk(a_i)$.
 		
@@ -419,7 +420,7 @@ For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}   
 	\begin{enumerate}
 		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_\sk(\oM_i,b)$.
 		
-		\item Let  $m \asn \sum_{i \in (\ell)}   2^{i c} \cdot  m_i $.
+		\item Let  $m \asn \sum_{i \in (\ell)}   2^{i c} \cdot  m_i $. \Inote{What is $c?$}
 		
 		\item Output $m$.
 	\end{enumerate}
@@ -621,7 +622,7 @@ In the following, we omit the parameter $b$ from the input list of  \Dec.  We wi
 		
 			\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
 			
-			\item   $a \asn  \Dec_e(\tA)$.
+			\item   $a \asn  \Dec_e(\tA)$. \Inote{Switch}
 			
 			\item   $\tA' \asn \Enc_E(a;r)$ for $r\getsr \Z_q$.
 			
@@ -687,7 +688,7 @@ Since the decryption procedure of of chunk-ElGamal  encryption scheme only guara
 	
 	\item[Init:] 
 	\begin{enumerate}
-		\item The parties  call the ideal functionality \randomH that returns $H \getsr \cG$.
+		\item The parties  call the ideal functionality $\randomH$ that returns $H \getsr \cG$.
 		\item 	Each $\Uc_i$ sets the parameters of the encryption key generation algorithm to $(1^b,H)$, for  $b \asn 2^{c}\cdot \pcount$.
 
 	\end{enumerate}
