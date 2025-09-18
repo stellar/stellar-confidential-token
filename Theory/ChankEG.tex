@@ -1,0 +1,1004 @@
+
+\newcommand{\basefactor}{\MathAlgX{baseFcts}}
+\newcommand{\FshS}{{\sf Fsh}}
+
+%%%%%%Twisted EG in the exponent
+\newcommand{\EgKg}{\MathAlgX{EgGen}}
+
+\newcommand{\EgEnc}{\MathAlgX{EgEnc}}
+\newcommand{\EgDec}{\MathAlgX{EgDec}}
+
+
+\newcommand{\randomH}{\hyperref[func:randomH]{\MathAlgX{RanElm}}}
+\newcommand{\Mult}{\hyperref[func:Mult]{\MathAlgX{Mult}}}
+
+
+%%%%%%% Relations
+
+
+%%%Groups
+
+\newcommand{\dlS}{{{\sf DL}}}
+\newcommand{\rdl}{\hyperref[rel:dl]{\cR_\dlS}}
+\newcommand{\rdlDef}
+{
+	\sset{((A,B),c))\colon B = c \cdot A}
+}
+
+\newcommand{\dhS}{{{\sf DH}}}
+\newcommand{\rdh}{\hyperref[rel:dh]{\cR_\dhS}}
+\newcommand{\rdhDef}
+{
+	\sset{((A,B,C,D),e))\colon B = e \cdot A \sland D = e\cdot C}
+}
+
+
+%%%EG 
+\newcommand{\EgKeyGens}{{{\sf EgKG}}}
+\newcommand{\rEgKeyGen}{\hyperref[rel:EgKeyGen]{ \cR_\EgKeyGens}}
+\newcommand{\rEgKeyGenDef}
+{
+	\sset{(E,e))\colon e\cdot G= E}
+}
+
+
+
+
+\newcommand{\EgEncs}{{{\sf EgEnc}}}
+\newcommand{\rEgEnc}{\hyperref[rel:EgEnc]{\cR_\EgEncs}}
+\newcommand{\rEgEncDef}
+{
+	\sset{((H,E,\tA),(a,r))\colon \EgEnc_{(H,E)}(a;r)= \tA}
+}
+
+\newcommand{\wEgEnc}{\MathAlgX{\widehat{EgEnc}}}
+\newcommand{\wEgDec}{\MathAlgX{\widehat{EgDec}}}
+
+\remove{
+\newcommand{\EgConsSkS}{{{\sf EgCons}}}
+\newcommand{\rEgConsSk}{\hyperref[rel:EgConsSk]{\cR_\EgConsSkS}}
+\newcommand{\rEgConsSkDef}
+{
+	\sset{((H,E,\tA,a),e)\colon e\cdot E  \sland \wEgDec_e(\tA) = a\cdot G}
+}
+}
+
+\newcommand{\tFshs}{{{\sf EgFsh}}}
+\newcommand{\rtFsh}{\hyperref[rel:tFsh]{\cR_\tFshs}}
+\newcommand{\rtFshDef}
+{
+	\sset{((\pk,\oA,b),(\oa,\orr))\colon \forall i\in (\ell)\colon  \EgEnc_\pk(\oa_i;\orr_i)= \oA_i  
+		\sland \oa_i \in (b)}
+}
+
+
+\newcommand{\EgEqs}{{{\sf EgEq}}}
+\newcommand{\rEgEq}{\hyperref[rel:EgEq]{\cR_\EgEqs}}
+
+\newcommand{\rEgEqDef}
+{
+	\sset{(((H,E_0,E_1,\tA_0,\tA_1),(a,r_0,r_1))\colon \forall i\in \zo \colon \; \EgEnc_{(H,E_i)}(a;r_i)= \tA_i}
+}
+
+
+
+\newcommand{\EgEqSkS}{{{\sf EgEqSk}}}
+\newcommand{\rEgEqSk}{\hyperref[rel:EgEqSk]{\cR_\EgEqSkS}}
+
+\newcommand{\rEgEqSkDef}
+{
+	\sset{((H,E,\tA_0,\tA_1),e)\colon   e\cdot   G = E \sland \wEgDec_e(\oA_0)= \wEgDec_e(\oA_1)}
+}
+
+\newcommand{\EgEqPedS}{{{\sf EgEqPed}}}
+\newcommand{\rEgEqPed}{\hyperref[rel:EgEqPed]{\cR_\EgEqPedS}}
+
+\newcommand{\rEgEqPedDef}
+{
+	\sset{((H,E,\tA,A),(a,r,r'))\colon    \EgEnc_{H,E}(a;r)= \tA \sland \Ped_H(a;r') = A}
+}
+
+
+
+
+\newcommand{\EgRps}{{{\sf EgRp}}}
+\newcommand{\rEgRp}{\hyperref[rel:EgRp]{\cR_\EgRps}}
+\newcommand{\rEgRpDef}
+{
+	\sset{((H,E,\tA,b),(a,r))\colon \EgEnc_{(H,E)}(a;r)= \tA \sland a\in (b)}
+}
+
+
+
+%%%%Pedersen
+\newcommand{\Ped}{\MathAlgX{Ped}}
+
+
+
+\newcommand{\PedEncs}{{\sf PedEnc}}
+\newcommand{\rPedEnc}{\hyperref[rel:PedEnc]{\cR_\PedEncs}}
+
+\newcommand{\rPedEncDef}
+{
+	\sset{((H,A),(a,r))\colon \Ped_H(a;r)= A}
+}
+
+
+
+
+\newcommand{\PedS}{{{\sf Ped}}}
+\newcommand{\rPed}{\hyperref[rel:Ped]{\cR_\PedS}}
+\newcommand{\rPedDef}
+{
+	\sset{((H,A),(a,r)))\colon A = \Ped_H(a;r)}
+}
+
+\newcommand{\PedEqS}{{{\sf PedEq}}}
+\newcommand{\rPedEq}{\hyperref[rel:PedEq]{\cR_\PedEqS}}
+\newcommand{\rPedEqDef}
+{
+	\sset{((H,A_0,A_1),(a,r_0,r_1)))\colon \forall j \in \zo\colon  \Ped_H(a;r_j) = A_j}
+}
+
+\newcommand{\PedGEqS}{{{\sf PedGrEq}}}
+\newcommand{\rPedGEq}{\hyperref[rel:PedGEq]{\cR_\PedGEqS}}
+\newcommand{\rPedGEqDef}
+{
+	\sset{((H,A,B),(a,r))\colon \Ped_H(a;r) = A \sland a \cdot G = B}
+}
+
+\section{The Chunk-ElGamal  Encryption Scheme}\label{sec:ChanksEg}
+In this section, we define the  (almost) additive homomorphic encryption scheme based on ElGamal multiplicative  homomorphic encryption scheme.  \Inote{give citations}
+The idea is to bootstrap the so-called   \textit{ElGamal in-the exponent}   additive homomorphic encryption/commitment  scheme,\footnote{It is called ElGamal ``in-the-exponent'' due to typical multiplicative group notation. Here use additive group notation, but keep the name for historical reason.}  which in turn is based on the  ElGamal multiplicative  homomorphic encryption scheme, that lacks efficient decryption algorithm, by splitting the plain text into small ``chunks''. That  is, we present a message $a\in Z_t$ as $\sum_{i \in (t/c)}   2^{i c} \cdot a_i$, where $c$, the chunk size, is  some inEgEr  dividing $t$, and encrypt each of the $a_i$ using    additive homomorphic EG. To decrypt $\oA= (A_0,\ldots,A_{t/c-1})$, one  
+\begin{enumerate}
+	\item Decrypt   each $A_i$ to get $a_i  \cdot G$.
+	\item Use brute force to find $a$.\footnote{One can use    processing to speed-up this part from $c$ group operations to $\sqrt{c}$  operations, or even \Inote{cite} to   $\sqrt[3]{c}$.}
+	
+	\item Reconstruct $a$.
+\end{enumerate}
+In \cref{sec:ChanksEg:Eg}, we formally define the  ElGamal in-the-exponent scheme, and a few ZK proofs for the \NP-relations the scheme induces. Actually, we use a ``twisted'' variant of this scheme, that supports somewhat more efficient proofs in our settings.   The chunk ElGamal  scheme is defined in \cref{sec:ChanksEg:EgScheme}, and the related ZK proofs are defined in \cref{sec:ChanksEg:Proofs}. Finally, in \cref{sec:ChanksEg:Adjusting} we explain  how to adjust \cref{prot:ConfidentialTransactions} to work with this almost homomorphic scheme.
+
+
+
+\subsection{Additional Preliminaries}\label{sec:ChanksEg:Pre}
+We will  use \textit{Pedersen commitments} defined by $\Ped_H(a;r) \eqdef r\cdot H + a \cdot G$. 
+
+\paragraph{Functionalities.}
+We will use access to the following functionality:
+\begin{functionality}[\randomH]\label{func:randomH}
+Returns a random element of $\cG$.\footnote{Can be implemented using a proper protocol,  sampled by a trusted  setup or using a random oracle.} 
+
+\end{functionality}
+ 
+
+\paragraph{Zero-knowledge proofs.}
+We will also use zero-knowledge proofs  for the following relations.
+
+\begin{description}
+	
+	\item[Knowledge of discrete log.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rdl = \rdlDef$. \label{rel:dl}
+		
+		\item[Protocol:] The standard Schnorr proof for discrete log, \eg  \cite{Shoup00b}.
+	\end{description}
+	
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rdh = \rdhDef$. \label{rel:dh}
+		
+		\item[Protocol:] Concatenate two executions of the protocol for $\rdl$, with  the same challenge.
+	\end{description}
+	
+	
+	\item[Knowledge of plaintext of Pedersen commitent.] ~
+	
+		\begin{description}
+		\item[Task:] ZKPOK for $\rPed = \rPedDef$. \label{rel:Ped}
+	
+	\item[Protocol:]  See \cite[Protocol A.1]{HaitnerLNR23}.
+	\end{description}
+	
+		\item[Pedersen equality.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rPedEq = \rPedEqDef$.
+		
+		\item[Protocol:]  This is just the discrete log protocol for $A_1-A_0$ with witness and $r_1 - r_0$.
+	\end{description}
+	
+	
+		\item[Pedersen and group equality.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rPedGEq = \rPedGEqDef$.
+		
+		\item[Protocol:]  Concatenation of the $\rPed$ and $\rdl$ with the same challenge.
+	\end{description}
+	
+\end{description}
+
+  
+
+
+
+
+
+
+\newcommand{\tcG}{\widetilde{\cG}}
+\subsection{Twisted ElGamal In-the-Exponent Encryption Scheme}\label{sec:ChanksEg:Eg}
+Throughout we fix a cyclic  additive $q$-size group $\cG$ with generator $G$. The  twisted ElGamal in-the-exponent encryption scheme $(\EgKg,\EgEnc,\EgDec)$ is defined below. Note that it  gets  $H\in \cG$ as an  additional parameter. The ciphertext of the encryption scheme are elements of $\tcG \eqdef \cG \times \cG$. We will mark such  ciphertexts   using tilde, and  address  the left-hand side and right-hand side of such  a ciphertext $\tA$,  by $\tA_L$ and  $\tA_R$, respectively. 
+
+
+
+
+\begin{algorithm}[$(\EgKg,\EgEnc,\EgDec)$: Twisted ElGamal in-the-exponent encryption]\label{alg:tEGinExp}~
+	
+	
+	\item[Key generation:] $\EgKg(1^b,H)$ samples $e\getsr \Z_q$, and outputs $(\sk 
+	\asn e,\pk \asn (1^b,H,E\asn  e^{-1}\cdot H))$.
+	
+	\item[Encryption:] $\EgEnc_{(H,E)}(a)$  samples $r\getsr \Z_q$, and outputs  $\tA  = (\tA _L,\tA _R)\asn (r\cdot E, \Ped_H(a;r))$. 
+	\item[Decryption:] $\EgDec_{(1^b,H,e)}(\tA)$,   
+	\begin{enumerate}
+		\item 	Let $M \asn \tA_R - e\cdot \tA_L$.
+		
+		\item Find (using brute force) $m\in (b) \in \Z_q$ so that $m\cdot G = M$. Abort if no such $m$ exists. 
+		\item Output $m$.
+	\end{enumerate}
+	
+	\item[Addition:] Addition over  $\cG^2$.\footnote{For $\tA,\tB \in \cG^2$: $\tA +\tB \eqdef (\tA_L+\tB_L,\tA_R+\tB_R)$.}
+	
+	\item[Minus:]  The inverse, \ie minus, in $\cG^2$.
+	
+\end{algorithm}	
+When clear from the context,  will omit the parameters $1^b$ from the public key of the scheme.
+
+Namely, the right hand side if a twisted ElGamal ciphertext is just a  Pedersen  commitment \cite{Pedersen91}. This change enable  using proofs that  support  Pedersen commitment on the ciphertext without changing it, but doing that  should be done with care.
+\begin{enumerate}
+	\item The parameter $H$ should be chosen so that the prover does not know that discrete log of $H$ \wrt $G$. (Otherwise, a proof of the Pedersen part means nothing).
+	
+	\item When using a proof of  the Pedersen part (which should always be POK, since Pedersen is perfectly hiding), it should \emph{always} be accompanied with a POK of the palaintext for the whole EG encryption (otherwise, the palaintext and randomness  extracted by the  Pedersen POK, might be  inconsistent with  EG publicj key)  
+\end{enumerate}
+
+\begin{theorem}[Security  of twisted-ElGamal in-the-exponent]\label{thm:tEGinExp}
+	Assuming DDH is hard over $\cG$, then \cref{alg:tEGinExp} is  a perfectly binding,  semantically secure additively homomorphic scheme over $\Z_q$, with the following caveat:  the description only guaranteed to work on encryptions of explain in $(b)$,   for $1^b$ being the parameter  of the key generation algorithm:
+\end{theorem}
+
+
+
+\subsubsection{Zero-Knowledge Proofs}\label{sec:ChanksEg:Eg:ZK}
+
+\Inote{Remove unused proofs}
+
+In \cref{sec:ChanksEg:EgScheme}, we make use of ZK proofs for the following relations regrading the above scheme.   We use the following notation:
+\begin{notation}
+Let   $\wEgDec_e (\tA) \eqdef \tA_1- e\cdot \tA_0$.  
+\end{notation}
+Namely, decryption without finding discrete log.  
+
+
+\begin{description}
+	\item[Knowledge of secret key.] ~
+	
+	
+	
+	\begin{description}
+		\item[Task:] ZKPOK for $\rEgKeyGen = \rEgKeyGenDef$. \label{rel:EgKeyGen}
+		
+		\item[Protocol:] Same protocol as for $\rdl$ (see \cref{sec:ChanksEg:Pre}).
+	\end{description}
+	
+	
+	\item[Knowledge of plain text.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for  $\rEgEnc=\rEgEncDef$.\label{rel:EgEnc}
+		
+		\item[Protocol:]   \cite[Protocol A.2]{HaitnerLNR23}.
+		
+	%	$$\rPedEnc = \rPedEncDef $$
+	%	Namely, the proof is only applied to  $\tA_1$, \ie the right hand side of the ciphertext. 
+		
+	\end{description}
+	
+	
+	
+	\remove{
+		\item[Conssitency  with plaintext using secret key.] ~
+	
+	\begin{description}
+		\item[Task:] ZKPOK for  $\rEgConsSk=\rEgConsSkDef$.\label{rel:EgConsSk}
+		
+		\item[Protocol:]   
+		
+		\Pc proves that $\tB \asn (\tA_L, \tA_R - a \cdot G)$ is an encryption of $0$ under $E$. Specifically, that it knows $e$ so that  $e\cdot \tB_R  = \tB_L$. This is just the standard Schnorr proof for discrete log.
+		
+		%	$$\rPedEnc = \rPedEncDef $$
+		%	Namely, the proof is only applied to  $\tA_1$, \ie the right hand side of the ciphertext. 
+		
+	\end{description}
+	
+}
+	
+	\item[Equality.] ~
+
+	
+	
+	\begin{description}
+		\item[Task:] ZKP for  $\rEgEq =\rEgEqDef$.\label{rel:EgEq}
+		
+		
+		Namely, the relation  is of  ciphertexts that encrypt the  same value under the different  public key, where the witness  is the plaintext and the two randomness used by the encryption algorithm.
+		
+		\item[Protocol:] The Sigma protocol for this relation concatenates, with the same challenge $t$, two proofs of $\rEgEnc$. 
+
+\item[Protocol for the case $E_0=E_1$:] For this case, the proof is somewhat simpler. \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $r$ (\ie $r\asn r_1 -r_0$) so that  $\tB  = r\cdot (E,H)$. The Sigma protocol for this relation concatenates, with the same challenge $t$, two discrete log proofs. (Thus, prover only sends two group elements, vs four above.)        		
+\end{description}
+
+
+\item[Equality using secret key.]~
+
+
+
+
+\begin{description}
+	\item[Task:] ZKP for  $\rEgEqSk =\rEgEqSkDef$.\label{rel:EgEqSk}
+	
+	Namely, the relation  is of  ciphertexts that encrypt the  same value under the same public key. The witness is the secret key
+	
+	\item[Protocol:] \Pc proves that $\tB \asn \tA_1 - \tA_0$ is an encryption of $0$ under $E$. Specifically, that it knows $e$ so that  $e\cdot \tB_R  = \tB_L$. This is just the standard Schnorr proof for discrete log.
+	
+\end{description}
+
+
+\item[Equality with Pedersen commitment.]~
+
+\begin{description}
+	\item[Task:] ZKP for  $\rEgEqPed =\rEgEqPedDef$.\label{rel:EgEqPed}
+	
+	\item[Protocol:]  The Sigma protocol for this relation concatenates, with the same challenge $t$, a  POK of $\rEgEnc$ and of $\rPed$. 
+\end{description}	
+
+
+	\item[In range.] ~
+	\begin{description}
+		\item[Task:] ZKP for $\rEgRp =\rEgRpDef$.\label{rel:EgRp}
+		
+		\item[Protocol:]  The proof consists of two parts:
+		\begin{enumerate}
+			\item  \textit{Bullet proofs} \cite{SP:BBBPWM18}  (which is  ZKPOK) on $\tA_1$ (\ie right hand side of $\tA$).   
+			
+			
+			
+			\item   $\rEgEnc$ ZKPOK  for the whole $\tA$.
+			
+			
+		\end{enumerate}
+
+
+\item[Efficiency.]
+	The saving in the above protocol comparing to using  non-twisted EG, is in  two  group elements in the proof size;  the prover does not have to provide a new Pedersen commitment (one group element)  for the plain text and prove it is consistent with the EG encryption (three group elements). Yet, he still has to preform an EG POK proof (two group elements).
+		
+	\end{description}
+
+\end{description}
+
+
+
+
+
+	
+\subsection{The Chunk-ElGamal  Scheme}\label{sec:ChanksEg:EgScheme}
+In the following we fix $t,c\in \N$ with $t\le q$ and $\ell \asn t/c \in \N$. The chunk ElGamal encryption scheme  is defined as follows:
+
+
+
+\begin{definition}[Base factorization]\label{def:basefactor}
+For $a\in \Z_q$ let $a_0,\ldots,a_{\ell-1}$ so that $a =  \sum_{i \in (\ell)}    2^{i c} \cdot a_i$.
+\end{definition}
+
+
+\begin{algorithm}[$(\KeyGen,\Enc,\Dec)$: Chunk ElGamal adaptively homomorphic encryption]\label{alg:ChunkEGa}~
+	
+	\item[Key generation:] $\KeyGen(1^b,H)$: act as $\EgKg(1^b,H)$.
+	
+	\item[Encryption:] $\Enc_\pk(a)$
+	
+	\begin{enumerate}
+		\item Compute $(a_0,\ldots,a_{\ell-1}) \asn \basefactor(a)$. 
+	\Inote{Define \basefactor}
+		
+		\item For each $i\in (\ell)$: let $\tA_i \getsr \EgEnc_\pk(a_i)$.
+		
+		\item Output $\oA \asn (\tA_0,\ldots, \tA_{\ell-1})$.
+		
+	\end{enumerate}
+	 
+	\item[Decription:] $\Dec_\sk(\oM,b)$   
+	\begin{enumerate}
+		\item 	 For each $i\in (\ell)$: let $m_i \getsr \EgDec_\sk(\oM_i,b)$.
+		
+		\item Let  $m \asn \sum_{i \in (\ell)}   2^{i c} \cdot  m_i $. \Inote{What is $c?$}
+		
+		\item Output $m$.
+	\end{enumerate}
+	
+	\item[Addition:] Vector addition.\footnote{For $\oA,\oB \in (\cG^2)^\ell$, $\oA +\oB \eqdef (\tA_0+\tB_0,\ldots,\tA_{\ell-1}+\tB_{\ell-1})$.}
+	
+	\item[Minus:]  Vector negation.
+	                     
+	
+\end{algorithm}
+
+
+\begin{theorem}[Security  of Chunk ElGamal]\label{thm:ChunkEG}
+	Assuming \DDH is hard over $\cG$, then \cref{alg:ChunkEGa} is  a perfectly binding,  semantically secure additively homophobic scheme over $\Z_q$, with the following caveat work on encryptions of plaintext  $a$ so that $\basefactor(a)\in (-b,b)^\ell$ ($1^b$ being the input of the key generation algorithm).
+\end{theorem}
+
+
+\subsubsection{Zero-Knowledge  Proofs }\label{sec:ChanksEg:Proofs}
+In this section, we define the ZK and POK proofs used in  \cref{sec:MainProtocol}.
+In the following, we omit the parameter $b$ from the input list of  \Dec.  We will address its value in \cref{sec:ChanksEg:Adjusting}.
+
+
+\begin{description}
+	\item[Knowledge of secret key.] ~
+	
+	\begin{description}
+		
+		
+		
+		\item[Task:] ZKPOK for $\rKeyGen$.%\label{rel:KeyGen}
+		
+		
+		
+		\item[Protocol:] Same as \piZKPOK{\rEgKeyGen}. 
+		
+	\end{description}
+	
+	
+	\item[Knowledge of plain text.] ~
+	
+	
+
+	\begin{description}
+		\item[Task:] ZKPOK for $\rEnc=\rEncDef$.\label{rel:Enc}
+		
+		\item[Protocol:]~
+		
+		\begin{description}
+			\item[\Pc:] On  input  $((\pk,\oA),(\oa,\orr)$.
+			\begin{enumerate}
+				\item For each $i\in (\ell)$: let  $\pi_i \asn \piZKPOK{\rEgEnc}((\pk,\oA_i),(\oa_i,\orr_i))$. 
+				
+				\item Output $\pi \asn (\pi_0,\ldots, \pi_{\ell-1})$.
+				
+			\end{enumerate}
+			
+			
+			\item[\Vc:] On  input  $((\pk,\oA),\pi = (\pi_0,\ldots, \pi_{\ell-1}))$: Accept iff  $\vZK{\rEgEnc}((\pk,\tA_i), \pi_i)$ for all $i\in (\ell)$.
+			
+		\end{description} 
+		
+		
+	\end{description}
+	
+	\begin{proof}
+		Immediate.
+	\end{proof}
+	
+\item[Equality.]~ 
+
+\begin{description}
+	\item[Task:] ZKP for $\rEq =\rEqDef$.
+	
+	\item[Protocol:]~
+	
+	\begin{description}
+		
+	\item[\Pc:]  On input $((\pk_0,\pk_1,\oA_0,\oA_1),(e_0,\orr_1))$: 
+	
+
+	\begin{enumerate}
+		
+		\item Let  $a \asn  \sum_{i\in (\ell)}    2^c \cdot \oa_i$. 
+		
+		\item For both $j\in \zo$:  $\tA_j \asn  \sum_i  2^c \cdot (\oA_j)_i$. 
+		
+		  
+		\item    $r_1 \asn  \sum_{i\in (\ell)}  2^c \cdot (\orr_1)_i$. 
+			
+		 
+		\item Output $\pi \asn \pZK{\rEgEq}((\pk,\tA_0,\tA_1), (e_0,r_1))$.
+				 
+	\end{enumerate}
+	
+	\item[\Vc:] On input $((\pk_0,\pk_1,\oA_0,\oA_1),\pi)$: 
+	
+	\begin{enumerate}
+		\item Generate $\tA_0$ and  $\tA_1$ as done by \Pc.
+		
+	\item Apply $\vZK{\rEgEq}((\pk,\tA_0,\tA_1), \pi)$.
+	
+	\end{enumerate}
+\end{description}
+\end{description}
+
+		
+
+\begin{proof}
+	\Inote{TODO}
+\end{proof}
+  
+
+
+\item[Equality using secret key.]~
+
+
+
+
+\begin{description}
+	\item[Task:] ZKP for  $\rEqSk =\rEqSkDef$. Namely, the relation  is of  ciphertexts that encrypt the  same value under the same public key. The witness is the secret key.
+	
+	\item[Protocol:] ~
+	
+	\begin{description}
+		\item[\Pc:] On input $((E,\oA_0,\oA_1),e)$:
+		
+		\begin{enumerate}
+			
+			\item    For both $j\in \zo$:   $\tA_j \asn  \sum_{i\in (\ell)}    2^c \cdot (\oA_j)_i$. 
+			
+			\item  Let  $\pi^\EgEqSkS \getsr \pZK{\rEgEqSk}((E,\tA_0,\tA_1
+			), e)$.
+			
+			\item Send $\pi^\EgEqSkS$ to \Vc.
+		\end{enumerate}
+		
+		
+		\item[\Vc:] On input $((E,\oA_0,\oA_1),\pi^\EgEqSkS)$:
+		
+		\begin{enumerate}
+			\item   Generate $\tA_0,\tA_1$ as by \Pc.
+			\item  Call $\pZK{\rEgEqSk}((E,\tA_0,\tA_1), \pi^\EgEqSkS)$.
+			
+		\end{enumerate}
+		
+	\end{description}
+	
+	
+\end{description}
+
+
+\item[In range.]~  
+
+\begin{description}
+	\item[Task:] ZK for $\rRp =\rRpDef$.
+	
+	\item[Protocol:]~
+	
+	\begin{description}
+	\item[\Pc:] On input $((\pk,\oA,b),(\oa,\orr))$:
+	
+	\begin{enumerate}
+			\item   $a \asn  \sum_{i\in (\ell)}   2^c \cdot \oa_i$. 
+		\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
+		\item    $r \asn  \sum_{i\in (\ell)}  2^c \cdot \orr_i$. 
+        
+        \item  Output $\pi \asn \pZK{\rEgRp}((\pk,\tA,b), (a,r))$.
+        
+	\end{enumerate}
+	
+	
+\item[\Vc:] On input $((\pk,\oA,b),\pi)$:
+	
+	\begin{enumerate}
+		\item   Generate $\tA$ as by \Pc.
+		\item  Output $\vZK{\rEgRp}((\pk,\tA,b), \pi)$.
+		
+	\end{enumerate}
+	
+\end{description}
+\end{description}
+
+		\begin{proof}
+			\Inote{TODO}
+		\end{proof}
+\item[In-range proof using sceret key.]~  
+
+\begin{description}
+	\item[Task:] POK for $\rRpSk =\rRpSkDef$.
+	
+	
+	\item[Protocol:] Similar line to the protocol for $\rRp$, but  the prover  decrypt $\tA$, encrypt the plaintext sing  fresh randomness, and continues as above.
+	
+	
+	\begin{description}
+		\item[\Pc:] On input $((E,\oA,b),e)$:
+		
+		\begin{enumerate}
+		
+			\item    $\tA \asn  \sum_{i\in (\ell)}    2^c \cdot \oA_i$. 
+			
+			\item   $a \asn  \Dec_e(\tA)$. \Inote{Switch}
+			
+			\item   $\tA' \asn \Enc_E(a;r)$ for $r\getsr \Z_q$.
+			
+				
+			
+			\item  Let  $\pi^\EgEqSkS \getsr \pZK{\rEgEqSk}((E,\tA,\tA'
+			), e)$.
+				
+			\item  Let  $\pi^\EgRps \getsr \pZK{\rEgRp}((E,\tA',b), (a,r))$.
+			
+			\item Send $(\pi^\EgEqSkS,\pi^\EgRps)$ to \Vc.
+		\end{enumerate}
+		
+		
+		\item[\Vc:] On input $((\pk,\tA',b),\pi^\EgEqSkS,\pi^\EgRps)$:
+		
+		\begin{enumerate}
+			\item   Generate $\tA$ as by \Pc.
+			\item  Call $\pZK{\rEgEqSk}((E,\tA,\tA'
+			), \pi^\EgEqSkS)$ and  $\pZK{\rEgRp}((E,\tA',b), (a,r))$.
+			
+		\end{enumerate}
+		
+	\end{description}
+
+	
+\end{description}
+	
+\item[Freshness.]  ~
+Proving that each of the entries of the  ciphertext are small. 
+
+\begin{description}
+	\item[Task:] ZKP for $\rtFsh =\rtFshDef$.
+
+\item[Protocol:]~
+
+\begin{description}	
+	\item[\Pc:] On  input  $((\pk,\oA,b),(\oa,\orr)$:
+	
+	\begin{enumerate}
+		\item For each $i\in (\ell)$: $\pi_i \asn \pZK{\rEgRp}((\pk,\tA_i,b), (\oa_i,\orr_i))$.
+		\item Output $\pi \asn (\pi_0,\ldots, \pi_{\ell-1})$.
+	\end{enumerate}
+	 
+	 
+	 	\item[\Vc:] On  input  $((\pk,\oA,b), \pi= (\pi_0,\ldots, \pi_{\ell-1}))$: Accept iff  $\vZK{\rEgRp}((\pk,\tA_i,b), \pi_i)$ for all $i\in (\ell)$.
+	 
+	 
+\end{description}
+
+\end{description}
+
+\begin{proof}
+	\Inote{TODO}
+\end{proof}
+\end{description}
+
+
+\subsection{Adjusting  \cref{prot:ConfidentialTransactions}}\label{sec:ChanksEg:Adjusting}
+Since the decryption procedure of of chunk-ElGamal  encryption scheme only guarantees to work on certain type of ciphertexts, see \cref{thm:ChunkEG} and take a group element, \ie $H$, as an additional parameter,  instantiating \cref{prot:ConfidentialTransactions} with this scheme  requires some adjustments.
+
+\begin{enumerate}
+	
+	\item[Init:] 
+	\begin{enumerate}
+		\item The parties  call the ideal functionality $\randomH$ that returns $H \getsr \cG$.
+		\item 	Each $\Uc_i$ sets the parameters of the encryption key generation algorithm to $(1^b,H)$, for  $b \asn 2^{c}\cdot \pcount$.
+
+	\end{enumerate}
+ 
+	\item[Transfer.]   In addition to the original protocol, $\Uc_s$
+	\begin{enumerate}
+		\item Provides a proof that $X_d$ is fresh, \ie using \pZK{\rtFsh} with parameter $b\asn 2^c$.
+		
+		\item Refreshes its active balance: it sends $\oA_s' \asn \oA_s - \oX_s$ to \Cc and a proof 
+			that $\oA_s' + \oX_s = \oA_s$, using   \pZK{\rEqSk}.
+			
+	\end{enumerate}
+	
+	
+	\Inote{So currently the $\Uc_s$ sends 3 encryptions, $\oX_s,\oX_d,\oA_s'$, and 4 proofs. Can we do better?}
+	
+	
+	
+	\item[Rollover:] The rollover over operation should be updated to allow the account holder to ``normalize''  its active balance: to make it fresh. Specifically
+	
+	\begin{enumerate}
+		\item $\Uc_i$:
+		
+		\begin{enumerate}
+			\item Decrypt $\oP_i$ and $\oB_i$ to get value $(p_i,r_i)$ and $(b_i,w_i)$ respectively.
+			
+			
+			\item Generate a fresh  encryption $\oB_i'$ of $(p_i +b_i )$ and $\oP_i'$ of $0$.
+			
+			\item Generate a proof $\pi_\Eqs$ (\ie using \pZK{\rEq})   that $\oP_i+\oB_i = \oP_i'+ \oB_i'$.
+			
+			
+		%	\item  Generate proofs $\pi^P_\Fshs$ and $\pi^B_\Fshs$ (\ie using \pZK{\rtFsh})   that $\oP_i'$ and $\oB_i'$ are fresh.
+			
+			\item Send $(\oP_i',\oB_i',\pi_\Eqs,\pi^P_\FshS,\pi^B_\FshS)$ to \Cc.
+		%
+			\item Send $(\oP_i',\oB_i',\pi_\Eqs)$ to \Cc.
+		
+		
+		\end{enumerate}
+		
+		\item $\Cc$:
+			\begin{enumerate}
+			%	\item Verify $\pi_\Eqs,\pi^P_\Fshs$ and $\pi^B_\Fshs$.
+				
+					\item Verify $\pi_\Eqs$.
+				
+				\item Set $\oP_i  \asn \oP_i'$  and $\oB_i  \asn \oB_i'$.
+				
+				\item Continue as in the original protocol.
+			\end{enumerate}
+		
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Efficient Improvements}\label{sec:ChanksEg:EfficientImp}
+
+\begin{enumerate}
+	\item The bullet proofs used  in the In range and the freshness proofs can be batched. 
+	
+	\item The Schnorr proofs can be batched. In particular, the one performed in the different In-range proofs.  
+\end{enumerate}
+
+
+
+\newcommand{\tdKg}{\MathAlgX{TshGen}}
+
+\newcommand{\tdEnc}{\MathAlgX{TshEnc}}
+\newcommand{\tdDec}{\MathAlgX{TshDec}}
+
+\subsection{Threshold ElGammal}\label{sec:ChanksEg:TshEG}	
+In this section, we present   a threshold  variant of the ElGammal encryption scheme. It will be used for the  auditing capability  of the confidential translation protocol.   In the following, fix the number of public keys to $n<q$ and a threshold $t \in [m]$. 
+
+
+\subsubsection{Additional Preliminaries}\label{sec:ChanksEg:TshEG:Pre}	
+
+
+
+
+\begin{notation}[Lagrange basis functions]
+ 	For $\cS$, $z\in \cS$ and $x\in \Z_q$, let $\lambda_y^\cS(x) \eqdef \prod_{z \in \cS \setminus \set{y}} \frac{x-z}{y-z}$.
+\end{notation}
+
+\begin{fact}
+	Let $p$ be a  degree $t-1$ polynomial over $\Z_q$ and let $\cS \subseteq \Z_q$  be of size $t$.  Then for  any $x\in \Z_q$: $p(x) = \sum_{y \in \cS}   \lambda_y^\cS(x) \cdot p(y)$.
+\end{fact}
+
+\subsubsection{The Scheme}
+The threshold scheme  $(\tdKg,\tdEnc,\tdDec)$ is defined as follows:
+
+
+\newcommand{\verifys}{\mathsf{verify}}
+\begin{algorithm}[$(\tdKg,\tdEnc,\tdDec)$: The ElGamal threshold   Encryption Scheme]\label{alg:Tsh}~
+	
+	\item[Paramters:] $1\le t\le n <q$.
+	
+	
+	\item[Key generation (standalone):] $\tdKg(1^b,H)$:
+	\begin{enumerate}
+		\item Sample   uniformly a degree $t-1$ polynomial  $p$ over $Z_q$. 
+		
+		\item For each $i\in (n+1)$: Let $e_i \asn p(i)$.
+		
+		 
+		
+		 \item Output public key $(1^b,H,E \asn e_0^{-1} \cdot G)$, verification keys $\sset{E_i \asn e_i  \cdot G}_{i\in [n]}$, and secret keys $\set{e_i}_{i\in [n]}$.
+	\end{enumerate}
+	
+
+	
+	\item[Encryption:]  $\tdEnc$:  Same like \EgEnc.
+	
+	%\footnote{I.e., this is just the ElGamal (not in the exponent) encryption algorithm.} 
+	
+	
+	\item[Decryption:] Protocol $\tdDec$.
+	
+	\begin{description}
+		\item[Parties:]   Combiner \Cc and $\set{\Pc_i}_{i\in \cS}$ for a $t$-size $\cS \subseteq [n]$.
+		
+		\item[Parameter:] $\verifys \in \zo$.
+		\item[Common input:] $\tA \in \tcG$ and $\sset{E_i \in \cG}_{i\in \cS}$.
+		
+		\item[$\Pc_i$'s input:]  $e_i \in \Z_q$.
+		
+		\item[Operation:]~
+		
+			\begin{enumerate}
+			\item Party $\Pc_i$, for all $i\in \cS$:  
+			\begin{enumerate}
+				\item 	Send   $A_i \asn e_i \cdot \tA_L$ to \Cc.
+				
+				 \item If  $\verifys$, also send $\pi_i \getsr \pZKPOK{\rdh}((G,\tA_L,E_i,A_i),e_i)$ to \Cc. 
+			\end{enumerate}
+		
+		
+			
+			\item  \Cc: 
+			\begin{enumerate}
+				
+				\item  If  $\verifys$,  verify $\vZKPOK{\rdh}((G,\tA_L,E_i,A_i),\pi_i)$ for each $i\in \cS$.
+				
+				\item $M \asn \tA_R - \sum_{i\in [t]}   \lambda_i^\cS(0) \cdot A_i$.
+				
+				\item Find (using brute force) $m\in(b)$ so that $m\cdot G = M$. Abort if no such $m$ exists.\footnote{This part is identical to \EgDec.}
+				
+				\item Output $m$.
+			\end{enumerate}
+		\end{enumerate}
+		
+	\end{description}
+	
+	
+	
+	
+\end{algorithm}	
+
+Note that the public key and the encryption algorithm of the above scheme are identical to that \cref{alg:tEGinExp}, the twisted ElGamal in-the-exponent encryption scheme. So almost all the machinery  developed on top of \cref{alg:tEGinExp} is applicable to the above scheme without any change, \ie the zero-knowledge protocols and chunk EG scheme. The only exception are the protocols that require knowledge of the secrete key, but those are irrelevant for are use case of   threshold encryption.
+
+\subsubsection{Distributed Key Generation}
+In this part we present a variant of the standard distributed key-generation  protocol for the key generation algorithm \tdKg described above.  We make use of the following two-party multiplication   functionality.
+
+\begin{functionality}[\Mult: two-party multiplication]\label{func:Mult}~
+\item[Parties:] $\Pc_0,\Pc_1$.
+\item[$\Pc_i$'s private input:] $a_i \in \Z_q$. A corrupt $\Pc_0$ can provide $o_0 \in \Z_q$.
+
+\item[Operation:] ~
+\begin{enumerate}
+	\item If $o_o$ is not set, sample $o_o \getsr \Z_q$.
+	
+	\item Send $o_0$ to $\Pc_0$ and $o_1 \asn a_0 \cdot a_1 - o_0$ to $\Pc_1$.
+\end{enumerate}
+ 
+\end{functionality}
+Functionality \Mult is just the well-known OLE functionality, see \cite{HaitnerMRT22} for an OT-base  implementation.\footnote{If we are fine with  using non-twisted threshold ElGamal, then the \Mult functionality is not needed, and the whole protocol gets simpler.}
+
+\begin{protocol}[Distributed key generation]\label{prot:TshEG:KG}~
+	
+	
+	\item[Paramters:] $1\le t\le n <q$.
+	
+	\item[Oracles:] \randomH, \Mult.
+	
+	
+	\item[Parties:] $\Pc_1,\ldots,\Pc_n$.
+
+	
+	\item[Proofs:] $\piZKPOK{\rPedGEq}$
+			
+	\item[Common input:]	$1^b,H$.
+	
+	
+	\item[Operation:] Party $\Pc_i$ acts as follows:
+	
+	
+	\begin{enumerate}
+
+       
+        \item Call \randomH, Let $D$ be the common output. \commentni{Sample a common ephemeral: Pedersen public key}\footnote{In practice, we can use $H$.}
+        
+        
+    	\item  	\commentni{Sample random polynomial and commit to its coefficients}
+    
+   
+		\begin{enumerate}  
+			
+			\item Sample  a uniform degree $t-1$ polynomial  $p_i$.   
+			
+			Let $\set{c_{i,j}}_{j\in (t-1)}$ be the coefficients of  $p_i$. 			
+			
+			
+			
+			\item For each $j\in (t-1)$: Sample   $r^C_{i,j} \getsr\zq$. 
+			
+			\item Send   $\sset{C_{i,j} \asn \PedCom_D(c_{i,j};r^C_{i,j})}_{j\in (t-1)}$  to all parties. 
+			
+			
+		%	\item \Inote{We might need to prove also knowledge of   opening of $C_{i,0}$, using \pZKPOK{\rPed}. Let's wait for the security proof}
+			
+			%	\commentni{Commit to $p_i$'s coefficients}
+			
+			\end{enumerate}
+			
+			\item[$\bullet$]  For $k,\ell \in [n]$, let $B_k(\ell)  \eqdef   \sum_{j\in (t-1)} C_{k,j} \cdot \ell^j$ and let $B(\ell) 
+			\eqdef \sum_{k \in [n]} B_k(\ell) $. 
+			
+			\item  \commentni{Send opening of $B_i(\ell)$ to $\Pc_\ell$}
+			
+			\begin{enumerate}
+				\item For all $\ell \in [n]$: Set $r_{i,\ell} \asn  \sum_{j\in (t-1)} r_{i,j}^C \cdot \ell^j$.   
+				
+				\item For all $\ell \in \nminusi$: Send $(p_i(\ell),r_{i,\ell})$ to $\Pc_\ell$
+			\end{enumerate}
+			
+	
+			
+			
+			\item 	\commentni{Generates the secret and verification keys}
+			
+			\begin{enumerate}
+				\item 	For all $\ell\in \nminusi$: Verify   $B_i(\ell) = \PedCom_D(p_\ell(i);r_{\ell,i})$.
+				
+				\item Let $e_i \asn  \sum_{\ell \in [n]} p_\ell(i)$, $E_i \asn e_i \cdot G$, and $r_i 
+				\asn  \sum_{\ell \in [n]} r_{\ell,i}$.
+				
+				
+				\item Let $\pi_i \asn \pZKPOK{\rPedGEq}((H,B(i),E_i),(e_i,r_i ))$.
+				
+				
+				\item Send $(E_i,\pi_i)$ to all parties.
+			\end{enumerate}
+		
+				
+		\item For all $\ell\in \nminusi$: Call $\vZKPOK{\rPedGEq}((H,B(\ell),E_\ell),\pi_\ell)$.
+		
+		
+		
+		\item 	\commentni{Construct additive shares $\sset{E_\ell'}$ of  public key $E = e^{-1} \cdot H$}
+		
+
+		\begin{enumerate}
+			
+			
+			\item Let $a_i \asn p_i(0)$ and $b_i \getsr \Z_q$.
+			
+			\item For each $\ell \in \nminusi$, call $\Mult$ jointly with $\Pc_\ell$, twice. If $\ell < i$, use $a_i$ in the first call and $b_i$ in the second; otherwise, use  $b_i$ in the first call and $a_i$ in the second.    Let $c_{i,\ell}$ and $c'_{i,\ell}$ be the private  outputs of these calls.
+			
+			\item Output $c_i = a_i b_i  + \sum_{\ell \in  \nminusi} c_{i,\ell} + c_{i,\ell}'$.
+			
+			\item Let $c \asn \sum_{\ell \in c_i}$.
+			 
+			
+			
+			
+			
+			
+			\item Send $E'_i \asn b_i \cdot c^{-1} \cdot H$ to all parties.
+			
+			
+		\end{enumerate}
+		
+		\item \commentni{Construct and verify public key $E$}
+		
+		\begin{enumerate}
+			\item 	Let $E \asn \sum_{\ell \in [n]} E'_\ell$.
+			
+			\item If $i$ is one  of the  $t$ parties, interact in the verified variant of  $\tdDec$ on input $\EgEnc_E(0;0)$.
+			
+			\item Act as \Cc in $\tdDec$,  and verify the  decrypted value is $0$.\footnote{\Inote{Hopefully, this is sufficient to enforce the  parties to act honestly. Will see when we write the security proof.}}
+		\end{enumerate}
+	
+		
+		\item Output $(1^b,H,E)$ as the public key, $\set{E_\ell}_{\ell \in [n]}$ as the verification keys, and $e_i$ as the secret key.
+			
+		%	\Inote{Output $B(0)$ as the secrete key in case of non-twisted EG}
+		\end{enumerate}
+	
+	
+\end{protocol}
+
+
+\begin{theorem}[Security  of key-generation  protocol]\label{thm:TshEG:KG}
+	Assuming \DDH is hard over $\cG$, then \cref{prot:TshEG:KG} UC-realizes \tdKg in the \sset{\randomH,{\Mult}}-hybrid model.
+\end{theorem}
+\begin{proof}
+	\Inote{TODO}
+\end{proof}
+
+
+\subsubsection{The Chunk Variant}\label{sec:ChanksEg:TshEG:Chunk}	
+Since the encryption algorithm  \cref{alg:Tsh} is exactly like that of the non-threshold case, its chunk variant is identical to the non-threshold case. The only difference are the zero-knowledge protocols  that requires the use of the secrete key, which in the threshold case is shared. Fortunately, it seems that  we do not need this protocols in out application.
+

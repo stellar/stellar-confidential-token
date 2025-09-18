@@ -1,0 +1,7 @@
+\section{Introduction}\label{sec:Introduction}
+We describe a and analyze the security of  a variant of the confidential transactions   scheme introduced by  \citet{BunzAZB20}, which  supports transactions over  a block-chain without revealing the accounts value and the transferred amounts.   Our scheme follows rather closely the  implementation  of the scheme of  Solana (\textit{Confidential Transfer}) and Aptos (\textit{Confidential Assets}). \Inote{is it accurate?}
+
+
+
+\subsection*{Paper organization.} Security notions  and some  basic building blocks used in our protocol are given in \cref{sec:Preliminaries}. In \cref{sec:MainProtocol} we define the confidential transaction scheme, and prove its security.  
+In \cref{sec:ChanksEG}, we define   the \textit{Chunk-ElGamal  encryption scheme} that can take the role of the additive-homomorphic scheme required for the confidential transaction scheme.

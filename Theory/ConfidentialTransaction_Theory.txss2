@@ -1,0 +1,24 @@
+{
+    "InternalPDFViewer": {
+        "Embedded": true,
+        "File": "build/ConfidentialTransaction_Theory.pdf"
+    },
+    "Session": {
+        "Bookmarks": [
+        ],
+        "CurrentFile": "ConfidentialTransaction_Theory.tex",
+        "FileVersion": 1,
+        "Files": [
+            {
+                "Col": 0,
+                "EditorGroup": 0,
+                "FileName": "ConfidentialTransaction_Theory.tex",
+                "FirstLine": 109,
+                "FoldedLines": "",
+                "Line": 127
+            }
+        ],
+        "MasterFile": "ConfidentialTransaction_Theory.tex",
+        "VerticalSplit": true
+    }
+}

@@ -1,0 +1,434 @@
+
+\newcommand{\init}{\mathsf{init}}
+\newcommand{\mint}{\mathsf{mint}}
+\newcommand{\transfer}{\mathsf{transfer}}
+\newcommand{\audit}{\mathsf{audit}}
+\newcommand{\rollover}{\mathsf{rollover}}
+\newcommand{\withraw}{\mathsf{withraw}}
+\newcommand{\history}{\mathsf{history}}
+\newcommand{\balance}{\mathsf{avlBlance}}
+\newcommand{\pendbalance}{\mathsf{pndBalance}}
+\newcommand{\tcount}{\mathsf{tcount}}
+
+\newcommand{\historylog}{\mathsf{log}}
+\newcommand{\sConfTran}{\mathsf{ConfTrans}}
+\newcommand{\fConfTran}{\MathAlgX{\cF_\sConfTran}}
+\newcommand{\pConfTran}{\MathAlgX{\Pi_\sConfTran}}
+
+
+\newcommand{\posvst}{{\mathsf{pos}}}
+\newcommand{\Chain}{{\MathAlgX{C}}}
+\newcommand{\pcount}{p_{\mathsf{pcount}} }
+\newcommand{\psize}{p_{\mathsf{size}} }
+
+
+
+%Relations
+\newcommand{\rEnc}{\hyperref[rel:Enc]{\cR_{\sf Enc}}}
+\newcommand{\rEncDef}
+{
+	\sset{((\pk,\oA),(a,r))\colon \Enc_\pk(a;r)= \oA}
+}
+
+\newcommand{\rKeyGen}{\hyperref[rel:KeyGen]{\cR_{\sf KeyGen}}}
+\newcommand{\rKeyGenDef}
+{
+	\sset{(\pk,w))\colon \KeyGen(w)= (\cdot,\pk)}
+}
+
+
+
+
+\newcommand{\Eqs}{{\sf Eq}}
+\newcommand{\rEq}{\hyperref[rel:Eq]{\cR_\Eqs}}
+\newcommand{\rEqDef}
+{
+	\set{((\pk_0,\pk_1,\oA_0,\oA_1),(a,r_0,r_1))\colon \forall i\in \zo \; \Enc_{\pk_i}(a;r_i)= \A_i}
+}
+
+
+\newcommand{\EqSks}{{\sf EqSk}}
+\newcommand{\rEqSk}{\hyperref[rel:EqSk]{\cR_\EqSks}}
+\newcommand{\rEqSkDef}
+{
+	\set{((\pk,\oA_0,\oA_1),w)\colon \KeyGen(w) = (\sk,\pk) \sland \Dec_\sk(\oA_0)= \Dec_\sk(\oA_1)  }
+}
+
+
+
+
+\newcommand{\RPs}{{\sf Rp}}
+\newcommand{\rRp}{\hyperref[rel:Rp]{\cR_\RPs}}
+\newcommand{\rRpDef}
+{
+	\sset{((\pk,\oA,b),(a,r))\colon \Enc_\pk(a;r)= \oA \sland a\in (b)}
+}
+
+\newcommand{\RpSkS}{{\sf RpSk}}
+\newcommand{\rRpSk}{\hyperref[rel:RpSk]{\cR_\RpSkS}}
+\newcommand{\rRpSkDef}
+{
+	\sset{((\pk,\oA,b),w)\colon \KeyGen(w) = (\sk,\pk) \sland  \Dec_\sk(\oA) \in (b)}
+}
+
+
+
+
+
+\section{The Confidential Transactions Protocol}\label{sec:MainProtocol}
+In this section we define the confidential transactions scheme, and prove its security. The ideal functionality for the scheme is define in \cref{sec:MainProtocol:Ideal}, the protocol itself in \cref{sec:MainProtocol:Protocol}, and its security is proved in  \cref{prot:ConfidentialTransactions}.
+
+
+\begin{remark}[$\sid$]\label{rem:sid}
+Recall that all ideal functionalities operations below and the protocol execution get $\sid\in \zs$ as common input. The $\sid$ is stored in the log and passed as common input to the proofs. To keep the text simpler, we omit it from the following text.
+\end{remark}
+
+
+\subsection{The Ideal Functionality}\label{sec:MainProtocol:Ideal}
+In this section we define the ideal functionality for the confidential transactions scheme. The functionality  captures the relevant parts of the actual scheme, which typically invoked using smart contracts over a block chain. Specifically, we model the  the chain as a single (honest) entity, the \textit{chain holder}, assume money flows into the system by a single (honest) party, the \textit{mint}, and assume fixed number of \textit{users}. We also assume an a initial starting phase,  \textit{init}.  
+
+\begin{functionality}[\fConfTran: Confidential transactions]\label{func:ConfidentialTransactions}~
+	
+	
+	
+	\item[Parties:]	Mint \Mc, chain holder  \Cc and users  $\Uc_1, 
+	\ldots,\Uc_n$.
+	
+	
+	\item[Parameters:] $\pcount,\psize,q \in \N$.
+	
+	
+	\begin{description}
+		\item[Init.] Upon receiving $\init$ from  all parties: for each $i\in [n]$:  set $\balance_i\asn 0,\pendbalance_i \asn 0$, $\tcount_i \asn 0$.
+		
+			\item[Mint.]   Upon receiving $(\mint,d,x)$ from  \Cc and \Mc:
+		\begin{enumerate}
+			
+			
+			\item \Assert{$x\in (\psize) \sland \tcount_d\le  \pcount$}.
+			
+			\item $\tcount_d^{++}$.
+			
+			\item $\pendbalance_d \pluseq x$.
+			
+			\item Send $(\mint,d,x)$ to all parties.
+		\end{enumerate}
+		
+		
+		\item[Transfer.]    Upon receiving  $(\transfer,d)$ from  \Cc and  $\Uc_s$, with  $\Uc_s$ using private input $x$. 
+		
+	
+		\begin{enumerate}
+			\item \Assert{$ x\in (\psize) \sland \tcount\le  \pcount \sland \balance_s  \ge x $}.
+			
+				\item $\tcount^{++}$.
+				
+				
+			\item $\balance_s \minuseq x$.
+			
+			\item   $\pendbalance_d \pluseq x$.
+			
+			
+		%	\item  $\historylog_d \unioneq {(\transfer,s,x)}$
+			
+		%	\item  $\historylog \unioneq {(\transfer,s,d)}$ 
+		
+		\item Send $(\transfer,s,d)$ to all parties, and send $x$ to $\Uc_d$.
+			
+		\end{enumerate}
+		
+		\item[Rollover.]     Upon receiving $\rollover$ from  party $\Uc_i$ and \Cc,  party \Cc
+		
+		\begin{enumerate}
+			
+			\item $\Assert{\balance_i \le q/4}$.\footnote{This check is to prevent overflow. In reality, it will never fire.}
+			
+			\item $\tcount \asn 0$.
+			
+			
+			\item  $\balance_i  \pluseq \pendbalance_i$.
+			
+			\item  $\pendbalance_i  \asn 0$.
+			
+		%	\item  $\historylog \unioneq (\rollover,i)$
+			
+			
+			\item  Send $ (\rollover,i)$ to all parties.
+		\end{enumerate}
+
+		
+			\item[Withraw.]     Upon receiving $(\withraw,x)$ from  party $\Uc_i$ and \Cc,  party \Cc
+		
+		\begin{enumerate}
+			
+			
+			 \item \Assert{$ \balance_i  \ge x$}.
+			
+			\item $\balance_i \minuseq x$.
+			
+			
+			%\item  $\historylog \unioneq {(\withraw,i,x)}$
+			
+			\item Send $(\withraw,i,x)$ to all parties,
+			
+		\end{enumerate}
+		
+		
+	%	\item[History.]     Upon receiving $\history$ from  party $\Uc_i$ and \Cc:   Send $(\historylog,\historylog_i)$ to  $\Uc_i$.	 
+		
+		\item[Audit.]      \Inote{TODO}
+		
+	\end{description}
+
+\end{functionality}
+
+
+\subsection{The Protocol}\label{sec:MainProtocol:Protocol}
+Throughout, we fix a security parameter $\kappa$ and omit is from the notation. We also fix an homomorphic encryption scheme $(\KeyGen,\Enc,\Dec)$ over $\Z_q$ with randomness domain $\cD$, and denote the ciphertexts of the scheme using  overlined capital letters.  % We require that $\Dec_{sk}(\oA)$ outputs   $(a;r)$ such that $\oA = \Enc(a;r)$.
+
+
+We split  the protocol into several sub-protocols defined below, and  use the  following environment to define the common part the different sub-protocols share, \eg global parameter. 
+
+\begin{protocol}[\pConfTran: Confidential transactions]~\label{prot:ConfidentialTransactions}
+
+
+	
+\item[Parties:] Mint \Mc, chain-holder \Cc and users  $\Uc_1, \ldots,\Uc_n$.
+
+\item[Parameters:] $\pcount,\psize,q \in \N$.
+
+\item[Subprotocols:]  See below.
+\end{protocol}
+
+
+\subsubsection{Init}
+
+
+This sub-protocol is were the encryption key are sampled and shared, and the chain manager \Cc set the initial balances  of all users to zero. The protocol  uses ZKPOK proof for the relation:
+\begin{description}
+	\item[Key generation:]    $\rKeyGen =\rKeyGenDef$.\label{rel:KeyGen}
+\end{description}
+
+
+\begin{protocol}[\pConfTran.Init]~\label{prot:ConfidentialTransactions:Init}
+	
+
+	\item[Participating parties.] All parties.
+			
+			
+	\item[Proofs:]   \piZKPOK{\rKeyGen}. 
+	
+%	\item[Common input:] $\sid \in \zs$.
+	%\item[Algorithms:]    \KeyGen.
+	
+			
+\item[Operation:] ~
+			
+			
+			\begin{enumerate}
+				
+				\item   $\Uc_i$, for  all $i\in [n]$:
+				\begin{enumerate}
+					\item  $(\pk_i,\sk_i) \getsr \KeyGen(r_i)$ for $r_i \getsr \cD$.
+					
+					
+					\item  $\pi_i \getsr \pZKPOK{\rKeyGen}(\pk_i,r_i)$.  \Inote{Probably needed for the security proof. }
+					
+					\item Send $(\pk_i,\pi_i)$ to \Cc.
+					
+					
+				\end{enumerate}
+				
+				\item \Cc: ~
+				
+				\begin{enumerate}
+				
+				\item For all $i\in [n]$: 
+				
+				\begin{enumerate}
+					\item 	 $\vZKPOK{\rKeyGen}(pk_i,\pi_i)$.\footnote{Here and after,  \Cc aborts and publish the prover identity if the   proof is not verified.}
+					
+					\item $\oP_i\getsr \Enc_{\pk_i}(0;0),\oA_i\getsr \Enc_{\pk_i}(0;0),\tcount_i 
+					\asn 0$. 
+					
+			
+				\end{enumerate}
+			
+		\item Broadcast $(\init,\sset{\pk_i,\oA_i,\oP_i}_{i\in [n]})$.\footnote{Since all ciphertext are known constants, \Cc can skip actually broadcasting them.}
+		%	\item     Broadcast $\historylog \asn \emptyset$.
+				\end{enumerate}								
+			\end{enumerate}
+\end{protocol}
+
+\subsubsection{Mint}
+
+\begin{protocol}[\pConfTran.Mint]~\label{prot:ConfidentialTransactions:Mint}
+	\item[Parties:] \Mc and \Cc.
+	
+	
+	
+	\item[Common input:]  $d\in [n]$ and $x\in (\psize)$.
+	
+	\item[Operation:]  \Cc~
+		\begin{enumerate}
+			\item \Assert{$d\in [n] \sland \tcount_d  \le \pcount \sland x\in (\psize)$}
+			
+			\item  $\oP_d \pluseq \Enc_{\pk_d}(x)$.
+				
+	%	\item   $\historylog \unioneq (\mint,d,x,\tcount_d,\oP_d)$.
+			
+			\item Broadcast 	 	$(\mint,d,x,\oP_d)$.
+		
+	\end{enumerate}
+\end{protocol}
+
+\subsubsection{Transfer}
+
+The protocol uses ZK and ZKPOK proofs for the   following  relations:
+
+\begin{description}
+	\item[In range.] $\rRp =\rRpDef$.\label{rel:Rp}
+	
+	Namely, encryption of values in $[\psize]$, witness is random coins.
+	
+		\item[In range using secret key.] $\rRpSk =\rRpSkDef$.\label{rel:RpSk}
+		
+		
+		Namely, encryption of values in $[\psize]$, witness is secret key. 
+		\begin{remark}
+			To prove this relation, see \cref{sec:ChanksEg:Eg:ZK}, the prover decrypts the ciphertext, encrypt it again using fresh randomness, and use this randomness as the witness for the proof above. By storing the random coins used to generate the original ciphertext, one significantly reduce the proof's cost.
+		\end{remark}
+		
+	\item[Equality.] $\rEq =\rEqDef$. \label{rel:Eq}
+	
+	Namely,   encryptions of the same value, witness is the  secret key for the $\pk_0$ and the randomness of  $\oA_1$.
+	
+
+\end{description}
+
+
+
+
+\begin{protocol}[\pConfTran.Transfer]~\label{prot:ConfidentialTransactions:Transfer}
+	\item[Parties:] $\Uc_s$ and \Cc.
+	
+\item[Proofs:]   \piZKPOK{\rRp},\piZK{\rRpSk},\piZK{\rEq}
+
+
+%\item[Algorithms:]    \Dec.
+
+	
+	\item[Common input:] $d\in [n]$. \comment{Payee (destination) name.}
+	
+	\item[$\Uc_s$'s private  input:] $x \in (\psize)$.
+	
+\item[Operation:] ~
+	
+
+	
+	\begin{enumerate}
+		\item  $\Uc_s$: 
+		
+		\begin{enumerate}
+			\item $\oX_s \getsr \Enc_{\pk_d}(x;r_s)$ for $r_s \getsr \cD$.
+			
+		
+			\item $\pi^\RPs \getsr \pZKPOK{\rRp}((\pk_s,\oX_s,\psize),(x,r_s))$.
+			
+			
+			\item $\oX_d \getsr \Enc_{\pk_d}(x;r_d)$ for $r_d \getsr \cD$.
+			
+			
+		\item $\pi^\Eqs \getsr \pZK{\rEq}((\pk_s,\pk_d,\oX_s, \oX_d),(x,r_s,r_d))$.
+			
+			
+		
+			
+		\item $\pi^\RpSkS \getsr \pZK{\rRpSk}((\pk_s,\oA_s- \oX_s, q/2),\sk_s)$.\footnote{Assuming there are never at most  $q/\psize$  increments of $\oA_s$, it holds that  $\oA_s$ is smaller than $q/2$. Since $\psize \le q/2$ as well, this check is equivalent to ``$\oA_s- \oX_s$ encrypts a non-negative value''. \Inote{Rephrase}} 
+			
+			
+			\item Send $(\oX_s,\oX_d,\pi^\RPs,\pi^\Eqs,\pi^\RpSkS)$ to \Cc.   
+		\end{enumerate}
+		
+		
+		\item  \Cc: 
+		
+		\begin{enumerate}
+			
+			\item  $\Assert{\tcount_d \le \pcount}$.
+				
+			\item   $\vZKPOK{\rRp}((\pk_d,\oX_d,\psize),\pi^\RPs)$,
+			
+			 $\vZK{\rEq}((\pk_s,\pk_d,\oX_s,\oX_d),\pi^\Eqs)$ and
+			 
+			  $\vZK{\rRpSk}((\pk_s,\oA_s-\oX_s,q/2),\pi^\RpSkS)$. 
+			
+	
+		
+		
+		     \item   $\oA_s\minuseq \oX_s$. 
+              
+              \item  $\oP_d \pluseq X_d$. 
+              
+              \item $\tcount_d^{++}$.
+              
+		    % \item  $\historylog \unioneq (\transfer,s,d,\oA_s,\oP_d)$.
+		     
+		     \item Broadcast $(\transfer,s,d,\oP_d)$.
+		\end{enumerate}
+		
+	\end{enumerate}
+	
+\end{protocol}
+
+
+
+\subsubsection{Rollover}
+
+\begin{protocol}[\pConfTran.Rollover]~\label{prot:ConfidentialTransactions:Rollover}
+	\item[Parties.] $\Uc_i$ and \Cc.
+	
+\item[Operation:] ~
+%\begin{enumerate}
+%	\item $\Uc_i$: Send $\pi^\RpSkS \getsr \pZKPOK{\rRp}((\pk_s,\oA_i,q/4),\sk_i)$ to \Cc.
+	%\item 	
+	\Cc:
+	\begin{enumerate}
+	
+%	\item Call $\vZKPOK{\RpSkS}((\pk_s,\oA_i,q/4),\pi^\RPs)$.
+	
+		
+	\item $\oA_i  \pluseq \oP_i$.
+	
+	
+	\item  $\oP_i \asn \Enc_{\pk_i}(0;0)$.
+	
+	\item  $\tcount_i \asn 0$.
+	
+	
+	\item  Broadcast $(\rollover,i)$.\footnote{No  need to publish  the new $\oP_i$, since everyone can compute it.}
+	
+	
+%\end{enumerate}
+\end{enumerate}
+\end{protocol}
+
+
+\subsubsection{Withdraw} 
+
+\Inote{TODO}
+
+\subsubsection{Audit} 
+
+\Inote{TODO}
+
+
+\subsection{Security of \cref{prot:ConfidentialTransactions}}
+\begin{theorem}[Security of \cref{prot:ConfidentialTransactions}]\label{thm:ConfidentialTransactions}
+Assuming  $(\KeyGen,\Enc,\Dec)$ is CPA secure, then \cref{prot:ConfidentialTransactions} UC-realizes (with static security\Inote{?}) \cref{func:ConfidentialTransactions} against semi-honest chain holder and mint.
+\end{theorem}
+
+\begin{proof}
+\Inote{TODO}
+\end{proof}
+
